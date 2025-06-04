@@ -132,7 +132,7 @@ const PersonaSelection = () => {
                     {persona.traits.map((trait) => (
                       <span
                         key={trait}
-                        className="px-3 py-1 bg-violet-100 text-violet-700 rounded-full text-sm font-medium"
+                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
                       >
                         {trait}
                       </span>

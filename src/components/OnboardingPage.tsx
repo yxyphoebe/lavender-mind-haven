@@ -171,14 +171,14 @@ const OnboardingPage = () => {
                     className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                       isSelected
                         ? 'border-violet-400 bg-violet-50 zen-shadow'
-                        : 'border-violet-200 hover:border-violet-300 hover:bg-violet-25'
+                        : 'border-violet-200 hover:border-violet-300 hover:bg-blue-25'
                     }`}
                     onClick={() => handleOptionSelect(option.id)}
                   >
                     <div className="flex items-start space-x-3">
                       {IconComponent && (
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                          isSelected ? 'bg-violet-400 text-white' : 'bg-violet-100 text-violet-600'
+                          isSelected ? 'bg-violet-400 text-white' : 'bg-blue-100 text-blue-600'
                         }`}>
                           <IconComponent className="w-4 h-4" />
                         </div>
@@ -207,7 +207,7 @@ const OnboardingPage = () => {
 
             {currentStepData.multiSelect && (
               <div className="mt-4">
-                <Badge variant="secondary" className="bg-violet-100 text-violet-700">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-700">
                   You can select multiple options
                 </Badge>
               </div>
