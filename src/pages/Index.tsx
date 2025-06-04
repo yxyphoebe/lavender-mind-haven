@@ -86,21 +86,21 @@ const Index = () => {
           <p className="text-xl md:text-2xl text-sage-600 mb-8 font-light leading-relaxed">
             Your personal sanctuary for emotional healing and growth
           </p>
-          <p className="text-lg text-sage-500 mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-sage-600 mb-12 max-w-2xl mx-auto leading-relaxed">
             Connect with AI companions designed to understand, support, and guide you through your wellness journey with empathy and wisdom.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
               onClick={() => navigate('/auth')}
-              className="bg-gradient-to-r from-lavender-500 to-lavender-600 hover:from-lavender-600 hover:to-lavender-700 text-white px-8 py-4 rounded-2xl text-lg font-medium mindful-shadow transition-all duration-300 hover:scale-105"
+              className="bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white px-8 py-4 rounded-2xl text-lg font-medium mindful-shadow transition-all duration-300 hover:scale-105"
             >
               Begin Your Journey
             </Button>
             <Button 
               variant="outline"
               onClick={() => navigate('/learn-more')}
-              className="border-2 border-lavender-300 text-lavender-700 hover:bg-lavender-50 px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300"
+              className="border-2 border-sky-300 text-sky-700 hover:bg-sky-50 px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300"
             >
               Learn More
             </Button>
@@ -110,7 +110,7 @@ const Index = () => {
         {/* Features preview */}
         <div className="mt-20 grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <div className="glass-effect rounded-3xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="w-16 h-16 bg-gradient-to-br from-lavender-400 to-lavender-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <Heart className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-display text-xl font-semibold text-sage-800 mb-4">Empathetic AI Companions</h3>
@@ -126,7 +126,7 @@ const Index = () => {
           </div>
 
           <div className="glass-effect rounded-3xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="w-16 h-16 bg-gradient-to-br from-sage-400 to-sage-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <Flower2 className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-display text-xl font-semibold text-sage-800 mb-4">Sacred Space</h3>

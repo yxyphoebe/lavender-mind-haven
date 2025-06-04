@@ -31,9 +31,9 @@ const PersonaSelection = () => {
       description: 'Nova brings clarity and strength to your wellness journey. She provides practical solutions while maintaining deep empathy and understanding.',
       traits: ['Motivating', 'Clear', 'Empowering', 'Solution-focused'],
       icon: Zap,
-      gradient: 'from-lavender-500 to-purple-600',
-      bgGradient: 'from-lavender-50 to-purple-50',
-      textColor: 'text-lavender-700',
+      gradient: 'from-sky-500 to-blue-600',
+      bgGradient: 'from-sky-50 to-blue-50',
+      textColor: 'text-sky-700',
       approach: 'Combines empathy with actionable strategies, helping you build confidence and achieve concrete progress.',
       bestFor: 'Goal achievement, confidence building, overcoming obstacles'
     },
@@ -65,12 +65,12 @@ const PersonaSelection = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-lavender-50 via-white to-rose-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-rose-50 p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <div className="flex items-center justify-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-lavender-400 to-rose-400 rounded-3xl flex items-center justify-center mindful-shadow">
+            <div className="w-20 h-20 bg-gradient-to-br from-sky-400 to-rose-400 rounded-3xl flex items-center justify-center mindful-shadow">
               <Sparkles className="w-10 h-10 text-white" />
             </div>
           </div>
@@ -94,16 +94,16 @@ const PersonaSelection = () => {
                 key={persona.id}
                 className={`cursor-pointer transition-all duration-300 border-2 hover:scale-105 ${
                   isSelected
-                    ? 'border-lavender-400 shadow-xl mindful-shadow'
-                    : 'border-lavender-200 hover:border-lavender-300'
-                } ${isSelected ? 'ring-4 ring-lavender-200' : ''}`}
+                    ? 'border-sky-400 shadow-xl mindful-shadow'
+                    : 'border-sky-200 hover:border-sky-300'
+                } ${isSelected ? 'ring-4 ring-sky-200' : ''}`}
                 onClick={() => handleSelectPersona(persona.id)}
               >
                 <CardContent className="p-6 relative">
                   {/* Selection indicator */}
                   {isSelected && (
                     <div className="absolute top-4 right-4">
-                      <CheckCircle className="w-6 h-6 text-lavender-600 fill-current" />
+                      <CheckCircle className="w-6 h-6 text-sky-600 fill-current" />
                     </div>
                   )}
 
@@ -132,7 +132,7 @@ const PersonaSelection = () => {
                     {persona.traits.map((trait) => (
                       <span
                         key={trait}
-                        className="px-3 py-1 bg-lavender-100 text-lavender-700 rounded-full text-sm font-medium"
+                        className="px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-medium"
                       >
                         {trait}
                       </span>
@@ -140,7 +140,7 @@ const PersonaSelection = () => {
                   </div>
 
                   {/* Approach */}
-                  <div className="bg-gradient-to-r from-white/50 to-lavender-50/50 rounded-xl p-4 mb-4">
+                  <div className="bg-gradient-to-r from-white/50 to-sky-50/50 rounded-xl p-4 mb-4">
                     <h4 className="font-semibold text-sage-800 mb-2">Approach:</h4>
                     <p className="text-sm text-sage-600 leading-relaxed">
                       {persona.approach}
@@ -167,7 +167,7 @@ const PersonaSelection = () => {
             disabled={!selectedPersona}
             className={`px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300 ${
               selectedPersona
-                ? 'bg-gradient-to-r from-lavender-500 to-lavender-600 hover:from-lavender-600 hover:to-lavender-700 text-white hover:scale-105 mindful-shadow'
+                ? 'bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white hover:scale-105 mindful-shadow'
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >

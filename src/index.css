@@ -154,7 +154,7 @@
 
 @layer components {
   .gradient-text {
-    @apply bg-gradient-to-r from-lavender-600 via-lavender-500 to-rose-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-sky-600 via-sky-500 to-rose-400 bg-clip-text text-transparent;
   }
 
   .glass-effect {
@@ -162,11 +162,11 @@
   }
 
   .mindful-shadow {
-    box-shadow: 0 10px 40px rgba(139, 92, 246, 0.1), 0 4px 12px rgba(139, 92, 246, 0.05);
+    box-shadow: 0 10px 40px rgba(56, 189, 248, 0.1), 0 4px 12px rgba(56, 189, 248, 0.05);
   }
 
   .bloom-shadow {
-    box-shadow: 0 0 30px rgba(244, 63, 94, 0.2), 0 0 60px rgba(139, 92, 246, 0.1);
+    box-shadow: 0 0 30px rgba(244, 63, 94, 0.2), 0 0 60px rgba(56, 189, 248, 0.1);
   }
 
   /* Mobile-optimized components */

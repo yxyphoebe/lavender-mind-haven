@@ -33,7 +33,7 @@ const ChatInterface = () => {
   
   const personas = {
     nuva: { name: 'Nuva', icon: Heart, color: 'rose' },
-    nova: { name: 'Nova', icon: Zap, color: 'lavender' },
+    nova: { name: 'Nova', icon: Zap, color: 'sky' },
     sage: { name: 'Sage', icon: Star, color: 'sage' }
   };
 
@@ -95,20 +95,26 @@ const ChatInterface = () => {
   const IconComponent = currentPersona.icon;
 
   return (
-    <div className="h-screen bg-gradient-to-br from-lavender-50 via-white to-rose-50 flex flex-col">
+    <div className="h-screen bg-gradient-to-br from-sky-50 via-white to-rose-50 flex flex-col">
       {/* Header */}
-      <div className="glass-effect border-b border-lavender-200 p-4 flex items-center justify-between">
+      <div className="glass-effect border-b border-sky-200 p-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/menu')}
-            className="hover:bg-lavender-100 rounded-xl"
+            className="hover:bg-sky-100 rounded-xl"
           >
             <Menu className="w-5 h-5 text-sage-600" />
           </Button>
           
-          <Avatar className="w-10 h-10 bg-gradient-to-br from-lavender-400 to-rose-400">
+          <Avatar className={`w-10 h-10 bg-gradient-to-br ${
+            currentPersona.color === 'sky' 
+              ? 'from-sky-400 to-blue-500' 
+              : currentPersona.color === 'rose' 
+                ? 'from-rose-400 to-rose-500'
+                : 'from-sage-400 to-sage-500'
+          }`}>
             <AvatarFallback className="bg-transparent">
               <IconComponent className="w-6 h-6 text-white" />
             </AvatarFallback>
@@ -129,7 +135,7 @@ const ChatInterface = () => {
             variant="ghost"
             size="icon"
             onClick={() => navigate('/video-call')}
-            className="hover:bg-lavender-100 rounded-xl"
+            className="hover:bg-sky-100 rounded-xl"
           >
             <Video className="w-5 h-5 text-sage-600" />
           </Button>
@@ -137,7 +143,7 @@ const ChatInterface = () => {
             variant="ghost"
             size="icon"
             onClick={() => navigate('/growth')}
-            className="hover:bg-lavender-100 rounded-xl"
+            className="hover:bg-sky-100 rounded-xl"
           >
             <TrendingUp className="w-5 h-5 text-sage-600" />
           </Button>
@@ -154,7 +160,13 @@ const ChatInterface = () => {
             <div className={`max-w-[80%] ${message.sender === 'user' ? 'order-1' : 'order-2'}`}>
               {message.sender === 'ai' && (
                 <div className="flex items-center space-x-2 mb-2">
-                  <Avatar className="w-8 h-8 bg-gradient-to-br from-lavender-400 to-rose-400">
+                  <Avatar className={`w-8 h-8 bg-gradient-to-br ${
+                    currentPersona.color === 'sky' 
+                      ? 'from-sky-400 to-blue-500' 
+                      : currentPersona.color === 'rose' 
+                        ? 'from-rose-400 to-rose-500'
+                        : 'from-sage-400 to-sage-500'
+                  }`}>
                     <AvatarFallback className="bg-transparent">
                       <IconComponent className="w-4 h-4 text-white" />
                     </AvatarFallback>
@@ -165,8 +177,8 @@ const ChatInterface = () => {
               
               <Card className={`p-4 ${
                 message.sender === 'user'
-                  ? 'bg-gradient-to-r from-lavender-500 to-lavender-600 text-white ml-4'
-                  : 'bg-white border-lavender-200 mr-4 mindful-shadow'
+                  ? 'bg-gradient-to-r from-sky-500 to-sky-600 text-white ml-4'
+                  : 'bg-white border-sky-200 mr-4 mindful-shadow'
               }`}>
                 <p className={`leading-relaxed ${
                   message.sender === 'user' ? 'text-white' : 'text-sage-700'
@@ -174,7 +186,7 @@ const ChatInterface = () => {
                   {message.text}
                 </p>
                 <p className={`text-xs mt-2 ${
-                  message.sender === 'user' ? 'text-lavender-100' : 'text-sage-400'
+                  message.sender === 'user' ? 'text-sky-100' : 'text-sage-400'
                 }`}>
                   {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
@@ -187,18 +199,24 @@ const ChatInterface = () => {
           <div className="flex justify-start animate-fade-in">
             <div className="max-w-[80%]">
               <div className="flex items-center space-x-2 mb-2">
-                <Avatar className="w-8 h-8 bg-gradient-to-br from-lavender-400 to-rose-400">
+                <Avatar className={`w-8 h-8 bg-gradient-to-br ${
+                  currentPersona.color === 'sky' 
+                    ? 'from-sky-400 to-blue-500' 
+                    : currentPersona.color === 'rose' 
+                      ? 'from-rose-400 to-rose-500'
+                      : 'from-sage-400 to-sage-500'
+                }`}>
                   <AvatarFallback className="bg-transparent">
                     <IconComponent className="w-4 h-4 text-white" />
                   </AvatarFallback>
                 </Avatar>
                 <span className="text-sm font-medium text-sage-700">{currentPersona.name}</span>
               </div>
-              <Card className="p-4 bg-white border-lavender-200 mr-4 mindful-shadow">
+              <Card className="p-4 bg-white border-sky-200 mr-4 mindful-shadow">
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-lavender-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-lavender-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-lavender-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 bg-sky-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-sky-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-sky-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </Card>
             </div>
@@ -209,19 +227,19 @@ const ChatInterface = () => {
       </div>
 
       {/* Input */}
-      <div className="p-4 glass-effect border-t border-lavender-200">
+      <div className="p-4 glass-effect border-t border-sky-200">
         <div className="flex items-center space-x-3">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Share what's on your mind..."
-            className="flex-1 h-12 border-lavender-200 rounded-2xl focus:ring-lavender-400 bg-white/80"
+            className="flex-1 h-12 border-sky-200 rounded-2xl focus:ring-sky-400 bg-white/80"
           />
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim()}
-            className="h-12 w-12 bg-gradient-to-r from-lavender-500 to-lavender-600 hover:from-lavender-600 hover:to-lavender-700 text-white rounded-2xl p-0 transition-all duration-300 hover:scale-105"
+            className="h-12 w-12 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white rounded-2xl p-0 transition-all duration-300 hover:scale-105"
           >
             <Send className="w-5 h-5" />
           </Button>

@@ -63,7 +63,7 @@ const OnboardingPage = () => {
                   value={formData.name}
                   onChange={(e) => updateFormData('name', e.target.value)}
                   placeholder="Your name"
-                  className="h-12 border-lavender-200 rounded-xl focus:ring-lavender-400"
+                  className="h-12 border-sky-200 rounded-xl focus:ring-sky-400"
                 />
               </div>
               
@@ -72,10 +72,10 @@ const OnboardingPage = () => {
                   Preferred language
                 </label>
                 <Select value={formData.language} onValueChange={(value) => updateFormData('language', value)}>
-                  <SelectTrigger className="h-12 border-lavender-200 rounded-xl">
+                  <SelectTrigger className="h-12 border-sky-200 rounded-xl">
                     <SelectValue placeholder="Select your language" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border-lavender-200">
+                  <SelectContent className="bg-white border-sky-200">
                     <SelectItem value="english">English</SelectItem>
                     <SelectItem value="spanish">Español</SelectItem>
                     <SelectItem value="french">Français</SelectItem>
@@ -93,7 +93,7 @@ const OnboardingPage = () => {
         return (
           <div className="space-y-6 animate-fade-in">
             <div className="text-center">
-              <Target className="w-12 h-12 text-lavender-500 mx-auto mb-4" />
+              <Target className="w-12 h-12 text-sky-500 mx-auto mb-4" />
               <h2 className="font-display text-2xl font-semibold text-sage-800 mb-2">
                 What brings you here today?
               </h2>
@@ -110,7 +110,7 @@ const OnboardingPage = () => {
                 value={formData.currentGoals}
                 onChange={(e) => updateFormData('currentGoals', e.target.value)}
                 placeholder="e.g., Managing stress, improving self-confidence, processing difficult emotions..."
-                className="min-h-[120px] border-lavender-200 rounded-xl focus:ring-lavender-400 resize-none"
+                className="min-h-[120px] border-sky-200 rounded-xl focus:ring-sky-400 resize-none"
               />
               <p className="text-xs text-sage-500 mt-2">
                 This helps us understand how to best support you
@@ -145,8 +145,8 @@ const OnboardingPage = () => {
                   onClick={() => updateFormData('emotionalState', option.value)}
                   className={`p-4 text-left border-2 rounded-xl transition-all duration-200 ${
                     formData.emotionalState === option.value
-                      ? 'border-lavender-400 bg-lavender-50'
-                      : 'border-lavender-200 hover:border-lavender-300 hover:bg-lavender-25'
+                      ? 'border-sky-400 bg-sky-50'
+                      : 'border-sky-200 hover:border-sky-300 hover:bg-sky-25'
                   }`}
                 >
                   <span className="text-2xl mr-3">{option.emoji}</span>
@@ -182,8 +182,8 @@ const OnboardingPage = () => {
                   onClick={() => updateFormData('preferredSupport', option.value)}
                   className={`p-4 text-left border-2 rounded-xl transition-all duration-200 ${
                     formData.preferredSupport === option.value
-                      ? 'border-lavender-400 bg-lavender-50'
-                      : 'border-lavender-200 hover:border-lavender-300 hover:bg-lavender-25'
+                      ? 'border-sky-400 bg-sky-50'
+                      : 'border-sky-200 hover:border-sky-300 hover:bg-sky-25'
                   }`}
                 >
                   <div className="font-medium text-sage-700 mb-1">{option.label}</div>
@@ -200,12 +200,12 @@ const OnboardingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-lavender-50 via-white to-rose-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-rose-50 flex items-center justify-center p-6">
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-lavender-400 to-rose-400 rounded-2xl flex items-center justify-center mindful-shadow">
+            <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-rose-400 rounded-2xl flex items-center justify-center mindful-shadow">
               <Flower2 className="w-8 h-8 text-white" />
             </div>
           </div>
@@ -219,7 +219,7 @@ const OnboardingPage = () => {
                 <div
                   key={i}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    i + 1 <= currentStep ? 'bg-lavender-400' : 'bg-lavender-200'
+                    i + 1 <= currentStep ? 'bg-sky-400' : 'bg-sky-200'
                   }`}
                 />
               ))}
@@ -242,7 +242,7 @@ const OnboardingPage = () => {
             variant="outline"
             onClick={handlePrevious}
             disabled={currentStep === 1}
-            className="border-lavender-200 text-lavender-700 hover:bg-lavender-50 rounded-xl px-6"
+            className="border-sky-200 text-sky-700 hover:bg-sky-50 rounded-xl px-6"
           >
             <ChevronLeft className="w-4 h-4 mr-2" />
             Previous
@@ -250,7 +250,7 @@ const OnboardingPage = () => {
           
           <Button
             onClick={handleNext}
-            className="bg-gradient-to-r from-lavender-500 to-lavender-600 hover:from-lavender-600 hover:to-lavender-700 text-white rounded-xl px-6"
+            className="bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white rounded-xl px-6"
           >
             {currentStep === totalSteps ? 'Continue' : 'Next'}
             <ChevronRight className="w-4 h-4 ml-2" />
