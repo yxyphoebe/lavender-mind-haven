@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Flower2, Heart, Zap, Star, Sparkles, CheckCircle } from 'lucide-react';
+import { Heart, Zap, Star, Sparkles, CheckCircle, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const PersonaSelection = () => {
@@ -58,26 +58,42 @@ const PersonaSelection = () => {
 
   const handleContinue = () => {
     if (selectedPersona) {
-      // Store selection and navigate to main app
       localStorage.setItem('selectedPersona', selectedPersona);
       navigate('/chat');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-lavender-50 via-white to-rose-50 p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-lavender-400 to-rose-400 rounded-3xl flex items-center justify-center mindful-shadow">
-              <Sparkles className="w-10 h-10 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Navigation Header */}
+      <nav className="bg-white/80 backdrop-blur-sm border-b border-slate-200 px-6 py-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/onboarding')}
+              className="hover:bg-slate-100 rounded-xl"
+            >
+              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            </Button>
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-xl font-semibold text-slate-800">Choose Your Companion</span>
             </div>
           </div>
-          <h1 className="font-display text-4xl md:text-5xl font-bold gradient-text mb-4">
+        </div>
+      </nav>
+
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">
             Choose Your AI Companion
           </h1>
-          <p className="text-xl text-sage-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
             Each companion has a unique approach to supporting your wellness journey. 
             You can always change your choice later.
           </p>
@@ -94,21 +110,21 @@ const PersonaSelection = () => {
                 key={persona.id}
                 className={`cursor-pointer transition-all duration-300 border-2 hover:scale-105 ${
                   isSelected
-                    ? 'border-lavender-400 shadow-xl mindful-shadow'
-                    : 'border-lavender-200 hover:border-lavender-300'
-                } ${isSelected ? 'ring-4 ring-lavender-200' : ''}`}
+                    ? 'border-blue-400 shadow-xl'
+                    : 'border-slate-200 hover:border-blue-300'
+                } ${isSelected ? 'ring-4 ring-blue-200' : ''}`}
                 onClick={() => handleSelectPersona(persona.id)}
               >
                 <CardContent className="p-6 relative">
                   {/* Selection indicator */}
                   {isSelected && (
                     <div className="absolute top-4 right-4">
-                      <CheckCircle className="w-6 h-6 text-lavender-600 fill-current" />
+                      <CheckCircle className="w-6 h-6 text-blue-600 fill-current" />
                     </div>
                   )}
 
                   {/* Avatar */}
-                  <div className={`w-16 h-16 bg-gradient-to-br ${persona.gradient} rounded-2xl flex items-center justify-center mx-auto mb-4 mindful-shadow`}>
+                  <div className={`w-16 h-16 bg-gradient-to-br ${persona.gradient} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
                     <IconComponent className="w-8 h-8 text-white" />
                   </div>
 
@@ -167,7 +183,7 @@ const PersonaSelection = () => {
             disabled={!selectedPersona}
             className={`px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300 ${
               selectedPersona
-                ? 'bg-gradient-to-r from-lavender-500 to-lavender-600 hover:from-lavender-600 hover:to-lavender-700 text-white hover:scale-105 mindful-shadow'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white hover:scale-105'
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >
@@ -177,7 +193,7 @@ const PersonaSelection = () => {
 
         {/* Additional info */}
         <div className="text-center mt-8">
-          <p className="text-sage-500 text-sm">
+          <p className="text-slate-500 text-sm">
             Don't worry - you can change your AI companion anytime in settings
           </p>
         </div>

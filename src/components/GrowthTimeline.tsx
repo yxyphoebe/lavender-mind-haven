@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -82,58 +81,58 @@ const GrowthTimeline = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-lavender-50 via-white to-rose-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
-      <div className="glass-effect border-b border-lavender-200 p-4">
+      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigate('/chat')}
-              className="hover:bg-lavender-100 rounded-xl"
+              className="hover:bg-slate-100 rounded-xl"
             >
-              <ArrowLeft className="w-5 h-5 text-sage-600" />
+              <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Button>
             <div>
-              <h1 className="font-display text-2xl font-bold gradient-text">Growth Timeline</h1>
-              <p className="text-sage-600">Your journey of healing and growth</p>
+              <h1 className="text-2xl font-bold text-slate-800">Growth Timeline</h1>
+              <p className="text-slate-600">Your journey of healing and growth</p>
             </div>
           </div>
-          <Calendar className="w-6 h-6 text-sage-500" />
+          <Calendar className="w-6 h-6 text-slate-500" />
         </div>
       </div>
 
       <div className="container mx-auto px-6 py-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="glass-effect border-0 mindful-shadow">
+          <Card className="bg-white/80 backdrop-blur-sm border-slate-200 shadow-lg">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-rose-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <Heart className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-display text-2xl font-bold text-sage-800 mb-1">5</h3>
-              <p className="text-sage-600">Days Active</p>
+              <h3 className="text-2xl font-bold text-slate-800 mb-1">5</h3>
+              <p className="text-slate-600">Days Active</p>
             </CardContent>
           </Card>
 
-          <Card className="glass-effect border-0 mindful-shadow">
+          <Card className="bg-white/80 backdrop-blur-sm border-slate-200 shadow-lg">
             <CardContent className="p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-lavender-400 to-lavender-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <Star className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-display text-2xl font-bold text-sage-800 mb-1">3</h3>
-              <p className="text-sage-600">Breakthroughs</p>
+              <h3 className="text-2xl font-bold text-slate-800 mb-1">3</h3>
+              <p className="text-slate-600">Breakthroughs</p>
             </CardContent>
           </Card>
 
-          <Card className="glass-effect border-0 mindful-shadow">
+          <Card className="bg-white/80 backdrop-blur-sm border-slate-200 shadow-lg">
             <CardContent className="p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-sage-400 to-sage-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-display text-2xl font-bold text-sage-800 mb-1">+23%</h3>
-              <p className="text-sage-600">Mood Improvement</p>
+              <h3 className="text-2xl font-bold text-slate-800 mb-1">+23%</h3>
+              <p className="text-slate-600">Mood Improvement</p>
             </CardContent>
           </Card>
         </div>
@@ -141,7 +140,7 @@ const GrowthTimeline = () => {
         {/* Timeline */}
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-lavender-300 to-rose-300"></div>
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-300 to-purple-300"></div>
 
           <div className="space-y-6">
             {milestones.map((milestone, index) => {
@@ -154,7 +153,7 @@ const GrowthTimeline = () => {
                   
                   {/* Content card */}
                   <div className="ml-20">
-                    <Card className="glass-effect border-0 mindful-shadow hover:scale-[1.02] transition-all duration-300">
+                    <Card className="bg-white/80 backdrop-blur-sm border-slate-200 shadow-lg hover:scale-[1.02] transition-all duration-300">
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex items-center space-x-3">
@@ -162,14 +161,14 @@ const GrowthTimeline = () => {
                               <IconComponent className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                              <CardTitle className="text-lg font-semibold text-sage-800 mb-1">
+                              <CardTitle className="text-lg font-semibold text-slate-800 mb-1">
                                 {milestone.title}
                               </CardTitle>
                               <div className="flex items-center space-x-2">
                                 <Badge className={`${getTypeColor(milestone.type)} border text-xs`}>
                                   {milestone.type}
                                 </Badge>
-                                <span className="text-sm text-sage-500">
+                                <span className="text-sm text-slate-500">
                                   {new Date(milestone.date).toLocaleDateString('en-US', { 
                                     month: 'short', 
                                     day: 'numeric',
@@ -182,12 +181,12 @@ const GrowthTimeline = () => {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-sage-600 leading-relaxed mb-3">
+                        <p className="text-slate-600 leading-relaxed mb-3">
                           {milestone.description}
                         </p>
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm text-sage-500">Feeling:</span>
-                          <Badge variant="outline" className="text-sage-600 border-sage-300">
+                          <span className="text-sm text-slate-500">Feeling:</span>
+                          <Badge variant="outline" className="text-slate-600 border-slate-300">
                             {milestone.emotion}
                           </Badge>
                         </div>
@@ -201,15 +200,15 @@ const GrowthTimeline = () => {
         </div>
 
         {/* Encouragement message */}
-        <Card className="glass-effect border-0 mindful-shadow mt-12">
+        <Card className="bg-white/80 backdrop-blur-sm border-slate-200 shadow-lg mt-12">
           <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-lavender-400 to-rose-400 rounded-3xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-4">
               <Heart className="w-8 h-8 text-white" />
             </div>
-            <h3 className="font-display text-2xl font-bold gradient-text mb-3">
+            <h3 className="text-2xl font-bold text-slate-800 mb-3">
               You're Making Beautiful Progress
             </h3>
-            <p className="text-sage-600 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-slate-600 leading-relaxed max-w-2xl mx-auto">
               Every step you take on this journey matters. Your willingness to grow, to feel, and to heal 
               is creating ripples of positive change in your life. Keep going - you're exactly where you need to be.
             </p>

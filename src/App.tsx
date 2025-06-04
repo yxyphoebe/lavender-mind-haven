@@ -11,6 +11,7 @@ import OnboardingPage from "./components/OnboardingPage";
 import PersonaSelection from "./components/PersonaSelection";
 import ChatInterface from "./components/ChatInterface";
 import GrowthTimeline from "./components/GrowthTimeline";
+import MenuPage from "./components/MenuPage";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/persona-selection" element={<PersonaSelection />} />
           <Route path="/chat" element={<ChatInterface />} />
           <Route path="/growth" element={<GrowthTimeline />} />
+          <Route path="/menu" element={<MenuPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
