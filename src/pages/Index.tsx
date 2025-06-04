@@ -25,14 +25,14 @@ const Index = () => {
 
   if (showLaunchAnimation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-lavender-50 via-white to-rose-50 overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 via-white to-blue-50 overflow-hidden">
         <div className="text-center px-6 relative">
           {/* Main text animation */}
           <div className={`transition-all duration-1000 ${animationPhase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <h1 className="font-display text-4xl md:text-6xl font-bold gradient-text mb-4 leading-tight">
               Mindful AI
             </h1>
-            <p className={`text-lg md:text-xl text-sage-600 font-light transition-all duration-1000 delay-300 ${animationPhase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <p className={`text-lg md:text-xl text-slate-600 font-light transition-all duration-1000 delay-300 ${animationPhase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               your personal space to heal and grow
             </p>
           </div>
@@ -46,17 +46,17 @@ const Index = () => {
               
               {/* Blooming flower */}
               <div className={`absolute -top-8 left-1/2 transform -translate-x-1/2 transition-all duration-2000 ${animationPhase >= 2 ? 'animate-bloom' : 'scale-0 opacity-0'}`}>
-                <Flower2 className="w-16 h-16 text-rose-400 bloom-shadow" />
+                <Flower2 className="w-16 h-16 text-violet-400 bloom-shadow" />
                 
                 {/* Sparkles around flower */}
                 <div className={`absolute -top-2 -left-2 transition-all duration-1000 delay-1000 ${animationPhase >= 3 ? 'animate-gentle-float opacity-60' : 'opacity-0'}`}>
-                  <Sparkles className="w-4 h-4 text-lavender-400" />
+                  <Sparkles className="w-4 h-4 text-violet-400" />
                 </div>
                 <div className={`absolute -top-1 -right-3 transition-all duration-1000 delay-1200 ${animationPhase >= 3 ? 'animate-gentle-float opacity-60' : 'opacity-0'}`}>
-                  <Sparkles className="w-3 h-3 text-rose-300" />
+                  <Sparkles className="w-3 h-3 text-blue-300" />
                 </div>
                 <div className={`absolute -bottom-1 -left-3 transition-all duration-1000 delay-1400 ${animationPhase >= 3 ? 'animate-gentle-float opacity-60' : 'opacity-0'}`}>
-                  <Sparkles className="w-3 h-3 text-lavender-300" />
+                  <Sparkles className="w-3 h-3 text-violet-300" />
                 </div>
               </div>
             </div>
@@ -64,7 +64,7 @@ const Index = () => {
 
           {/* Healing message */}
           <div className={`mt-16 transition-all duration-1000 delay-2000 ${animationPhase >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <div className="flex items-center justify-center space-x-2 text-sage-500">
+            <div className="flex items-center justify-center space-x-2 text-slate-500">
               <Heart className="w-4 h-4 fill-current" />
               <span className="text-sm font-light italic">Finding strength in gentle moments</span>
               <Heart className="w-4 h-4 fill-current" />
@@ -76,31 +76,31 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-lavender-50 via-white to-rose-50">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
       {/* Hero Section */}
       <div className="container mx-auto px-6 py-12 text-center animate-fade-in">
         <div className="max-w-4xl mx-auto">
           <h1 className="font-display text-5xl md:text-7xl font-bold gradient-text mb-6 leading-tight">
             Mindful AI
           </h1>
-          <p className="text-xl md:text-2xl text-sage-600 mb-8 font-light leading-relaxed">
+          <p className="text-xl md:text-2xl text-slate-600 mb-8 font-light leading-relaxed">
             Your personal sanctuary for emotional healing and growth
           </p>
-          <p className="text-lg text-sage-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed">
             Connect with AI companions designed to understand, support, and guide you through your wellness journey with empathy and wisdom.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
               onClick={() => navigate('/auth')}
-              className="bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white px-8 py-4 rounded-2xl text-lg font-medium mindful-shadow transition-all duration-300 hover:scale-105"
+              className="bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white px-8 py-4 rounded-2xl text-lg font-medium zen-shadow transition-all duration-300 hover:scale-105"
             >
               Begin Your Journey
             </Button>
             <Button 
               variant="outline"
               onClick={() => navigate('/learn-more')}
-              className="border-2 border-sky-300 text-sky-700 hover:bg-sky-50 px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300"
+              className="border-2 border-violet-300 text-violet-700 hover:bg-violet-50 px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300"
             >
               Learn More
             </Button>
@@ -110,27 +110,27 @@ const Index = () => {
         {/* Features preview */}
         <div className="mt-20 grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <div className="glass-effect rounded-3xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-violet-400 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <Heart className="w-8 h-8 text-white" />
             </div>
-            <h3 className="font-display text-xl font-semibold text-sage-800 mb-4">Empathetic AI Companions</h3>
-            <p className="text-sage-600 leading-relaxed">Choose from thoughtfully designed AI personas, each with unique approaches to support your emotional well-being.</p>
+            <h3 className="font-display text-xl font-semibold text-slate-800 mb-4">Empathetic AI Companions</h3>
+            <p className="text-slate-600 leading-relaxed">Choose from thoughtfully designed AI personas, each with unique approaches to support your emotional well-being.</p>
           </div>
 
           <div className="glass-effect rounded-3xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-rose-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <Sparkles className="w-8 h-8 text-white" />
             </div>
-            <h3 className="font-display text-xl font-semibold text-sage-800 mb-4">Growth Tracking</h3>
-            <p className="text-sage-600 leading-relaxed">Visualize your emotional journey with beautiful timelines that celebrate your progress and insights.</p>
+            <h3 className="font-display text-xl font-semibold text-slate-800 mb-4">Growth Tracking</h3>
+            <p className="text-slate-600 leading-relaxed">Visualize your emotional journey with beautiful timelines that celebrate your progress and insights.</p>
           </div>
 
           <div className="glass-effect rounded-3xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-violet-400 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <Flower2 className="w-8 h-8 text-white" />
             </div>
-            <h3 className="font-display text-xl font-semibold text-sage-800 mb-4">Sacred Space</h3>
-            <p className="text-sage-600 leading-relaxed">Experience a carefully crafted environment designed to feel safe, nurturing, and conducive to healing.</p>
+            <h3 className="font-display text-xl font-semibold text-slate-800 mb-4">Sacred Space</h3>
+            <p className="text-slate-600 leading-relaxed">Experience a carefully crafted environment designed to feel safe, nurturing, and conducive to healing.</p>
           </div>
         </div>
       </div>

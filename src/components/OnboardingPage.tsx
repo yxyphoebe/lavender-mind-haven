@@ -1,273 +1,245 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Flower2, ChevronRight, ChevronLeft, Heart, Target, Smile } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Heart, Brain, Star, CheckCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+interface OnboardingStep {
+  id: number;
+  title: string;
+  description: string;
+  question: string;
+  options: Array<{
+    id: string;
+    label: string;
+    description?: string;
+    icon?: any;
+  }>;
+  multiSelect?: boolean;
+}
+
 const OnboardingPage = () => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    name: '',
-    language: '',
-    currentGoals: '',
-    emotionalState: '',
-    preferredSupport: ''
-  });
+  const [currentStep, setCurrentStep] = useState(0);
+  const [answers, setAnswers] = useState<Record<number, string[]>>({});
   const navigate = useNavigate();
 
-  const totalSteps = 4;
+  const steps: OnboardingStep[] = [
+    {
+      id: 0,
+      title: "What brings you here today?",
+      description: "Understanding your goals helps us personalize your experience",
+      question: "What would you like to focus on? (Select all that apply)",
+      multiSelect: true,
+      options: [
+        { id: 'stress', label: 'Managing stress & anxiety', icon: Brain },
+        { id: 'emotional', label: 'Processing emotions', icon: Heart },
+        { id: 'growth', label: 'Personal growth', icon: Star },
+        { id: 'relationships', label: 'Improving relationships', icon: Heart },
+        { id: 'confidence', label: 'Building confidence', icon: Star },
+        { id: 'mindfulness', label: 'Developing mindfulness', icon: Brain }
+      ]
+    },
+    {
+      id: 1,
+      title: "How familiar are you with therapy or counseling?",
+      description: "This helps us adjust our approach to your comfort level",
+      question: "Select the option that best describes you:",
+      options: [
+        { id: 'new', label: "I'm completely new to this", description: "Never tried therapy or counseling before" },
+        { id: 'some', label: "I have some experience", description: "Tried therapy or counseling a few times" },
+        { id: 'experienced', label: "I'm quite experienced", description: "Regular therapy experience or extensive self-work" }
+      ]
+    },
+    {
+      id: 2,
+      title: "What's your preferred communication style?",
+      description: "We'll match you with an AI companion that fits your preferences",
+      question: "How do you prefer to receive support?",
+      options: [
+        { id: 'gentle', label: "Gentle and nurturing", description: "Soft approach with lots of validation" },
+        { id: 'direct', label: "Direct and solution-focused", description: "Clear guidance with actionable steps" },
+        { id: 'balanced', label: "Balanced approach", description: "Mix of empathy and practical advice" }
+      ]
+    }
+  ];
+
+  const currentStepData = steps[currentStep];
+  const progress = ((currentStep + 1) / steps.length) * 100;
+
+  const handleOptionSelect = (optionId: string) => {
+    const stepAnswers = answers[currentStep] || [];
+    
+    if (currentStepData.multiSelect) {
+      if (stepAnswers.includes(optionId)) {
+        setAnswers({
+          ...answers,
+          [currentStep]: stepAnswers.filter(id => id !== optionId)
+        });
+      } else {
+        setAnswers({
+          ...answers,
+          [currentStep]: [...stepAnswers, optionId]
+        });
+      }
+    } else {
+      setAnswers({
+        ...answers,
+        [currentStep]: [optionId]
+      });
+    }
+  };
+
+  const isOptionSelected = (optionId: string) => {
+    return answers[currentStep]?.includes(optionId) || false;
+  };
+
+  const canProceed = () => {
+    const stepAnswers = answers[currentStep];
+    return stepAnswers && stepAnswers.length > 0;
+  };
 
   const handleNext = () => {
-    if (currentStep < totalSteps) {
+    if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      // Onboarding complete
+      localStorage.setItem('onboardingComplete', 'true');
+      localStorage.setItem('onboardingAnswers', JSON.stringify(answers));
       navigate('/persona-selection');
     }
   };
 
-  const handlePrevious = () => {
-    if (currentStep > 1) {
+  const handleBack = () => {
+    if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
 
-  const updateFormData = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const renderStep = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <div className="space-y-6 animate-fade-in">
-            <div className="text-center">
-              <Heart className="w-12 h-12 text-rose-400 mx-auto mb-4" />
-              <h2 className="font-display text-2xl font-semibold text-sage-800 mb-2">
-                Let's get to know you
-              </h2>
-              <p className="text-sage-600">
-                Help us personalize your wellness journey
-              </p>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-sage-700 mb-2">
-                  What should we call you?
-                </label>
-                <Input
-                  value={formData.name}
-                  onChange={(e) => updateFormData('name', e.target.value)}
-                  placeholder="Your name"
-                  className="h-12 border-sky-200 rounded-xl focus:ring-sky-400"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-sage-700 mb-2">
-                  Preferred language
-                </label>
-                <Select value={formData.language} onValueChange={(value) => updateFormData('language', value)}>
-                  <SelectTrigger className="h-12 border-sky-200 rounded-xl">
-                    <SelectValue placeholder="Select your language" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-sky-200">
-                    <SelectItem value="english">English</SelectItem>
-                    <SelectItem value="spanish">Español</SelectItem>
-                    <SelectItem value="french">Français</SelectItem>
-                    <SelectItem value="german">Deutsch</SelectItem>
-                    <SelectItem value="portuguese">Português</SelectItem>
-                    <SelectItem value="chinese">中文</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 2:
-        return (
-          <div className="space-y-6 animate-fade-in">
-            <div className="text-center">
-              <Target className="w-12 h-12 text-sky-500 mx-auto mb-4" />
-              <h2 className="font-display text-2xl font-semibold text-sage-800 mb-2">
-                What brings you here today?
-              </h2>
-              <p className="text-sage-600">
-                Share what you'd like to work on (optional)
-              </p>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-sage-700 mb-2">
-                Current goals or challenges
-              </label>
-              <Textarea
-                value={formData.currentGoals}
-                onChange={(e) => updateFormData('currentGoals', e.target.value)}
-                placeholder="e.g., Managing stress, improving self-confidence, processing difficult emotions..."
-                className="min-h-[120px] border-sky-200 rounded-xl focus:ring-sky-400 resize-none"
-              />
-              <p className="text-xs text-sage-500 mt-2">
-                This helps us understand how to best support you
-              </p>
-            </div>
-          </div>
-        );
-
-      case 3:
-        return (
-          <div className="space-y-6 animate-fade-in">
-            <div className="text-center">
-              <Smile className="w-12 h-12 text-sage-500 mx-auto mb-4" />
-              <h2 className="font-display text-2xl font-semibold text-sage-800 mb-2">
-                How are you feeling lately?
-              </h2>
-              <p className="text-sage-600">
-                Help us understand your current emotional state
-              </p>
-            </div>
-            
-            <div className="grid gap-3">
-              {[
-                { value: 'great', label: 'Great - feeling positive and energized', emoji: '😊' },
-                { value: 'good', label: 'Good - generally feeling well', emoji: '🙂' },
-                { value: 'neutral', label: 'Neutral - feeling okay, nothing special', emoji: '😐' },
-                { value: 'struggling', label: 'Struggling - going through some challenges', emoji: '😔' },
-                { value: 'difficult', label: 'Having a difficult time', emoji: '😞' }
-              ].map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => updateFormData('emotionalState', option.value)}
-                  className={`p-4 text-left border-2 rounded-xl transition-all duration-200 ${
-                    formData.emotionalState === option.value
-                      ? 'border-sky-400 bg-sky-50'
-                      : 'border-sky-200 hover:border-sky-300 hover:bg-sky-25'
-                  }`}
-                >
-                  <span className="text-2xl mr-3">{option.emoji}</span>
-                  <span className="text-sage-700">{option.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 4:
-        return (
-          <div className="space-y-6 animate-fade-in">
-            <div className="text-center">
-              <Flower2 className="w-12 h-12 text-rose-400 mx-auto mb-4" />
-              <h2 className="font-display text-2xl font-semibold text-sage-800 mb-2">
-                How do you prefer support?
-              </h2>
-              <p className="text-sage-600">
-                This helps us match you with the right AI companion
-              </p>
-            </div>
-            
-            <div className="grid gap-3">
-              {[
-                { value: 'gentle', label: 'Gentle and nurturing approach', desc: 'Soft encouragement with lots of empathy' },
-                { value: 'direct', label: 'Direct and solution-focused', desc: 'Clear guidance with practical steps' },
-                { value: 'balanced', label: 'Balanced mix of both', desc: 'Empathy combined with actionable advice' },
-                { value: 'adaptive', label: 'Adaptive to my needs', desc: 'Adjusts approach based on the situation' }
-              ].map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => updateFormData('preferredSupport', option.value)}
-                  className={`p-4 text-left border-2 rounded-xl transition-all duration-200 ${
-                    formData.preferredSupport === option.value
-                      ? 'border-sky-400 bg-sky-50'
-                      : 'border-sky-200 hover:border-sky-300 hover:bg-sky-25'
-                  }`}
-                >
-                  <div className="font-medium text-sage-700 mb-1">{option.label}</div>
-                  <div className="text-sm text-sage-500">{option.desc}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-rose-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-lg">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 p-6">
+      <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-rose-400 rounded-2xl flex items-center justify-center mindful-shadow">
-              <Flower2 className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-gradient-to-br from-violet-400 to-blue-400 rounded-2xl flex items-center justify-center zen-shadow">
+              <Heart className="w-8 h-8 text-white" />
             </div>
           </div>
           <h1 className="font-display text-3xl font-bold gradient-text mb-2">
-            Welcome to Mindful AI
+            Let's personalize your journey
           </h1>
-          <div className="flex items-center justify-center space-x-2 text-sm text-sage-500">
-            <span>Step {currentStep} of {totalSteps}</span>
-            <div className="flex space-x-1">
-              {Array.from({ length: totalSteps }, (_, i) => (
-                <div
-                  key={i}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    i + 1 <= currentStep ? 'bg-sky-400' : 'bg-sky-200'
-                  }`}
-                />
-              ))}
+          <p className="text-slate-600 font-light mb-6">
+            A few questions to help us understand you better
+          </p>
+          
+          {/* Progress */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm text-slate-500">
+              <span>Step {currentStep + 1} of {steps.length}</span>
+              <span>{Math.round(progress)}% complete</span>
             </div>
+            <Progress value={progress} className="h-2" />
           </div>
         </div>
 
-        {/* Content Card */}
-        <Card className="glass-effect border-0 mindful-shadow">
+        {/* Step Content */}
+        <Card className="glass-effect border-0 zen-shadow mb-8">
           <CardHeader>
-            <CardContent className="p-6">
-              {renderStep()}
-            </CardContent>
+            <CardTitle className="text-xl font-semibold text-slate-800 mb-2">
+              {currentStepData.title}
+            </CardTitle>
+            <p className="text-slate-600">
+              {currentStepData.description}
+            </p>
           </CardHeader>
+          <CardContent>
+            <h3 className="font-medium text-slate-800 mb-4">
+              {currentStepData.question}
+            </h3>
+            
+            <div className="space-y-3">
+              {currentStepData.options.map((option) => {
+                const IconComponent = option.icon;
+                const isSelected = isOptionSelected(option.id);
+                
+                return (
+                  <div
+                    key={option.id}
+                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                      isSelected
+                        ? 'border-violet-400 bg-violet-50 zen-shadow'
+                        : 'border-violet-200 hover:border-violet-300 hover:bg-violet-25'
+                    }`}
+                    onClick={() => handleOptionSelect(option.id)}
+                  >
+                    <div className="flex items-start space-x-3">
+                      {IconComponent && (
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                          isSelected ? 'bg-violet-400 text-white' : 'bg-violet-100 text-violet-600'
+                        }`}>
+                          <IconComponent className="w-4 h-4" />
+                        </div>
+                      )}
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-medium text-slate-800">
+                            {option.label}
+                          </h4>
+                          {isSelected && (
+                            <CheckCircle className="w-5 h-5 text-violet-600" />
+                          )}
+                        </div>
+                        {option.description && (
+                          <p className="text-sm text-slate-600 mt-1">
+                            {option.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {currentStepData.multiSelect && (
+              <div className="mt-4">
+                <Badge variant="secondary" className="bg-violet-100 text-violet-700">
+                  You can select multiple options
+                </Badge>
+              </div>
+            )}
+          </CardContent>
         </Card>
 
         {/* Navigation */}
-        <div className="flex justify-between mt-6">
+        <div className="flex justify-between">
           <Button
             variant="outline"
-            onClick={handlePrevious}
-            disabled={currentStep === 1}
-            className="border-sky-200 text-sky-700 hover:bg-sky-50 rounded-xl px-6"
+            onClick={handleBack}
+            disabled={currentStep === 0}
+            className="flex items-center space-x-2 border-violet-200 hover:bg-violet-50"
           >
-            <ChevronLeft className="w-4 h-4 mr-2" />
-            Previous
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back</span>
           </Button>
           
           <Button
             onClick={handleNext}
-            className="bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white rounded-xl px-6"
+            disabled={!canProceed()}
+            className={`flex items-center space-x-2 ${
+              canProceed()
+                ? 'bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white'
+                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+            }`}
           >
-            {currentStep === totalSteps ? 'Continue' : 'Next'}
-            <ChevronRight className="w-4 h-4 ml-2" />
+            <span>{currentStep === steps.length - 1 ? 'Complete' : 'Next'}</span>
+            <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
-
-        {/* Skip option */}
-        {currentStep > 1 && (
-          <div className="text-center mt-4">
-            <button
-              onClick={() => navigate('/persona-selection')}
-              className="text-sm text-sage-500 hover:text-sage-700 underline transition-colors"
-            >
-              Skip remaining questions
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -32,9 +32,9 @@ const ChatInterface = () => {
   const selectedPersona = localStorage.getItem('selectedPersona') || 'nuva';
   
   const personas = {
-    nuva: { name: 'Nuva', icon: Heart, color: 'rose' },
-    nova: { name: 'Nova', icon: Zap, color: 'sky' },
-    sage: { name: 'Sage', icon: Star, color: 'sage' }
+    nuva: { name: 'Nuva', icon: Heart, color: 'violet' },
+    nova: { name: 'Nova', icon: Zap, color: 'blue' },
+    sage: { name: 'Sage', icon: Star, color: 'indigo' }
   };
 
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
@@ -95,25 +95,25 @@ const ChatInterface = () => {
   const IconComponent = currentPersona.icon;
 
   return (
-    <div className="h-screen bg-gradient-to-br from-sky-50 via-white to-rose-50 flex flex-col">
+    <div className="h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex flex-col">
       {/* Header */}
-      <div className="glass-effect border-b border-sky-200 p-4 flex items-center justify-between">
+      <div className="glass-effect border-b border-violet-200 p-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/menu')}
-            className="hover:bg-sky-100 rounded-xl"
+            className="hover:bg-violet-100 rounded-xl"
           >
-            <Menu className="w-5 h-5 text-sage-600" />
+            <Menu className="w-5 h-5 text-slate-600" />
           </Button>
           
           <Avatar className={`w-10 h-10 bg-gradient-to-br ${
-            currentPersona.color === 'sky' 
-              ? 'from-sky-400 to-blue-500' 
-              : currentPersona.color === 'rose' 
-                ? 'from-rose-400 to-rose-500'
-                : 'from-sage-400 to-sage-500'
+            currentPersona.color === 'blue' 
+              ? 'from-blue-400 to-blue-500' 
+              : currentPersona.color === 'violet' 
+                ? 'from-violet-400 to-violet-500'
+                : 'from-indigo-400 to-indigo-500'
           }`}>
             <AvatarFallback className="bg-transparent">
               <IconComponent className="w-6 h-6 text-white" />
@@ -121,10 +121,10 @@ const ChatInterface = () => {
           </Avatar>
           
           <div>
-            <h2 className="font-display text-lg font-semibold text-sage-800">
+            <h2 className="font-display text-lg font-semibold text-slate-800">
               {currentPersona.name}
             </h2>
-            <p className="text-sm text-sage-500">
+            <p className="text-sm text-slate-500">
               {isTyping ? 'Typing...' : 'Here to support you'}
             </p>
           </div>
@@ -135,17 +135,17 @@ const ChatInterface = () => {
             variant="ghost"
             size="icon"
             onClick={() => navigate('/video-call')}
-            className="hover:bg-sky-100 rounded-xl"
+            className="hover:bg-violet-100 rounded-xl"
           >
-            <Video className="w-5 h-5 text-sage-600" />
+            <Video className="w-5 h-5 text-slate-600" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/growth')}
-            className="hover:bg-sky-100 rounded-xl"
+            className="hover:bg-violet-100 rounded-xl"
           >
-            <TrendingUp className="w-5 h-5 text-sage-600" />
+            <TrendingUp className="w-5 h-5 text-slate-600" />
           </Button>
         </div>
       </div>
@@ -161,32 +161,32 @@ const ChatInterface = () => {
               {message.sender === 'ai' && (
                 <div className="flex items-center space-x-2 mb-2">
                   <Avatar className={`w-8 h-8 bg-gradient-to-br ${
-                    currentPersona.color === 'sky' 
-                      ? 'from-sky-400 to-blue-500' 
-                      : currentPersona.color === 'rose' 
-                        ? 'from-rose-400 to-rose-500'
-                        : 'from-sage-400 to-sage-500'
+                    currentPersona.color === 'blue' 
+                      ? 'from-blue-400 to-blue-500' 
+                      : currentPersona.color === 'violet' 
+                        ? 'from-violet-400 to-violet-500'
+                        : 'from-indigo-400 to-indigo-500'
                   }`}>
                     <AvatarFallback className="bg-transparent">
                       <IconComponent className="w-4 h-4 text-white" />
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium text-sage-700">{currentPersona.name}</span>
+                  <span className="text-sm font-medium text-slate-700">{currentPersona.name}</span>
                 </div>
               )}
               
               <Card className={`p-4 ${
                 message.sender === 'user'
-                  ? 'bg-gradient-to-r from-sky-500 to-sky-600 text-white ml-4'
-                  : 'bg-white border-sky-200 mr-4 mindful-shadow'
+                  ? 'bg-gradient-to-r from-violet-500 to-blue-500 text-white ml-4'
+                  : 'bg-white border-violet-200 mr-4 zen-shadow'
               }`}>
                 <p className={`leading-relaxed ${
-                  message.sender === 'user' ? 'text-white' : 'text-sage-700'
+                  message.sender === 'user' ? 'text-white' : 'text-slate-700'
                 }`}>
                   {message.text}
                 </p>
                 <p className={`text-xs mt-2 ${
-                  message.sender === 'user' ? 'text-sky-100' : 'text-sage-400'
+                  message.sender === 'user' ? 'text-violet-100' : 'text-slate-400'
                 }`}>
                   {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
@@ -200,23 +200,23 @@ const ChatInterface = () => {
             <div className="max-w-[80%]">
               <div className="flex items-center space-x-2 mb-2">
                 <Avatar className={`w-8 h-8 bg-gradient-to-br ${
-                  currentPersona.color === 'sky' 
-                    ? 'from-sky-400 to-blue-500' 
-                    : currentPersona.color === 'rose' 
-                      ? 'from-rose-400 to-rose-500'
-                      : 'from-sage-400 to-sage-500'
+                  currentPersona.color === 'blue' 
+                    ? 'from-blue-400 to-blue-500' 
+                    : currentPersona.color === 'violet' 
+                      ? 'from-violet-400 to-violet-500'
+                      : 'from-indigo-400 to-indigo-500'
                 }`}>
                   <AvatarFallback className="bg-transparent">
                     <IconComponent className="w-4 h-4 text-white" />
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-medium text-sage-700">{currentPersona.name}</span>
+                <span className="text-sm font-medium text-slate-700">{currentPersona.name}</span>
               </div>
-              <Card className="p-4 bg-white border-sky-200 mr-4 mindful-shadow">
+              <Card className="p-4 bg-white border-violet-200 mr-4 zen-shadow">
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-sky-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-sky-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-sky-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </Card>
             </div>
@@ -227,19 +227,19 @@ const ChatInterface = () => {
       </div>
 
       {/* Input */}
-      <div className="p-4 glass-effect border-t border-sky-200">
+      <div className="p-4 glass-effect border-t border-violet-200">
         <div className="flex items-center space-x-3">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Share what's on your mind..."
-            className="flex-1 h-12 border-sky-200 rounded-2xl focus:ring-sky-400 bg-white/80"
+            className="flex-1 h-12 border-violet-200 rounded-2xl focus:ring-violet-400 bg-white/80"
           />
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim()}
-            className="h-12 w-12 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white rounded-2xl p-0 transition-all duration-300 hover:scale-105"
+            className="h-12 w-12 bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white rounded-2xl p-0 transition-all duration-300 hover:scale-105"
           >
             <Send className="w-5 h-5" />
           </Button>

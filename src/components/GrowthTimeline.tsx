@@ -17,7 +17,7 @@ const GrowthTimeline = () => {
       description: 'Welcome to Mindful AI! You took the first brave step toward healing and growth.',
       emotion: 'hopeful',
       icon: Heart,
-      color: 'rose'
+      color: 'violet'
     },
     {
       id: '2',
@@ -27,7 +27,7 @@ const GrowthTimeline = () => {
       description: 'You opened up about your anxiety and felt truly heard. This was a moment of genuine connection.',
       emotion: 'relieved',
       icon: Star,
-      color: 'sky'
+      color: 'blue'
     },
     {
       id: '3',
@@ -37,7 +37,7 @@ const GrowthTimeline = () => {
       description: 'You noticed your inner critic and chose kindness instead. A beautiful moment of growth.',
       emotion: 'proud',
       icon: Smile,
-      color: 'sage'
+      color: 'indigo'
     },
     {
       id: '4',
@@ -47,7 +47,7 @@ const GrowthTimeline = () => {
       description: 'You identified the connection between your stress and sleep patterns. This insight will serve you well.',
       emotion: 'enlightened',
       icon: TrendingUp,
-      color: 'sky'
+      color: 'blue'
     },
     {
       id: '5',
@@ -57,16 +57,16 @@ const GrowthTimeline = () => {
       description: 'You practiced saying no to commitments that don\'t serve your well-being. That takes courage.',
       emotion: 'empowered',
       icon: Target,
-      color: 'sage'
+      color: 'indigo'
     }
   ];
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'milestone': return 'bg-rose-100 text-rose-700 border-rose-200';
-      case 'breakthrough': return 'bg-sky-100 text-sky-700 border-sky-200';
+      case 'milestone': return 'bg-violet-100 text-violet-700 border-violet-200';
+      case 'breakthrough': return 'bg-blue-100 text-blue-700 border-blue-200';
       case 'practice': return 'bg-green-100 text-green-700 border-green-200';
-      case 'insight': return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'insight': return 'bg-indigo-100 text-indigo-700 border-indigo-200';
       case 'action': return 'bg-purple-100 text-purple-700 border-purple-200';
       default: return 'bg-gray-100 text-gray-700 border-gray-200';
     }
@@ -74,66 +74,66 @@ const GrowthTimeline = () => {
 
   const getIconColor = (color: string) => {
     switch (color) {
-      case 'rose': return 'from-rose-400 to-rose-600';
-      case 'sky': return 'from-sky-400 to-sky-600';
-      case 'sage': return 'from-sage-400 to-sage-600';
+      case 'violet': return 'from-violet-400 to-violet-600';
+      case 'blue': return 'from-blue-400 to-blue-600';
+      case 'indigo': return 'from-indigo-400 to-indigo-600';
       default: return 'from-gray-400 to-gray-600';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-rose-50">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
       {/* Header */}
-      <div className="glass-effect border-b border-sky-200 p-4">
+      <div className="glass-effect border-b border-violet-200 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigate('/chat')}
-              className="hover:bg-sky-100 rounded-xl"
+              className="hover:bg-violet-100 rounded-xl"
             >
-              <ArrowLeft className="w-5 h-5 text-sage-600" />
+              <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Button>
             <div>
               <h1 className="font-display text-2xl font-bold gradient-text">Growth Timeline</h1>
-              <p className="text-sage-600">Your journey of healing and growth</p>
+              <p className="text-slate-600">Your journey of healing and growth</p>
             </div>
           </div>
-          <Calendar className="w-6 h-6 text-sage-500" />
+          <Calendar className="w-6 h-6 text-slate-500" />
         </div>
       </div>
 
       <div className="container mx-auto px-6 py-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="glass-effect border-0 mindful-shadow">
+          <Card className="glass-effect border-0 zen-shadow">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-rose-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-violet-400 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <Heart className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-display text-2xl font-bold text-sage-800 mb-1">5</h3>
-              <p className="text-sage-600">Days Active</p>
+              <h3 className="font-display text-2xl font-bold text-slate-800 mb-1">5</h3>
+              <p className="text-slate-600">Days Active</p>
             </CardContent>
           </Card>
 
-          <Card className="glass-effect border-0 mindful-shadow">
+          <Card className="glass-effect border-0 zen-shadow">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <Star className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-display text-2xl font-bold text-sage-800 mb-1">3</h3>
-              <p className="text-sage-600">Breakthroughs</p>
+              <h3 className="font-display text-2xl font-bold text-slate-800 mb-1">3</h3>
+              <p className="text-slate-600">Breakthroughs</p>
             </CardContent>
           </Card>
 
-          <Card className="glass-effect border-0 mindful-shadow">
+          <Card className="glass-effect border-0 zen-shadow">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-sage-400 to-sage-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-display text-2xl font-bold text-sage-800 mb-1">+23%</h3>
-              <p className="text-sage-600">Mood Improvement</p>
+              <h3 className="font-display text-2xl font-bold text-slate-800 mb-1">+23%</h3>
+              <p className="text-slate-600">Mood Improvement</p>
             </CardContent>
           </Card>
         </div>
@@ -141,7 +141,7 @@ const GrowthTimeline = () => {
         {/* Timeline */}
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-sky-300 to-rose-300"></div>
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-violet-300 to-blue-300"></div>
 
           <div className="space-y-6">
             {milestones.map((milestone, index) => {
@@ -154,7 +154,7 @@ const GrowthTimeline = () => {
                   
                   {/* Content card */}
                   <div className="ml-20">
-                    <Card className="glass-effect border-0 mindful-shadow hover:scale-[1.02] transition-all duration-300">
+                    <Card className="glass-effect border-0 zen-shadow hover:scale-[1.02] transition-all duration-300">
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex items-center space-x-3">
@@ -162,14 +162,14 @@ const GrowthTimeline = () => {
                               <IconComponent className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                              <CardTitle className="text-lg font-semibold text-sage-800 mb-1">
+                              <CardTitle className="text-lg font-semibold text-slate-800 mb-1">
                                 {milestone.title}
                               </CardTitle>
                               <div className="flex items-center space-x-2">
                                 <Badge className={`${getTypeColor(milestone.type)} border text-xs`}>
                                   {milestone.type}
                                 </Badge>
-                                <span className="text-sm text-sage-500">
+                                <span className="text-sm text-slate-500">
                                   {new Date(milestone.date).toLocaleDateString('en-US', { 
                                     month: 'short', 
                                     day: 'numeric',
@@ -182,12 +182,12 @@ const GrowthTimeline = () => {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-sage-600 leading-relaxed mb-3">
+                        <p className="text-slate-600 leading-relaxed mb-3">
                           {milestone.description}
                         </p>
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm text-sage-500">Feeling:</span>
-                          <Badge variant="outline" className="text-sage-600 border-sage-300">
+                          <span className="text-sm text-slate-500">Feeling:</span>
+                          <Badge variant="outline" className="text-slate-600 border-slate-300">
                             {milestone.emotion}
                           </Badge>
                         </div>
@@ -201,15 +201,15 @@ const GrowthTimeline = () => {
         </div>
 
         {/* Encouragement message */}
-        <Card className="glass-effect border-0 mindful-shadow mt-12">
+        <Card className="glass-effect border-0 zen-shadow mt-12">
           <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-rose-400 rounded-3xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-violet-400 to-blue-400 rounded-3xl flex items-center justify-center mx-auto mb-4">
               <Heart className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-display text-2xl font-bold gradient-text mb-3">
               You're Making Beautiful Progress
             </h3>
-            <p className="text-sage-600 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-slate-600 leading-relaxed max-w-2xl mx-auto">
               Every step you take on this journey matters. Your willingness to grow, to feel, and to heal 
               is creating ripples of positive change in your life. Keep going - you're exactly where you need to be.
             </p>
