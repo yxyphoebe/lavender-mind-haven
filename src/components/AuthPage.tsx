@@ -28,12 +28,12 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center p-6">
       <div className="w-full max-w-md animate-slide-up">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-violet-400 to-blue-400 rounded-2xl flex items-center justify-center zen-shadow">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-violet-400 rounded-2xl flex items-center justify-center zen-shadow">
               <Flower2 className="w-8 h-8 text-white" />
             </div>
           </div>
@@ -46,14 +46,14 @@ const AuthPage = () => {
         </div>
 
         {/* Auth Card */}
-        <Card className="glass-effect border-0 zen-shadow">
+        <Card className="bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow">
           <CardHeader>
             <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-violet-50 rounded-xl">
-                <TabsTrigger value="login" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-violet-700">
+              <TabsList className="grid w-full grid-cols-2 bg-blue-50 rounded-xl">
+                <TabsTrigger value="login" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-blue-700">
                   Sign In
                 </TabsTrigger>
-                <TabsTrigger value="signup" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-violet-700">
+                <TabsTrigger value="signup" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-blue-700">
                   Sign Up
                 </TabsTrigger>
               </TabsList>
@@ -67,14 +67,14 @@ const AuthPage = () => {
                       <Input 
                         type="email" 
                         placeholder="Email address"
-                        className="pl-10 h-12 border-violet-200 rounded-xl focus:ring-violet-400"
+                        className="pl-10 h-12 border-blue-200 rounded-xl focus:ring-blue-400 bg-white"
                       />
                     </div>
                     <div className="relative">
                       <Input 
                         type={showPassword ? "text" : "password"}
                         placeholder="Password"
-                        className="pr-10 h-12 border-violet-200 rounded-xl focus:ring-violet-400"
+                        className="pr-10 h-12 border-blue-200 rounded-xl focus:ring-blue-400 bg-white"
                       />
                       <button
                         type="button"
@@ -88,7 +88,7 @@ const AuthPage = () => {
 
                   <Button 
                     onClick={() => handleAuth('login')}
-                    className="w-full h-12 bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white rounded-xl font-medium transition-all duration-300"
+                    className="w-full h-12 bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white rounded-xl font-medium transition-all duration-300"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Signing in...' : 'Sign In'}
@@ -105,14 +105,14 @@ const AuthPage = () => {
                       <Input 
                         type="email" 
                         placeholder="Email address"
-                        className="pl-10 h-12 border-violet-200 rounded-xl focus:ring-violet-400"
+                        className="pl-10 h-12 border-blue-200 rounded-xl focus:ring-blue-400 bg-white"
                       />
                     </div>
                     <div className="relative">
                       <Input 
                         type={showPassword ? "text" : "password"}
                         placeholder="Create password"
-                        className="pr-10 h-12 border-violet-200 rounded-xl focus:ring-violet-400"
+                        className="pr-10 h-12 border-blue-200 rounded-xl focus:ring-blue-400 bg-white"
                       />
                       <button
                         type="button"
@@ -126,14 +126,14 @@ const AuthPage = () => {
                       <Input 
                         type="password"
                         placeholder="Confirm password"
-                        className="h-12 border-violet-200 rounded-xl focus:ring-violet-400"
+                        className="h-12 border-blue-200 rounded-xl focus:ring-blue-400 bg-white"
                       />
                     </div>
                   </div>
 
                   <Button 
                     onClick={() => handleAuth('signup')}
-                    className="w-full h-12 bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white rounded-xl font-medium transition-all duration-300"
+                    className="w-full h-12 bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white rounded-xl font-medium transition-all duration-300"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Creating account...' : 'Create Account'}
@@ -147,16 +147,16 @@ const AuthPage = () => {
         {/* Social Auth */}
         <div className="mt-6 space-y-3">
           <div className="flex items-center justify-center space-x-4 text-sm text-slate-500">
-            <div className="h-px bg-violet-200 flex-1"></div>
+            <div className="h-px bg-blue-200 flex-1"></div>
             <span>or continue with</span>
-            <div className="h-px bg-violet-200 flex-1"></div>
+            <div className="h-px bg-blue-200 flex-1"></div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <Button
               variant="outline"
               onClick={() => handleSocialAuth('google')}
-              className="h-12 border-violet-200 hover:bg-violet-50 rounded-xl"
+              className="h-12 border-blue-200 hover:bg-blue-50 rounded-xl bg-white"
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -169,7 +169,7 @@ const AuthPage = () => {
             <Button
               variant="outline"
               onClick={() => handleSocialAuth('apple')}
-              className="h-12 border-violet-200 hover:bg-violet-50 rounded-xl"
+              className="h-12 border-blue-200 hover:bg-blue-50 rounded-xl bg-white"
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
@@ -181,7 +181,7 @@ const AuthPage = () => {
           <Button
             variant="outline"
             onClick={() => handleSocialAuth('phone')}
-            className="w-full h-12 border-violet-200 hover:bg-violet-50 rounded-xl"
+            className="w-full h-12 border-blue-200 hover:bg-blue-50 rounded-xl bg-white"
           >
             <Phone className="w-5 h-5 mr-2" />
             Continue with Phone
@@ -191,9 +191,9 @@ const AuthPage = () => {
         {/* Footer */}
         <p className="text-center text-sm text-slate-500 mt-6 leading-relaxed">
           By continuing, you agree to our{' '}
-          <a href="#" className="text-violet-600 hover:underline">Terms of Service</a>
+          <a href="#" className="text-blue-600 hover:underline">Terms of Service</a>
           {' '}and{' '}
-          <a href="#" className="text-violet-600 hover:underline">Privacy Policy</a>
+          <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>
         </p>
       </div>
     </div>
