@@ -13,6 +13,7 @@ import ChatInterface from "./components/ChatInterface";
 import GrowthTimeline from "./components/GrowthTimeline";
 import UserCenter from "./components/UserCenter";
 import VideoChat from "./components/VideoChat";
+import Profile from "./components/Profile";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,7 @@ const App = () => (
           <Route path="/video-call" element={<VideoChat />} />
           <Route path="/growth" element={<GrowthTimeline />} />
           <Route path="/user-center" element={<UserCenter />} />
-          <Route path="/profile" element={<UserCenter />} />
+          <Route path="/profile" element={<Profile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
