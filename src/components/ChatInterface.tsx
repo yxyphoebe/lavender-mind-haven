@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, Heart, Zap, Star, Menu, Video, TrendingUp, Settings } from 'lucide-react';
+import { Send, Heart, Zap, Star, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface Message {
@@ -102,10 +102,10 @@ const ChatInterface = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate('/menu')}
+            onClick={() => navigate('/user-center')}
             className="hover:bg-violet-100 rounded-xl"
           >
-            <Menu className="w-5 h-5 text-slate-600" />
+            <ArrowLeft className="w-5 h-5 text-slate-600" />
           </Button>
           
           <Avatar className={`w-10 h-10 bg-gradient-to-br ${
@@ -128,25 +128,6 @@ const ChatInterface = () => {
               {isTyping ? 'Typing...' : 'Here to support you'}
             </p>
           </div>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/video-call')}
-            className="hover:bg-violet-100 rounded-xl"
-          >
-            <Video className="w-5 h-5 text-slate-600" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/growth')}
-            className="hover:bg-violet-100 rounded-xl"
-          >
-            <TrendingUp className="w-5 h-5 text-slate-600" />
-          </Button>
         </div>
       </div>
 
