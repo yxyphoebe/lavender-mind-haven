@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, CheckCircle } from 'lucide-react';
+import { Heart, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PersonaAvatar from './PersonaAvatar';
 
@@ -32,11 +32,11 @@ const PersonaSelection = () => {
       tagline: 'Confident & Direct',
       description: 'Nova brings clarity and strength to your wellness journey. She provides practical solutions while maintaining deep empathy and understanding.',
       traits: ['Motivating', 'Clear', 'Empowering', 'Solution-focused'],
-      bgGradient: 'from-blue-50 to-cyan-50',
-      textColor: 'text-blue-700',
-      borderColor: 'border-blue-200',
-      selectedBorder: 'border-blue-400',
-      selectedRing: 'ring-blue-200',
+      bgGradient: 'from-amber-50 to-orange-50',
+      textColor: 'text-amber-700',
+      borderColor: 'border-amber-200',
+      selectedBorder: 'border-amber-400',
+      selectedRing: 'ring-amber-200',
       approach: 'Combines empathy with actionable strategies, helping you build confidence and achieve concrete progress.',
       bestFor: 'Goal achievement, confidence building, overcoming obstacles'
     },
@@ -46,11 +46,11 @@ const PersonaSelection = () => {
       tagline: 'Wise & Balanced',
       description: 'Sage draws from ancient wisdom and modern psychology to offer balanced perspectives on life\'s challenges and opportunities for growth.',
       traits: ['Wise', 'Balanced', 'Insightful', 'Grounding'],
-      bgGradient: 'from-violet-50 to-purple-50',
-      textColor: 'text-violet-700',
-      borderColor: 'border-violet-200',
-      selectedBorder: 'border-violet-400',
-      selectedRing: 'ring-violet-200',
+      bgGradient: 'from-emerald-50 to-green-50',
+      textColor: 'text-emerald-700',
+      borderColor: 'border-emerald-200',
+      selectedBorder: 'border-emerald-400',
+      selectedRing: 'ring-emerald-200',
       approach: 'Integrates mindfulness practices with practical wisdom, helping you find balance and deeper understanding.',
       bestFor: 'Life transitions, mindfulness practice, finding purpose'
     }
@@ -74,8 +74,8 @@ const PersonaSelection = () => {
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <div className="flex items-center justify-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-violet-400 rounded-3xl flex items-center justify-center zen-shadow">
-              <Sparkles className="w-10 h-10 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-br from-rose-400 to-pink-400 rounded-3xl flex items-center justify-center zen-shadow">
+              <Heart className="w-10 h-10 text-white" />
             </div>
           </div>
           <h1 className="font-display text-4xl md:text-5xl font-bold gradient-text mb-4">
@@ -170,7 +170,7 @@ const PersonaSelection = () => {
             disabled={!selectedPersona}
             className={`px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300 ${
               selectedPersona
-                ? 'bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white hover:scale-105 zen-shadow'
+                ? 'bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white hover:scale-105 zen-shadow'
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >
