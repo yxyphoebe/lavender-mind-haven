@@ -12,6 +12,7 @@ import PersonaSelection from "./components/PersonaSelection";
 import ChatInterface from "./components/ChatInterface";
 import GrowthTimeline from "./components/GrowthTimeline";
 import UserCenter from "./components/UserCenter";
+import VideoChat from "./components/VideoChat";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/persona-selection" element={<PersonaSelection />} />
           <Route path="/chat" element={<ChatInterface />} />
+          <Route path="/video-call" element={<VideoChat />} />
           <Route path="/growth" element={<GrowthTimeline />} />
           <Route path="/profile" element={<UserCenter />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
