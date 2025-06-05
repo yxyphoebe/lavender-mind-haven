@@ -105,39 +105,6 @@ const GrowthTimeline = () => {
       </div>
 
       <div className="container mx-auto px-6 py-8">
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-violet-400 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                <Heart className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="font-display text-2xl font-bold text-slate-800 mb-1">5</h3>
-              <p className="text-slate-600">Days Active</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                <Star className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="font-display text-2xl font-bold text-slate-800 mb-1">3</h3>
-              <p className="text-slate-600">Breakthroughs</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                <TrendingUp className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="font-display text-2xl font-bold text-slate-800 mb-1">+23%</h3>
-              <p className="text-slate-600">Mood Improvement</p>
-            </CardContent>
-          </Card>
-        </div>
-
         {/* Timeline */}
         <div className="relative">
           {/* Timeline line */}
