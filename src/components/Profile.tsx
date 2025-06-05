@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { 
-  User, 
   Settings, 
   Heart, 
   Mail, 
@@ -84,14 +83,10 @@ const Profile = () => {
           </Button>
         </div>
 
-        {/* Profile Picture & Basic Info */}
+        {/* Profile Basic Info */}
         <Card className="mb-6 glass-effect border-0 zen-shadow">
           <CardContent className="p-6">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-24 h-24 mb-4 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center zen-shadow">
-                <User className="w-12 h-12 text-white" />
-              </div>
-              
+            <div className="flex flex-col text-center">
               {isEditing ? (
                 <div className="w-full space-y-3">
                   <div>
@@ -131,11 +126,11 @@ const Profile = () => {
                 </div>
               ) : (
                 <div>
-                  <h2 className="font-display text-xl font-bold text-slate-800 mb-2">
+                  <h2 className="font-display text-2xl font-bold text-slate-800 mb-3">
                     {userInfo.name}
                   </h2>
-                  <p className="text-slate-600 mb-1">{userInfo.email}</p>
-                  <p className="text-slate-600 mb-3">{userInfo.phone}</p>
+                  <p className="text-slate-600 mb-2">{userInfo.email}</p>
+                  <p className="text-slate-600 mb-4">{userInfo.phone}</p>
                   <div className="inline-flex items-center space-x-2 bg-violet-50 rounded-full px-3 py-1">
                     <Calendar className="w-4 h-4 text-violet-600" />
                     <span className="text-sm text-violet-700">
