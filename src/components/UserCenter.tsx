@@ -35,10 +35,10 @@ const UserCenter = () => {
   };
 
   const moodOptions = [
-    { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-pink-100 to-pink-200 text-pink-700' },
-    { id: 'bright', label: 'Bright', icon: '✨', color: 'from-purple-100 to-purple-200 text-purple-700' },
-    { id: 'calm', label: 'Calm', icon: '🌊', color: 'from-blue-100 to-blue-200 text-blue-700' },
-    { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-gray-100 to-gray-200 text-gray-700' }
+    { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-rose-100 to-rose-200 text-rose-700 border-rose-200' },
+    { id: 'bright', label: 'Bright', icon: '✨', color: 'from-purple-100 to-purple-200 text-purple-700 border-purple-200' },
+    { id: 'calm', label: 'Calm', icon: '🌊', color: 'from-blue-100 to-blue-200 text-blue-700 border-blue-200' },
+    { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-slate-100 to-slate-200 text-slate-700 border-slate-200' }
   ];
 
   const mainActions = [
@@ -136,9 +136,9 @@ const UserCenter = () => {
                   onClick={() => setSelectedMood(mood.id)}
                   className={`h-auto p-3 justify-start bg-gradient-to-r ${
                     selectedMood === mood.id 
-                      ? 'from-violet-500 to-blue-500 text-white' 
+                      ? 'from-violet-500 to-blue-500 text-white border-0' 
                       : mood.color
-                  } border-0 hover:scale-105 transition-all duration-300`}
+                  } hover:scale-105 transition-all duration-300`}
                 >
                   <span className="text-lg mr-2">{mood.icon}</span>
                   <span className="font-medium text-sm">{mood.label}</span>
