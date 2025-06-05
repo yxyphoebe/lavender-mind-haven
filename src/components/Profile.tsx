@@ -56,20 +56,20 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-50 via-slate-50 to-gray-50">
-      <div className="container mx-auto px-4 py-6 max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center p-6">
+      <div className="w-full max-w-md animate-slide-up">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/user-center')}
-            className="w-10 h-10 rounded-full bg-stone-100/80 backdrop-blur-sm hover:bg-stone-200/80 shadow-sm border-0"
+            className="w-12 h-12 rounded-xl bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg border border-blue-100"
           >
-            <ArrowLeft className="w-5 h-5 text-stone-600" />
+            <ArrowLeft className="w-5 h-5 text-blue-600" />
           </Button>
           
-          <h1 className="font-display text-2xl font-light text-stone-700">
+          <h1 className="font-display text-3xl font-bold gradient-text">
             Profile
           </h1>
           
@@ -77,63 +77,63 @@ const Profile = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsEditing(!isEditing)}
-            className="w-10 h-10 rounded-full bg-stone-100/80 backdrop-blur-sm hover:bg-stone-200/80 shadow-sm border-0"
+            className="w-12 h-12 rounded-xl bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg border border-blue-100"
           >
-            <Edit className="w-5 h-5 text-stone-600" />
+            <Edit className="w-5 h-5 text-blue-600" />
           </Button>
         </div>
 
         {/* Profile Basic Info */}
-        <Card className="mb-6 bg-stone-50/50 border-stone-200/50 shadow-sm">
+        <Card className="mb-6 bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow">
           <CardContent className="p-6">
             <div className="flex flex-col text-center">
               {isEditing ? (
-                <div className="w-full space-y-3">
+                <div className="w-full space-y-4">
                   <div>
-                    <Label htmlFor="name" className="text-sm text-stone-600">Name</Label>
+                    <Label htmlFor="name" className="text-sm text-slate-600 font-medium">Name</Label>
                     <Input
                       id="name"
                       value={userInfo.name}
                       onChange={(e) => setUserInfo({...userInfo, name: e.target.value})}
-                      className="mt-1 border-stone-200 bg-white/80"
+                      className="mt-2 h-12 border-blue-200 rounded-xl focus:ring-blue-400 bg-white"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="email" className="text-sm text-stone-600">Email</Label>
+                    <Label htmlFor="email" className="text-sm text-slate-600 font-medium">Email</Label>
                     <Input
                       id="email"
                       type="email"
                       value={userInfo.email}
                       onChange={(e) => setUserInfo({...userInfo, email: e.target.value})}
-                      className="mt-1 border-stone-200 bg-white/80"
+                      className="mt-2 h-12 border-blue-200 rounded-xl focus:ring-blue-400 bg-white"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="phone" className="text-sm text-stone-600">Phone</Label>
+                    <Label htmlFor="phone" className="text-sm text-slate-600 font-medium">Phone</Label>
                     <Input
                       id="phone"
                       value={userInfo.phone}
                       onChange={(e) => setUserInfo({...userInfo, phone: e.target.value})}
-                      className="mt-1 border-stone-200 bg-white/80"
+                      className="mt-2 h-12 border-blue-200 rounded-xl focus:ring-blue-400 bg-white"
                     />
                   </div>
                   <Button 
                     onClick={handleSaveProfile}
-                    className="w-full bg-stone-600 hover:bg-stone-700 text-white border-0"
+                    className="w-full h-12 bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white rounded-xl font-medium transition-all duration-300 mt-4"
                   >
                     Save Changes
                   </Button>
                 </div>
               ) : (
                 <div>
-                  <h2 className="font-display text-2xl font-light text-stone-800 mb-3">
+                  <h2 className="font-display text-2xl font-bold text-slate-800 mb-3">
                     {userInfo.name}
                   </h2>
-                  <p className="text-stone-600 mb-2">{userInfo.email}</p>
-                  <p className="text-stone-600 mb-4">{userInfo.phone}</p>
-                  <div className="inline-flex items-center space-x-2 bg-stone-100/60 rounded-full px-3 py-1">
-                    <Calendar className="w-4 h-4 text-stone-500" />
-                    <span className="text-sm text-stone-600">
+                  <p className="text-slate-600 mb-2">{userInfo.email}</p>
+                  <p className="text-slate-600 mb-4">{userInfo.phone}</p>
+                  <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-xl px-4 py-2">
+                    <Calendar className="w-4 h-4 text-blue-500" />
+                    <span className="text-sm text-slate-600 font-medium">
                       Member since {new Date(userInfo.joinDate).toLocaleDateString()}
                     </span>
                   </div>
@@ -144,9 +144,9 @@ const Profile = () => {
         </Card>
 
         {/* Current AI Companion */}
-        <Card className="mb-6 bg-slate-50/50 border-slate-200/50 shadow-sm">
+        <Card className="mb-6 bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow">
           <CardHeader className="pb-3">
-            <CardTitle className="font-display text-lg font-light text-slate-700 flex items-center">
+            <CardTitle className="font-display text-lg font-bold text-slate-800 flex items-center">
               <Heart className="w-5 h-5 mr-2 text-rose-400" />
               AI Companion
             </CardTitle>
@@ -163,7 +163,7 @@ const Profile = () => {
                 variant="outline"
                 size="sm"
                 onClick={handleChangePersona}
-                className="text-slate-600 border-slate-300 hover:bg-slate-100 bg-white/80"
+                className="h-10 text-blue-600 border-blue-200 hover:bg-blue-50 bg-white rounded-xl font-medium"
               >
                 Change
               </Button>
@@ -172,47 +172,47 @@ const Profile = () => {
         </Card>
 
         {/* Settings Options */}
-        <Card className="mb-6 bg-gray-50/50 border-gray-200/50 shadow-sm">
+        <Card className="mb-6 bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow">
           <CardHeader className="pb-3">
-            <CardTitle className="font-display text-lg font-light text-gray-700 flex items-center">
-              <Settings className="w-5 h-5 mr-2 text-gray-500" />
+            <CardTitle className="font-display text-lg font-bold text-slate-800 flex items-center">
+              <Settings className="w-5 h-5 mr-2 text-blue-500" />
               Settings
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between py-2">
               <div className="flex items-center space-x-3">
-                <Bell className="w-5 h-5 text-gray-500" />
-                <span className="text-gray-700">Notifications</span>
+                <Bell className="w-5 h-5 text-blue-500" />
+                <span className="text-slate-700 font-medium">Notifications</span>
               </div>
-              <Button variant="outline" size="sm" className="border-gray-300 hover:bg-gray-100 bg-white/80">Configure</Button>
+              <Button variant="outline" size="sm" className="h-10 border-blue-200 hover:bg-blue-50 bg-white rounded-xl font-medium">Configure</Button>
             </div>
             
             <div className="flex items-center justify-between py-2">
               <div className="flex items-center space-x-3">
-                <Shield className="w-5 h-5 text-gray-500" />
-                <span className="text-gray-700">Privacy & Security</span>
+                <Shield className="w-5 h-5 text-blue-500" />
+                <span className="text-slate-700 font-medium">Privacy & Security</span>
               </div>
-              <Button variant="outline" size="sm" className="border-gray-300 hover:bg-gray-100 bg-white/80">Manage</Button>
+              <Button variant="outline" size="sm" className="h-10 border-blue-200 hover:bg-blue-50 bg-white rounded-xl font-medium">Manage</Button>
             </div>
             
             <div className="flex items-center justify-between py-2">
               <div className="flex items-center space-x-3">
-                <Sparkles className="w-5 h-5 text-gray-500" />
-                <span className="text-gray-700">Preferences</span>
+                <Sparkles className="w-5 h-5 text-blue-500" />
+                <span className="text-slate-700 font-medium">Preferences</span>
               </div>
-              <Button variant="outline" size="sm" className="border-gray-300 hover:bg-gray-100 bg-white/80">Edit</Button>
+              <Button variant="outline" size="sm" className="h-10 border-blue-200 hover:bg-blue-50 bg-white rounded-xl font-medium">Edit</Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Account Actions */}
-        <Card className="mb-6 bg-red-50/50 border-red-200/50 shadow-sm">
+        <Card className="mb-6 bg-white/90 backdrop-blur-sm border border-red-200 zen-shadow">
           <CardContent className="p-4">
             <Button
               variant="outline"
               onClick={handleLogout}
-              className="w-full text-red-600 border-red-300 hover:bg-red-100 bg-white/80"
+              className="w-full h-12 text-red-600 border-red-200 hover:bg-red-50 bg-white rounded-xl font-medium transition-all duration-300"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Sign Out
@@ -222,7 +222,7 @@ const Profile = () => {
 
         {/* App Version */}
         <div className="text-center">
-          <p className="text-sm text-stone-400">
+          <p className="text-sm text-slate-500 font-light">
             Version 1.0.0 • Made with ❤️
           </p>
         </div>
