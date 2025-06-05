@@ -56,15 +56,15 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-md animate-slide-up">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
+      <div className="container mx-auto px-4 py-6 max-w-md">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/user-center')}
-            className="w-12 h-12 rounded-xl bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg border border-blue-100"
+            className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 backdrop-blur-sm hover:from-blue-100 hover:to-purple-100 shadow-lg border border-blue-100"
           >
             <ArrowLeft className="w-5 h-5 text-blue-600" />
           </Button>
@@ -77,14 +77,14 @@ const Profile = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsEditing(!isEditing)}
-            className="w-12 h-12 rounded-xl bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg border border-blue-100"
+            className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 backdrop-blur-sm hover:from-blue-100 hover:to-purple-100 shadow-lg border border-blue-100"
           >
             <Edit className="w-5 h-5 text-blue-600" />
           </Button>
         </div>
 
         {/* Profile Basic Info */}
-        <Card className="mb-6 bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow">
+        <Card className="mb-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
           <CardContent className="p-6">
             <div className="flex flex-col text-center">
               {isEditing ? (
@@ -131,7 +131,7 @@ const Profile = () => {
                   </h2>
                   <p className="text-slate-600 mb-2">{userInfo.email}</p>
                   <p className="text-slate-600 mb-4">{userInfo.phone}</p>
-                  <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-xl px-4 py-2">
+                  <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl px-4 py-2 border border-blue-100">
                     <Calendar className="w-4 h-4 text-blue-500" />
                     <span className="text-sm text-slate-600 font-medium">
                       Member since {new Date(userInfo.joinDate).toLocaleDateString()}
@@ -144,7 +144,7 @@ const Profile = () => {
         </Card>
 
         {/* Current AI Companion */}
-        <Card className="mb-6 bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow">
+        <Card className="mb-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
           <CardHeader className="pb-3">
             <CardTitle className="font-display text-lg font-bold text-slate-800 flex items-center">
               <Heart className="w-5 h-5 mr-2 text-rose-400" />
@@ -172,7 +172,7 @@ const Profile = () => {
         </Card>
 
         {/* Settings Options */}
-        <Card className="mb-6 bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow">
+        <Card className="mb-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
           <CardHeader className="pb-3">
             <CardTitle className="font-display text-lg font-bold text-slate-800 flex items-center">
               <Settings className="w-5 h-5 mr-2 text-blue-500" />
@@ -207,7 +207,7 @@ const Profile = () => {
         </Card>
 
         {/* Account Actions */}
-        <Card className="mb-6 bg-white/90 backdrop-blur-sm border border-red-200 zen-shadow">
+        <Card className="mb-6 bg-gradient-to-br from-rose-50 to-red-50 border border-red-200 zen-shadow">
           <CardContent className="p-4">
             <Button
               variant="outline"

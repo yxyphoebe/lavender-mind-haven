@@ -84,7 +84,7 @@ const GrowthTimeline = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
       {/* Header */}
-      <div className="glass-effect border-b border-violet-200 p-4">
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-violet-200 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
@@ -107,7 +107,7 @@ const GrowthTimeline = () => {
       <div className="container mx-auto px-6 py-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="glass-effect border-0 zen-shadow">
+          <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
             <CardContent className="p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-violet-400 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <Heart className="w-6 h-6 text-white" />
@@ -117,7 +117,7 @@ const GrowthTimeline = () => {
             </CardContent>
           </Card>
 
-          <Card className="glass-effect border-0 zen-shadow">
+          <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
             <CardContent className="p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <Star className="w-6 h-6 text-white" />
@@ -127,7 +127,7 @@ const GrowthTimeline = () => {
             </CardContent>
           </Card>
 
-          <Card className="glass-effect border-0 zen-shadow">
+          <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
             <CardContent className="p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <TrendingUp className="w-6 h-6 text-white" />
@@ -154,7 +154,7 @@ const GrowthTimeline = () => {
                   
                   {/* Content card */}
                   <div className="ml-20">
-                    <Card className="glass-effect border-0 zen-shadow hover:scale-[1.02] transition-all duration-300">
+                    <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow hover:scale-[1.02] transition-all duration-300">
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex items-center space-x-3">
@@ -201,7 +201,7 @@ const GrowthTimeline = () => {
         </div>
 
         {/* Encouragement message */}
-        <Card className="glass-effect border-0 zen-shadow mt-12">
+        <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow mt-12">
           <CardContent className="p-8 text-center">
             <div className="w-16 h-16 bg-gradient-to-br from-violet-400 to-blue-400 rounded-3xl flex items-center justify-center mx-auto mb-4">
               <Heart className="w-8 h-8 text-white" />
