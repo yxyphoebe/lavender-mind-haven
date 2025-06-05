@@ -84,59 +84,59 @@ const GrowthTimeline = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-violet-200 p-4">
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-violet-200 p-3 sm:p-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigate('/chat')}
-              className="hover:bg-violet-100 rounded-xl"
+              className="hover:bg-violet-100 rounded-xl h-8 w-8 sm:h-10 sm:w-10"
             >
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
             </Button>
             <div>
-              <h1 className="font-display text-2xl font-bold gradient-text">Growth Timeline</h1>
-              <p className="text-slate-600">Your journey of healing and growth</p>
+              <h1 className="font-display text-lg sm:text-2xl font-bold gradient-text">Growth Timeline</h1>
+              <p className="text-xs sm:text-sm text-slate-600">Your journey of healing and growth</p>
             </div>
           </div>
-          <Calendar className="w-6 h-6 text-slate-500" />
+          <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-slate-500" />
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8">
         {/* Timeline */}
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-violet-300 to-blue-300"></div>
+          <div className="absolute left-6 sm:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-violet-300 to-blue-300"></div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {milestones.map((milestone, index) => {
               const IconComponent = milestone.icon;
               
               return (
                 <div key={milestone.id} className="relative animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                   {/* Timeline dot */}
-                  <div className={`absolute left-6 w-4 h-4 bg-gradient-to-br ${getIconColor(milestone.color)} rounded-full border-4 border-white shadow-lg z-10`}></div>
+                  <div className={`absolute left-4 sm:left-6 w-4 h-4 bg-gradient-to-br ${getIconColor(milestone.color)} rounded-full border-4 border-white shadow-lg z-10`}></div>
                   
                   {/* Content card */}
-                  <div className="ml-20">
+                  <div className="ml-14 sm:ml-20">
                     <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow hover:scale-[1.02] transition-all duration-300">
-                      <CardHeader>
+                      <CardHeader className="p-4 sm:p-6">
                         <div className="flex items-start justify-between">
-                          <div className="flex items-center space-x-3">
-                            <div className={`w-12 h-12 bg-gradient-to-br ${getIconColor(milestone.color)} rounded-2xl flex items-center justify-center`}>
-                              <IconComponent className="w-6 h-6 text-white" />
+                          <div className="flex items-start space-x-2 sm:space-x-3 w-full">
+                            <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${getIconColor(milestone.color)} rounded-2xl flex items-center justify-center flex-shrink-0`}>
+                              <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                             </div>
-                            <div>
-                              <CardTitle className="text-lg font-semibold text-slate-800 mb-1">
+                            <div className="min-w-0 flex-1">
+                              <CardTitle className="text-base sm:text-lg font-semibold text-slate-800 mb-1 leading-tight">
                                 {milestone.title}
                               </CardTitle>
-                              <div className="flex items-center space-x-2">
-                                <Badge className={`${getTypeColor(milestone.type)} border text-xs`}>
+                              <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2">
+                                <Badge className={`${getTypeColor(milestone.type)} border text-xs w-fit`}>
                                   {milestone.type}
                                 </Badge>
-                                <span className="text-sm text-slate-500">
+                                <span className="text-xs sm:text-sm text-slate-500">
                                   {new Date(milestone.date).toLocaleDateString('en-US', { 
                                     month: 'short', 
                                     day: 'numeric',
@@ -148,13 +148,13 @@ const GrowthTimeline = () => {
                           </div>
                         </div>
                       </CardHeader>
-                      <CardContent>
-                        <p className="text-slate-600 leading-relaxed mb-3">
+                      <CardContent className="p-4 sm:p-6 pt-0">
+                        <p className="text-sm sm:text-base text-slate-600 leading-relaxed mb-3">
                           {milestone.description}
                         </p>
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm text-slate-500">Feeling:</span>
-                          <Badge variant="outline" className="text-slate-600 border-slate-300">
+                          <span className="text-xs sm:text-sm text-slate-500">Feeling:</span>
+                          <Badge variant="outline" className="text-xs sm:text-sm text-slate-600 border-slate-300">
                             {milestone.emotion}
                           </Badge>
                         </div>
@@ -168,15 +168,15 @@ const GrowthTimeline = () => {
         </div>
 
         {/* Encouragement message */}
-        <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow mt-12">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-violet-400 to-blue-400 rounded-3xl flex items-center justify-center mx-auto mb-4">
-              <Heart className="w-8 h-8 text-white" />
+        <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow mt-8 sm:mt-12">
+          <CardContent className="p-6 sm:p-8 text-center">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-violet-400 to-blue-400 rounded-3xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
-            <h3 className="font-display text-2xl font-bold gradient-text mb-3">
+            <h3 className="font-display text-xl sm:text-2xl font-bold gradient-text mb-2 sm:mb-3">
               You're Making Beautiful Progress
             </h3>
-            <p className="text-slate-600 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto">
               Every step you take on this journey matters. Your willingness to grow, to feel, and to heal 
               is creating ripples of positive change in your life. Keep going - you're exactly where you need to be.
             </p>
