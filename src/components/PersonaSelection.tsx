@@ -18,9 +18,9 @@ const PersonaSelection = () => {
       description: 'Nuva offers a warm, nurturing presence with infinite patience. She specializes in creating safe spaces for emotional exploration and healing.',
       traits: ['Compassionate', 'Patient', 'Intuitive', 'Nurturing'],
       icon: Heart,
-      gradient: 'from-violet-400 to-violet-600',
-      bgGradient: 'from-violet-50 to-purple-50',
-      textColor: 'text-violet-700',
+      gradient: 'from-purple-400 to-purple-600',
+      bgGradient: 'from-purple-50 to-purple-100',
+      textColor: 'text-purple-700',
       approach: 'Focuses on emotional validation, gentle guidance, and creating a judgment-free environment for healing.',
       bestFor: 'Processing trauma, anxiety support, self-compassion work'
     },
@@ -32,7 +32,7 @@ const PersonaSelection = () => {
       traits: ['Motivating', 'Clear', 'Empowering', 'Solution-focused'],
       icon: Zap,
       gradient: 'from-blue-500 to-blue-600',
-      bgGradient: 'from-blue-50 to-sky-50',
+      bgGradient: 'from-blue-50 to-blue-100',
       textColor: 'text-blue-700',
       approach: 'Combines empathy with actionable strategies, helping you build confidence and achieve concrete progress.',
       bestFor: 'Goal achievement, confidence building, overcoming obstacles'
@@ -44,8 +44,8 @@ const PersonaSelection = () => {
       description: 'Sage draws from ancient wisdom and modern psychology to offer balanced perspectives on life\'s challenges and opportunities for growth.',
       traits: ['Wise', 'Balanced', 'Insightful', 'Grounding'],
       icon: Star,
-      gradient: 'from-indigo-500 to-purple-600',
-      bgGradient: 'from-indigo-50 to-violet-50',
+      gradient: 'from-indigo-500 to-sky-600',
+      bgGradient: 'from-indigo-50 to-sky-100',
       textColor: 'text-indigo-700',
       approach: 'Integrates mindfulness practices with practical wisdom, helping you find balance and deeper understanding.',
       bestFor: 'Life transitions, mindfulness practice, finding purpose'
@@ -65,12 +65,12 @@ const PersonaSelection = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-sky-50 p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <div className="flex items-center justify-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-violet-400 to-blue-400 rounded-3xl flex items-center justify-center zen-shadow">
+            <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-blue-400 rounded-3xl flex items-center justify-center zen-shadow">
               <Sparkles className="w-10 h-10 text-white" />
             </div>
           </div>
@@ -94,16 +94,16 @@ const PersonaSelection = () => {
                 key={persona.id}
                 className={`cursor-pointer transition-all duration-300 border-2 hover:scale-105 ${
                   isSelected
-                    ? 'border-violet-400 shadow-xl zen-shadow'
-                    : 'border-violet-200 hover:border-violet-300'
-                } ${isSelected ? 'ring-4 ring-violet-200' : ''}`}
+                    ? 'border-purple-400 shadow-xl zen-shadow'
+                    : 'border-purple-200 hover:border-purple-300'
+                } ${isSelected ? 'ring-4 ring-purple-200' : ''}`}
                 onClick={() => handleSelectPersona(persona.id)}
               >
                 <CardContent className="p-6 relative">
                   {/* Selection indicator */}
                   {isSelected && (
                     <div className="absolute top-4 right-4">
-                      <CheckCircle className="w-6 h-6 text-violet-600 fill-current" />
+                      <CheckCircle className="w-6 h-6 text-purple-600 fill-current" />
                     </div>
                   )}
 
@@ -132,7 +132,7 @@ const PersonaSelection = () => {
                     {persona.traits.map((trait) => (
                       <span
                         key={trait}
-                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
+                        className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium"
                       >
                         {trait}
                       </span>
@@ -140,7 +140,7 @@ const PersonaSelection = () => {
                   </div>
 
                   {/* Approach */}
-                  <div className="bg-gradient-to-r from-white/50 to-violet-50/50 rounded-xl p-4 mb-4">
+                  <div className="bg-gradient-to-r from-white/60 to-purple-50/60 rounded-xl p-4 mb-4">
                     <h4 className="font-semibold text-slate-800 mb-2">Approach:</h4>
                     <p className="text-sm text-slate-600 leading-relaxed">
                       {persona.approach}
@@ -167,7 +167,7 @@ const PersonaSelection = () => {
             disabled={!selectedPersona}
             className={`px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300 ${
               selectedPersona
-                ? 'bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white hover:scale-105 zen-shadow'
+                ? 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white hover:scale-105 zen-shadow'
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >

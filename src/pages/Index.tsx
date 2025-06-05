@@ -25,7 +25,7 @@ const Index = () => {
 
   if (showLaunchAnimation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 via-white to-blue-50 overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-blue-50 to-sky-50 overflow-hidden">
         <div className="text-center px-6 relative">
           {/* Main text animation */}
           <div className={`transition-all duration-1000 ${animationPhase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -46,17 +46,17 @@ const Index = () => {
               
               {/* Blooming flower */}
               <div className={`absolute -top-8 left-1/2 transform -translate-x-1/2 transition-all duration-2000 ${animationPhase >= 2 ? 'animate-bloom' : 'scale-0 opacity-0'}`}>
-                <Flower2 className="w-16 h-16 text-violet-400 bloom-shadow" />
+                <Flower2 className="w-16 h-16 text-purple-400 bloom-shadow" />
                 
                 {/* Sparkles around flower */}
                 <div className={`absolute -top-2 -left-2 transition-all duration-1000 delay-1000 ${animationPhase >= 3 ? 'animate-gentle-float opacity-60' : 'opacity-0'}`}>
-                  <Sparkles className="w-4 h-4 text-violet-400" />
+                  <Sparkles className="w-4 h-4 text-purple-400" />
                 </div>
                 <div className={`absolute -top-1 -right-3 transition-all duration-1000 delay-1200 ${animationPhase >= 3 ? 'animate-gentle-float opacity-60' : 'opacity-0'}`}>
-                  <Sparkles className="w-3 h-3 text-blue-300" />
+                  <Sparkles className="w-3 h-3 text-blue-400" />
                 </div>
                 <div className={`absolute -bottom-1 -left-3 transition-all duration-1000 delay-1400 ${animationPhase >= 3 ? 'animate-gentle-float opacity-60' : 'opacity-0'}`}>
-                  <Sparkles className="w-3 h-3 text-violet-300" />
+                  <Sparkles className="w-3 h-3 text-sky-400" />
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-sky-50">
       {/* Hero Section */}
       <div className="container mx-auto px-6 py-12 text-center animate-fade-in">
         <div className="max-w-4xl mx-auto">
@@ -93,14 +93,14 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
               onClick={() => navigate('/auth')}
-              className="bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white px-8 py-4 rounded-2xl text-lg font-medium zen-shadow transition-all duration-300 hover:scale-105"
+              className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-4 rounded-2xl text-lg font-medium zen-shadow transition-all duration-300 hover:scale-105"
             >
               Begin Your Journey
             </Button>
             <Button 
               variant="outline"
               onClick={() => navigate('/learn-more')}
-              className="border-2 border-violet-300 text-violet-700 hover:bg-violet-50 px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300"
+              className="border-2 border-purple-300 text-purple-700 hover:bg-purple-50 px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300"
             >
               Learn More
             </Button>
@@ -110,7 +110,7 @@ const Index = () => {
         {/* Features preview */}
         <div className="mt-20 grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <div className="glass-effect rounded-3xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="w-16 h-16 bg-gradient-to-br from-violet-400 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <Heart className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-display text-xl font-semibold text-slate-800 mb-4">Empathetic AI Companions</h3>
@@ -126,7 +126,7 @@ const Index = () => {
           </div>
 
           <div className="glass-effect rounded-3xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="w-16 h-16 bg-gradient-to-br from-violet-400 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-sky-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <Flower2 className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-display text-xl font-semibold text-slate-800 mb-4">Sacred Space</h3>
