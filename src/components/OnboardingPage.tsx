@@ -48,9 +48,9 @@ const OnboardingPage = () => {
       description: "This helps us adjust our approach to your comfort level",
       question: "Select the option that best describes you:",
       options: [
-        { id: 'new', label: "I'm completely new to this", description: "Never tried therapy or counseling before" },
-        { id: 'some', label: "I have some experience", description: "Tried therapy or counseling a few times" },
-        { id: 'experienced', label: "I'm quite experienced", description: "Regular therapy experience or extensive self-work" }
+        { id: 'new', label: "I'm completely new to this" },
+        { id: 'some', label: "I have some experience" },
+        { id: 'experienced', label: "I'm quite experienced" }
       ]
     },
     {
@@ -59,9 +59,9 @@ const OnboardingPage = () => {
       description: "We'll match you with an AI companion that fits your preferences",
       question: "How do you prefer to receive support?",
       options: [
-        { id: 'gentle', label: "Gentle and nurturing", description: "Soft approach with lots of validation" },
-        { id: 'direct', label: "Direct and solution-focused", description: "Clear guidance with actionable steps" },
-        { id: 'balanced', label: "Balanced approach", description: "Mix of empathy and practical advice" }
+        { id: 'gentle', label: "Gentle and nurturing" },
+        { id: 'direct', label: "Direct and solution-focused" },
+        { id: 'balanced', label: "Balanced approach" }
       ]
     }
   ];
@@ -119,19 +119,19 @@ const OnboardingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 p-6">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center p-4">
+      <div className="max-w-2xl w-full">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-violet-400 rounded-2xl flex items-center justify-center zen-shadow">
-              <Heart className="w-8 h-8 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-violet-400 rounded-xl flex items-center justify-center zen-shadow">
+              <Heart className="w-6 h-6 text-white" />
             </div>
           </div>
-          <h1 className="font-display text-3xl font-bold gradient-text mb-2">
+          <h1 className="font-display text-2xl font-bold gradient-text mb-2">
             Let's personalize your journey
           </h1>
-          <p className="text-slate-600 font-light mb-6">
+          <p className="text-slate-600 font-light mb-4">
             A few questions to help us understand you better
           </p>
           
@@ -146,21 +146,20 @@ const OnboardingPage = () => {
         </div>
 
         {/* Step Content */}
-        <Card className="bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow mb-8">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold text-slate-800 mb-2">
+        <Card className="bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow mb-6">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg font-semibold text-slate-800">
               {currentStepData.title}
             </CardTitle>
-            <p className="text-slate-600">
+            <p className="text-slate-600 text-sm">
               {currentStepData.description}
             </p>
-          </CardHeader>
-          <CardContent>
-            <h3 className="font-medium text-slate-800 mb-4">
+            <p className="font-medium text-slate-800 text-sm mt-2">
               {currentStepData.question}
-            </h3>
-            
-            <div className="space-y-3">
+            </p>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className={`grid gap-3 ${currentStepData.multiSelect ? 'grid-cols-2' : 'grid-cols-1'}`}>
               {currentStepData.options.map((option) => {
                 const IconComponent = option.icon;
                 const isSelected = isOptionSelected(option.id);
@@ -168,33 +167,33 @@ const OnboardingPage = () => {
                 return (
                   <div
                     key={option.id}
-                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
                       isSelected
                         ? 'border-blue-400 bg-blue-50 zen-shadow'
                         : 'border-blue-200 hover:border-blue-300 hover:bg-blue-25'
                     }`}
                     onClick={() => handleOptionSelect(option.id)}
                   >
-                    <div className="flex items-start space-x-3">
+                    <div className="flex items-center space-x-3">
                       {IconComponent && (
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                        <div className={`w-6 h-6 rounded-md flex items-center justify-center ${
                           isSelected ? 'bg-blue-400 text-white' : 'bg-blue-100 text-blue-600'
                         }`}>
-                          <IconComponent className="w-4 h-4" />
+                          <IconComponent className="w-3 h-3" />
                         </div>
                       )}
                       
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-medium text-slate-800">
+                          <h4 className="font-medium text-slate-800 text-sm truncate">
                             {option.label}
                           </h4>
                           {isSelected && (
-                            <CheckCircle className="w-5 h-5 text-blue-600" />
+                            <CheckCircle className="w-4 h-4 text-blue-600 flex-shrink-0 ml-2" />
                           )}
                         </div>
-                        {option.description && (
-                          <p className="text-sm text-slate-600 mt-1">
+                        {option.description && !currentStepData.multiSelect && (
+                          <p className="text-xs text-slate-600 mt-1">
                             {option.description}
                           </p>
                         )}
@@ -206,8 +205,8 @@ const OnboardingPage = () => {
             </div>
 
             {currentStepData.multiSelect && (
-              <div className="mt-4">
-                <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
+              <div className="mt-3">
+                <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">
                   You can select multiple options
                 </Badge>
               </div>
