@@ -11,19 +11,19 @@ interface PersonaAvatarProps {
 const PersonaAvatar = ({ personaId, size = 'md', className = '' }: PersonaAvatarProps) => {
   const avatarConfig = {
     nuva: {
-      imageUrl: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=400&fit=crop&crop=face',
+      imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
       fallbackIcon: Heart,
       gradient: 'from-rose-400 to-pink-500',
       name: 'Nuva'
     },
     nova: {
-      imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face',
+      imageUrl: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=400&h=400&fit=crop&crop=face',
       fallbackIcon: Sun,
       gradient: 'from-amber-400 to-orange-500',
       name: 'Nova'
     },
     sage: {
-      imageUrl: 'https://images.unsplash.com/photo-1506629905607-c75b5d3b9822?w=400&h=400&fit=crop&crop=face',
+      imageUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face',
       fallbackIcon: Flower,
       gradient: 'from-emerald-400 to-green-500',
       name: 'Sage'
