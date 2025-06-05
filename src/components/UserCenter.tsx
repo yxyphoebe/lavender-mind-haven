@@ -13,12 +13,7 @@ import {
   Heart,
   LogOut,
   Crown,
-  Sparkles,
-  Sun,
-  Cloud,
-  CloudRain,
-  Zap,
-  Star
+  Sparkles
 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -79,28 +74,32 @@ const UserCenter = () => {
       color: 'from-indigo-400 to-indigo-500',
       bgColor: 'bg-indigo-50',
       action: () => navigate('/growth')
-    },
-    {
-      icon: User,
-      title: 'Profile Settings',
-      description: 'Personalize your experience',
-      color: 'from-purple-400 to-purple-500',
-      bgColor: 'bg-purple-50',
-      action: () => navigate('/profile')
     }
   ];
 
   const personas = {
     nuva: { name: 'Nuva', icon: Heart },
-    nova: { name: 'Nova', icon: Zap },
-    sage: { name: 'Sage', icon: Star }
+    nova: { name: 'Nova', icon: Heart },
+    sage: { name: 'Sage', icon: Heart }
   };
 
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
-      <div className="container mx-auto px-4 py-6 max-w-md">
+      <div className="container mx-auto px-4 py-6 max-w-md relative">
+        {/* Profile Button - Top Right */}
+        <div className="absolute top-6 right-4 z-10">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate('/profile')}
+            className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white shadow-lg"
+          >
+            <User className="w-5 h-5 text-slate-600" />
+          </Button>
+        </div>
+
         {/* Personalized Greeting */}
         <div className="text-center mb-8">
           <Avatar className="w-20 h-20 mx-auto mb-4 zen-shadow">
