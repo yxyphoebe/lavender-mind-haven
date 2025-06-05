@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -73,6 +72,15 @@ const UserCenter = () => {
 
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
 
+  const getPersonalGreeting = () => {
+    const greetings = {
+      nuva: "I'm here with you, ready to listen 💕",
+      nova: "Let's shine bright together today! ✨",
+      sage: "I'm here to walk this journey with you 🌸"
+    };
+    return greetings[selectedPersona as keyof typeof greetings] || greetings.nuva;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
       <div className="container mx-auto px-4 py-6 max-w-md relative">
@@ -102,7 +110,7 @@ const UserCenter = () => {
             {getGreeting()}, {user.name}
           </h1>
           <p className="text-slate-600 text-lg mb-4">
-            {currentPersona.name} is here for you
+            {getPersonalGreeting()}
           </p>
           
           {/* Streak indicator */}
