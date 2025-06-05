@@ -35,10 +35,10 @@ const UserCenter = () => {
   };
 
   const moodOptions = [
-    { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-pink-100 to-pink-200 text-pink-700' },
+    { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-rose-100 to-rose-200 text-rose-700' },
     { id: 'bright', label: 'Bright', icon: '✨', color: 'from-purple-100 to-purple-200 text-purple-700' },
     { id: 'calm', label: 'Calm', icon: '🌊', color: 'from-blue-100 to-blue-200 text-blue-700' },
-    { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-gray-100 to-gray-200 text-gray-700' }
+    { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-slate-100 to-slate-200 text-slate-700' }
   ];
 
   const mainActions = [
@@ -115,14 +115,14 @@ const UserCenter = () => {
           </p>
           
           {/* Streak indicator */}
-          <div className="inline-flex items-center space-x-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 zen-shadow">
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 backdrop-blur-sm rounded-full px-4 py-2 zen-shadow border border-blue-100">
             <Sparkles className="w-4 h-4 text-purple-500" />
             <span className="text-sm text-slate-700 font-medium">{user.currentStreak} day streak</span>
           </div>
         </div>
 
         {/* Quick Mood Check */}
-        <Card className="mb-8 glass-effect border-0 zen-shadow">
+        <Card className="mb-8 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
           <CardContent className="p-6">
             <h3 className="font-display text-lg font-semibold text-slate-800 mb-4 text-center">
               How are you feeling today?
@@ -153,7 +153,7 @@ const UserCenter = () => {
           {mainActions.map((action) => (
             <Card
               key={action.title}
-              className="cursor-pointer transition-all duration-300 hover:scale-[1.02] glass-effect border-0 zen-shadow"
+              className="cursor-pointer transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow"
               onClick={action.action}
             >
               <CardContent className="p-6">
