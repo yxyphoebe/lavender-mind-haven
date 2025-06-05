@@ -30,6 +30,7 @@ const App = () => (
           <Route path="/chat" element={<ChatInterface />} />
           <Route path="/video-call" element={<VideoChat />} />
           <Route path="/growth" element={<GrowthTimeline />} />
+          <Route path="/user-center" element={<UserCenter />} />
           <Route path="/profile" element={<UserCenter />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
