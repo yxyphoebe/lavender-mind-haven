@@ -84,7 +84,7 @@ const Profile = () => {
         </div>
 
         {/* Profile Basic Info */}
-        <Card className="mb-6 glass-effect border-0 zen-shadow">
+        <Card className="mb-6 bg-white border-0 zen-shadow">
           <CardContent className="p-6">
             <div className="flex flex-col text-center">
               {isEditing ? (
@@ -144,7 +144,7 @@ const Profile = () => {
         </Card>
 
         {/* Current AI Companion */}
-        <Card className="mb-6 glass-effect border-0 zen-shadow">
+        <Card className="mb-6 bg-white border-0 zen-shadow">
           <CardHeader className="pb-3">
             <CardTitle className="font-display text-lg text-slate-800 flex items-center">
               <Heart className="w-5 h-5 mr-2 text-rose-500" />
@@ -173,7 +173,7 @@ const Profile = () => {
         </Card>
 
         {/* Settings Options */}
-        <Card className="mb-6 glass-effect border-0 zen-shadow">
+        <Card className="mb-6 bg-white border-0 zen-shadow">
           <CardHeader className="pb-3">
             <CardTitle className="font-display text-lg text-slate-800 flex items-center">
               <Settings className="w-5 h-5 mr-2 text-slate-600" />
@@ -208,7 +208,7 @@ const Profile = () => {
         </Card>
 
         {/* Account Actions */}
-        <Card className="mb-6 glass-effect border-0 zen-shadow">
+        <Card className="mb-6 bg-white border-0 zen-shadow">
           <CardContent className="p-4">
             <Button
               variant="outline"
