@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Heart, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PersonaAvatar from './PersonaAvatar';
@@ -69,119 +70,132 @@ const PersonaSelection = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 p-4 safe-area-top safe-area-bottom">
+      <div className="max-w-md mx-auto">
         {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-rose-400 to-pink-400 rounded-3xl flex items-center justify-center zen-shadow">
-              <Heart className="w-10 h-10 text-white" />
+        <div className="text-center mb-8 animate-fade-in">
+          <div className="flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-pink-400 rounded-3xl flex items-center justify-center zen-shadow">
+              <Heart className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="font-display text-4xl md:text-5xl font-bold gradient-text mb-4">
-            Choose Your AI Companion
+          <h1 className="font-display text-2xl md:text-3xl font-bold gradient-text mb-3">
+            选择您的AI伙伴
           </h1>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Each companion has a unique approach to supporting your wellness journey. 
-            You can always change your choice later.
+          <p className="text-base text-slate-600 leading-relaxed">
+            每个伙伴都有独特的方式支持您的健康之旅
           </p>
         </div>
 
-        {/* Persona Cards */}
-        <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {personas.map((persona) => {
-            const isSelected = selectedPersona === persona.id;
-            
-            return (
-              <Card
-                key={persona.id}
-                className={`cursor-pointer transition-all duration-300 border-2 hover:scale-105 bg-white/80 backdrop-blur-sm ${
-                  isSelected
-                    ? `${persona.selectedBorder} shadow-xl zen-shadow ring-4 ${persona.selectedRing}`
-                    : `${persona.borderColor} hover:${persona.selectedBorder} hover:shadow-lg`
-                }`}
-                onClick={() => handleSelectPersona(persona.id)}
-              >
-                <CardContent className="p-8 relative">
-                  {/* Selection indicator */}
-                  {isSelected && (
-                    <div className="absolute top-6 right-6">
-                      <CheckCircle className={`w-6 h-6 ${persona.textColor} fill-current`} />
-                    </div>
-                  )}
+        {/* Persona Carousel */}
+        <div className="mb-8">
+          <Carousel className="w-full">
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {personas.map((persona) => {
+                const isSelected = selectedPersona === persona.id;
+                
+                return (
+                  <CarouselItem key={persona.id} className="pl-2 md:pl-4 basis-[85%] sm:basis-[80%]">
+                    <Card
+                      className={`cursor-pointer transition-all duration-300 border-2 bg-white/90 backdrop-blur-sm h-full ${
+                        isSelected
+                          ? `${persona.selectedBorder} shadow-xl zen-shadow ring-4 ${persona.selectedRing}`
+                          : `${persona.borderColor} hover:${persona.selectedBorder} hover:shadow-lg`
+                      }`}
+                      onClick={() => handleSelectPersona(persona.id)}
+                    >
+                      <CardContent className="p-6 relative h-full flex flex-col">
+                        {/* Selection indicator */}
+                        {isSelected && (
+                          <div className="absolute top-4 right-4">
+                            <CheckCircle className={`w-5 h-5 ${persona.textColor} fill-current`} />
+                          </div>
+                        )}
 
-                  {/* Avatar */}
-                  <div className="flex justify-center mb-6">
-                    <PersonaAvatar personaId={persona.id} size="lg" />
-                  </div>
+                        {/* Avatar */}
+                        <div className="flex justify-center mb-4">
+                          <PersonaAvatar personaId={persona.id} size="lg" />
+                        </div>
 
-                  {/* Name and tagline */}
-                  <div className="text-center mb-6">
-                    <h3 className="font-display text-2xl font-bold text-slate-800 mb-3">
-                      {persona.name}
-                    </h3>
-                    <Badge variant="secondary" className={`${persona.textColor} bg-gradient-to-r ${persona.bgGradient} border-0 text-sm px-4 py-1`}>
-                      {persona.tagline}
-                    </Badge>
-                  </div>
+                        {/* Name and tagline */}
+                        <div className="text-center mb-4">
+                          <h3 className="font-display text-xl font-bold text-slate-800 mb-2">
+                            {persona.name}
+                          </h3>
+                          <Badge variant="secondary" className={`${persona.textColor} bg-gradient-to-r ${persona.bgGradient} border-0 text-sm px-3 py-1`}>
+                            {persona.tagline}
+                          </Badge>
+                        </div>
 
-                  {/* Description */}
-                  <p className="text-slate-600 mb-6 leading-relaxed text-center">
-                    {persona.description}
-                  </p>
+                        {/* Description */}
+                        <p className="text-slate-600 mb-4 leading-relaxed text-center text-sm flex-grow">
+                          {persona.description}
+                        </p>
 
-                  {/* Traits */}
-                  <div className="flex flex-wrap gap-2 justify-center mb-6">
-                    {persona.traits.map((trait) => (
-                      <span
-                        key={trait}
-                        className={`px-3 py-1.5 ${persona.bgGradient} ${persona.textColor} rounded-full text-sm font-medium border ${persona.borderColor}`}
-                      >
-                        {trait}
-                      </span>
-                    ))}
-                  </div>
+                        {/* Traits */}
+                        <div className="flex flex-wrap gap-1.5 justify-center mb-4">
+                          {persona.traits.slice(0, 3).map((trait) => (
+                            <span
+                              key={trait}
+                              className={`px-2 py-1 ${persona.bgGradient} ${persona.textColor} rounded-full text-xs font-medium border ${persona.borderColor}`}
+                            >
+                              {trait}
+                            </span>
+                          ))}
+                        </div>
 
-                  {/* Approach */}
-                  <div className={`bg-gradient-to-r ${persona.bgGradient} rounded-xl p-4 mb-4 border ${persona.borderColor}`}>
-                    <h4 className="font-semibold text-slate-800 mb-2">Approach:</h4>
-                    <p className="text-sm text-slate-600 leading-relaxed">
-                      {persona.approach}
-                    </p>
-                  </div>
+                        {/* Best for */}
+                        <div className={`bg-gradient-to-r ${persona.bgGradient} rounded-lg p-3 border ${persona.borderColor}`}>
+                          <h4 className="font-semibold text-slate-800 mb-1 text-sm">适合:</h4>
+                          <p className="text-xs text-slate-600 leading-relaxed">
+                            {persona.bestFor}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </CarouselItem>
+                );
+              })}
+            </CarouselContent>
+            <CarouselPrevious className="left-2" />
+            <CarouselNext className="right-2" />
+          </Carousel>
+        </div>
 
-                  {/* Best for */}
-                  <div>
-                    <h4 className="font-semibold text-slate-800 mb-2 text-sm">Best for:</h4>
-                    <p className="text-sm text-slate-600">
-                      {persona.bestFor}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+        {/* Selection indicator dots */}
+        <div className="flex justify-center space-x-2 mb-8">
+          {personas.map((persona) => (
+            <button
+              key={persona.id}
+              onClick={() => handleSelectPersona(persona.id)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                selectedPersona === persona.id
+                  ? 'bg-rose-400 w-6'
+                  : 'bg-slate-300 hover:bg-slate-400'
+              }`}
+            />
+          ))}
         </div>
 
         {/* Continue button */}
-        <div className="text-center">
+        <div className="text-center mb-6">
           <Button
             onClick={handleContinue}
             disabled={!selectedPersona}
-            className={`px-8 py-4 rounded-2xl text-lg font-medium transition-all duration-300 ${
+            className={`w-full mobile-button text-base font-medium transition-all duration-300 ${
               selectedPersona
                 ? 'bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white hover:scale-105 zen-shadow'
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >
-            {selectedPersona ? `Begin Your Journey with ${personas.find(p => p.id === selectedPersona)?.name}` : 'Select a Companion to Continue'}
+            {selectedPersona ? `开始与 ${personas.find(p => p.id === selectedPersona)?.name} 的旅程` : '选择一个伙伴以继续'}
           </Button>
         </div>
 
         {/* Additional info */}
-        <div className="text-center mt-8">
+        <div className="text-center">
           <p className="text-slate-500 text-sm">
-            Don't worry - you can change your AI companion anytime in settings
+            您可以随时在设置中更换AI伙伴
           </p>
         </div>
       </div>
