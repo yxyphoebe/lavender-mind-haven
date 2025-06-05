@@ -80,10 +80,10 @@ const PersonaSelection = () => {
             </div>
           </div>
           <h1 className="font-display text-2xl md:text-3xl font-bold gradient-text mb-3">
-            选择您的AI伙伴
+            Choose Your AI Companion
           </h1>
           <p className="text-base text-slate-600 leading-relaxed">
-            每个伙伴都有独特的方式支持您的健康之旅
+            Each companion has a unique way to support your wellness journey
           </p>
         </div>
 
@@ -146,7 +146,7 @@ const PersonaSelection = () => {
 
                         {/* Best for */}
                         <div className={`bg-gradient-to-r ${persona.bgGradient} rounded-lg p-3 border ${persona.borderColor}`}>
-                          <h4 className="font-semibold text-slate-800 mb-1 text-sm">适合:</h4>
+                          <h4 className="font-semibold text-slate-800 mb-1 text-sm">Best for:</h4>
                           <p className="text-xs text-slate-600 leading-relaxed">
                             {persona.bestFor}
                           </p>
@@ -188,14 +188,14 @@ const PersonaSelection = () => {
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >
-            {selectedPersona ? `开始与 ${personas.find(p => p.id === selectedPersona)?.name} 的旅程` : '选择一个伙伴以继续'}
+            {selectedPersona ? `Begin Journey with ${personas.find(p => p.id === selectedPersona)?.name}` : 'Select a companion to continue'}
           </Button>
         </div>
 
         {/* Additional info */}
         <div className="text-center">
           <p className="text-slate-500 text-sm">
-            您可以随时在设置中更换AI伙伴
+            You can change your AI companion anytime in settings
           </p>
         </div>
       </div>
