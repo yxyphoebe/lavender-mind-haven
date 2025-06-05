@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Zap, Star, Sparkles, CheckCircle } from 'lucide-react';
+import { Sparkles, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import PersonaAvatar from './PersonaAvatar';
 
 const PersonaSelection = () => {
   const [selectedPersona, setSelectedPersona] = useState<string | null>(null);
@@ -12,13 +13,11 @@ const PersonaSelection = () => {
 
   const personas = [
     {
-      id: 'nuva',
+      id: 'nuva' as const,
       name: 'Nuva',
       tagline: 'Gentle & Empathetic',
       description: 'Nuva offers a warm, nurturing presence with infinite patience. She specializes in creating safe spaces for emotional exploration and healing.',
       traits: ['Compassionate', 'Patient', 'Intuitive', 'Nurturing'],
-      icon: Heart,
-      gradient: 'from-rose-400 to-pink-500',
       bgGradient: 'from-rose-50 to-pink-50',
       textColor: 'text-rose-700',
       borderColor: 'border-rose-200',
@@ -28,13 +27,11 @@ const PersonaSelection = () => {
       bestFor: 'Processing trauma, anxiety support, self-compassion work'
     },
     {
-      id: 'nova',
+      id: 'nova' as const,
       name: 'Nova',
       tagline: 'Confident & Direct',
       description: 'Nova brings clarity and strength to your wellness journey. She provides practical solutions while maintaining deep empathy and understanding.',
       traits: ['Motivating', 'Clear', 'Empowering', 'Solution-focused'],
-      icon: Zap,
-      gradient: 'from-blue-400 to-cyan-500',
       bgGradient: 'from-blue-50 to-cyan-50',
       textColor: 'text-blue-700',
       borderColor: 'border-blue-200',
@@ -44,13 +41,11 @@ const PersonaSelection = () => {
       bestFor: 'Goal achievement, confidence building, overcoming obstacles'
     },
     {
-      id: 'sage',
+      id: 'sage' as const,
       name: 'Sage',
       tagline: 'Wise & Balanced',
       description: 'Sage draws from ancient wisdom and modern psychology to offer balanced perspectives on life\'s challenges and opportunities for growth.',
       traits: ['Wise', 'Balanced', 'Insightful', 'Grounding'],
-      icon: Star,
-      gradient: 'from-violet-400 to-purple-500',
       bgGradient: 'from-violet-50 to-purple-50',
       textColor: 'text-violet-700',
       borderColor: 'border-violet-200',
@@ -95,7 +90,6 @@ const PersonaSelection = () => {
         {/* Persona Cards */}
         <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {personas.map((persona) => {
-            const IconComponent = persona.icon;
             const isSelected = selectedPersona === persona.id;
             
             return (
@@ -117,8 +111,8 @@ const PersonaSelection = () => {
                   )}
 
                   {/* Avatar */}
-                  <div className={`w-20 h-20 bg-gradient-to-br ${persona.gradient} rounded-3xl flex items-center justify-center mx-auto mb-6 zen-shadow`}>
-                    <IconComponent className="w-10 h-10 text-white" />
+                  <div className="flex justify-center mb-6">
+                    <PersonaAvatar personaId={persona.id} size="lg" />
                   </div>
 
                   {/* Name and tagline */}
