@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -35,10 +34,10 @@ const UserCenter = () => {
   };
 
   const moodOptions = [
-    { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-pink-100 to-pink-200 text-pink-700' },
+    { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-lavender-100 to-lavender-200 text-lavender-700' },
     { id: 'bright', label: 'Bright', icon: '✨', color: 'from-purple-100 to-purple-200 text-purple-700' },
     { id: 'calm', label: 'Calm', icon: '🌊', color: 'from-blue-100 to-blue-200 text-blue-700' },
-    { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-gray-100 to-gray-200 text-gray-700' }
+    { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-slate-100 to-slate-200 text-slate-700' }
   ];
 
   const mainActions = [
