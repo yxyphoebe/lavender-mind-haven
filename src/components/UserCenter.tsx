@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -35,7 +36,7 @@ const UserCenter = () => {
 
   const moodOptions = [
     { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-pink-100 to-pink-200 text-pink-700' },
-    { id: 'bright', label: 'Bright', icon: '✨', color: 'from-yellow-100 to-yellow-200 text-yellow-700' },
+    { id: 'bright', label: 'Bright', icon: '✨', color: 'from-purple-100 to-purple-200 text-purple-700' },
     { id: 'calm', label: 'Calm', icon: '🌊', color: 'from-blue-100 to-blue-200 text-blue-700' },
     { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-gray-100 to-gray-200 text-gray-700' }
   ];
@@ -115,7 +116,7 @@ const UserCenter = () => {
           
           {/* Streak indicator */}
           <div className="inline-flex items-center space-x-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 zen-shadow">
-            <Sparkles className="w-4 h-4 text-amber-500" />
+            <Sparkles className="w-4 h-4 text-purple-500" />
             <span className="text-sm text-slate-700 font-medium">{user.currentStreak} day streak</span>
           </div>
         </div>
