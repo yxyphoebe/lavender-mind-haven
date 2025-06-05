@@ -63,9 +63,9 @@ const PersonaSelection = () => {
 
   const handleContinue = () => {
     if (selectedPersona) {
-      // Store selection and navigate to main app
+      // Store selection and navigate to user center instead of chat
       localStorage.setItem('selectedPersona', selectedPersona);
-      navigate('/chat');
+      navigate('/user-center');
     }
   };
 
