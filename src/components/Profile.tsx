@@ -131,9 +131,9 @@ const Profile = () => {
                   </h2>
                   <p className="text-slate-600 mb-2">{userInfo.email}</p>
                   <p className="text-slate-600 mb-4">{userInfo.phone}</p>
-                  <div className="inline-flex items-center space-x-2 bg-violet-50 rounded-full px-3 py-1">
-                    <Calendar className="w-4 h-4 text-violet-600" />
-                    <span className="text-sm text-violet-700">
+                  <div className="inline-flex items-center space-x-2 bg-slate-50 rounded-full px-3 py-1">
+                    <Calendar className="w-4 h-4 text-slate-600" />
+                    <span className="text-sm text-slate-700">
                       Member since {new Date(userInfo.joinDate).toLocaleDateString()}
                     </span>
                   </div>
