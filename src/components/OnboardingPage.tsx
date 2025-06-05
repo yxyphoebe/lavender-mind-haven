@@ -119,12 +119,12 @@ const OnboardingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-sky-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-blue-400 rounded-2xl flex items-center justify-center zen-shadow">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-violet-400 rounded-2xl flex items-center justify-center zen-shadow">
               <Heart className="w-8 h-8 text-white" />
             </div>
           </div>
@@ -146,7 +146,7 @@ const OnboardingPage = () => {
         </div>
 
         {/* Step Content */}
-        <Card className="glass-effect border-0 zen-shadow mb-8">
+        <Card className="bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow mb-8">
           <CardHeader>
             <CardTitle className="text-xl font-semibold text-slate-800 mb-2">
               {currentStepData.title}
@@ -170,15 +170,15 @@ const OnboardingPage = () => {
                     key={option.id}
                     className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                       isSelected
-                        ? 'border-purple-400 bg-purple-50 zen-shadow'
-                        : 'border-purple-200 hover:border-purple-300 hover:bg-blue-25'
+                        ? 'border-blue-400 bg-blue-50 zen-shadow'
+                        : 'border-blue-200 hover:border-blue-300 hover:bg-blue-25'
                     }`}
                     onClick={() => handleOptionSelect(option.id)}
                   >
                     <div className="flex items-start space-x-3">
                       {IconComponent && (
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                          isSelected ? 'bg-purple-400 text-white' : 'bg-blue-100 text-blue-600'
+                          isSelected ? 'bg-blue-400 text-white' : 'bg-blue-100 text-blue-600'
                         }`}>
                           <IconComponent className="w-4 h-4" />
                         </div>
@@ -190,7 +190,7 @@ const OnboardingPage = () => {
                             {option.label}
                           </h4>
                           {isSelected && (
-                            <CheckCircle className="w-5 h-5 text-purple-600" />
+                            <CheckCircle className="w-5 h-5 text-blue-600" />
                           )}
                         </div>
                         {option.description && (
@@ -207,7 +207,7 @@ const OnboardingPage = () => {
 
             {currentStepData.multiSelect && (
               <div className="mt-4">
-                <Badge variant="secondary" className="bg-blue-50 text-blue-700">
+                <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
                   You can select multiple options
                 </Badge>
               </div>
@@ -221,7 +221,7 @@ const OnboardingPage = () => {
             variant="outline"
             onClick={handleBack}
             disabled={currentStep === 0}
-            className="flex items-center space-x-2 border-purple-200 hover:bg-purple-50"
+            className="flex items-center space-x-2 border-blue-200 hover:bg-blue-50 bg-white"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back</span>
@@ -232,7 +232,7 @@ const OnboardingPage = () => {
             disabled={!canProceed()}
             className={`flex items-center space-x-2 ${
               canProceed()
-                ? 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white'
+                ? 'bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white'
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >
