@@ -1,13 +1,11 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { 
   MessageCircle, 
   Video, 
   TrendingUp, 
   User, 
-  Heart,
   Sparkles,
   Sun,
   Moon,
@@ -28,12 +26,6 @@ const UserCenter = () => {
     if (hour < 12) return 'Good morning';
     if (hour < 17) return 'Good afternoon';
     return 'Good evening';
-  };
-
-  const getGreetingIcon = () => {
-    if (hour < 12) return Sunrise;
-    if (hour < 17) return Sun;
-    return Moon;
   };
 
   // Mock user data - simplified for home page
@@ -74,13 +66,12 @@ const UserCenter = () => {
   ];
 
   const personas = {
-    nuva: { name: 'Nuva', icon: Heart },
-    nova: { name: 'Nova', icon: Heart },
-    sage: { name: 'Sage', icon: Heart }
+    nuva: { name: 'Nuva' },
+    nova: { name: 'Nova' },
+    sage: { name: 'Sage' }
   };
 
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
-  const GreetingIcon = getGreetingIcon();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
@@ -97,12 +88,14 @@ const UserCenter = () => {
           </Button>
         </div>
 
-        {/* Zen Greeting */}
+        {/* Zen Greeting with AI Therapist Avatar */}
         <div className="text-center mb-8 pt-4">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-violet-100 to-blue-100 rounded-full flex items-center justify-center zen-shadow">
-              <GreetingIcon className="w-8 h-8 text-violet-600" />
-            </div>
+            <PersonaAvatar 
+              personaId={selectedPersona as 'nuva' | 'nova' | 'sage'} 
+              size="lg" 
+              className="animate-fade-in"
+            />
           </div>
           
           <h1 className="font-display text-3xl font-bold gradient-text mb-2">
@@ -173,31 +166,6 @@ const UserCenter = () => {
             </Card>
           ))}
         </div>
-
-        {/* Current Companion */}
-        <Card className="glass-effect border-0 zen-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <PersonaAvatar personaId={selectedPersona as 'nuva' | 'nova' | 'sage'} size="md" />
-                <div>
-                  <h3 className="font-display text-lg font-semibold text-slate-800">
-                    Your companion: {currentPersona.name}
-                  </h3>
-                  <p className="text-slate-600 text-sm">Ready to support your journey</p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                onClick={() => navigate('/persona-selection')}
-                className="text-violet-600 hover:bg-violet-50"
-              >
-                <Heart className="w-4 h-4 mr-2" />
-                Change
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
