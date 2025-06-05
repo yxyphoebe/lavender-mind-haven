@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { 
   User, 
   Settings, 
@@ -32,8 +31,7 @@ const Profile = () => {
     name: 'Sarah Chen',
     email: 'sarah.chen@email.com',
     phone: '+1 (555) 123-4567',
-    joinDate: '2024-01-15',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face'
+    joinDate: '2024-01-15'
   });
 
   const personas = {
@@ -90,12 +88,9 @@ const Profile = () => {
         <Card className="mb-6 glass-effect border-0 zen-shadow">
           <CardContent className="p-6">
             <div className="flex flex-col items-center text-center">
-              <Avatar className="w-24 h-24 mb-4 zen-shadow">
-                <AvatarImage src={userInfo.avatar} alt="Profile" />
-                <AvatarFallback className="bg-gradient-to-br from-violet-400 to-blue-400 text-white text-xl">
-                  {userInfo.name.split(' ').map(n => n[0]).join('')}
-                </AvatarFallback>
-              </Avatar>
+              <div className="w-24 h-24 mb-4 rounded-full bg-gradient-to-br from-violet-400 to-blue-400 flex items-center justify-center zen-shadow">
+                <User className="w-12 h-12 text-white" />
+              </div>
               
               {isEditing ? (
                 <div className="w-full space-y-3">
