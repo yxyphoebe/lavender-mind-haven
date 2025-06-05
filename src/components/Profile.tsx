@@ -88,7 +88,7 @@ const Profile = () => {
         <Card className="mb-6 glass-effect border-0 zen-shadow">
           <CardContent className="p-6">
             <div className="flex flex-col items-center text-center">
-              <div className="w-24 h-24 mb-4 rounded-full bg-gradient-to-br from-violet-400 to-blue-400 flex items-center justify-center zen-shadow">
+              <div className="w-24 h-24 mb-4 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center zen-shadow">
                 <User className="w-12 h-12 text-white" />
               </div>
               
