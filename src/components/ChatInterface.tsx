@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -118,51 +119,95 @@ const ChatInterface = () => {
   const IconComponent = currentPersona.icon;
 
   return (
-    <div className="h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex flex-col">
-      {/* Header */}
-      <div className="glass-effect border-b border-violet-200 p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/user-center')}
-            className="hover:bg-violet-100 rounded-xl"
-          >
-            <ArrowLeft className="w-5 h-5 text-slate-600" />
-          </Button>
-          
-          <Avatar className={`w-10 h-10 bg-gradient-to-br ${
-            currentPersona.color === 'blue' 
-              ? 'from-blue-400 to-blue-500' 
-              : currentPersona.color === 'violet' 
-                ? 'from-violet-400 to-violet-500'
-                : 'from-indigo-400 to-indigo-500'
-          }`}>
-            <AvatarFallback className="bg-transparent">
-              <IconComponent className="w-6 h-6 text-white" />
-            </AvatarFallback>
-          </Avatar>
-          
-          <div>
-            <h2 className="font-display text-lg font-semibold text-slate-800">
-              {currentPersona.name}
-            </h2>
-            <p className="text-sm text-slate-500">
-              {isTyping ? 'Typing...' : 'Here to support you'}
-            </p>
+    <div className="h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex">
+      {/* Left side - empty space */}
+      <div className="flex-1"></div>
+      
+      {/* Right side - chat interface */}
+      <div className="w-96 flex flex-col border-l border-violet-200">
+        {/* Header */}
+        <div className="glass-effect border-b border-violet-200 p-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/user-center')}
+              className="hover:bg-violet-100 rounded-xl"
+            >
+              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            </Button>
+            
+            <Avatar className={`w-10 h-10 bg-gradient-to-br ${
+              currentPersona.color === 'blue' 
+                ? 'from-blue-400 to-blue-500' 
+                : currentPersona.color === 'violet' 
+                  ? 'from-violet-400 to-violet-500'
+                  : 'from-indigo-400 to-indigo-500'
+            }`}>
+              <AvatarFallback className="bg-transparent">
+                <IconComponent className="w-6 h-6 text-white" />
+              </AvatarFallback>
+            </Avatar>
+            
+            <div>
+              <h2 className="font-display text-lg font-semibold text-slate-800">
+                {currentPersona.name}
+              </h2>
+              <p className="text-sm text-slate-500">
+                {isTyping ? 'Typing...' : 'Here to support you'}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
-          >
-            <div className={`max-w-[80%] ${message.sender === 'user' ? 'order-1' : 'order-2'}`}>
-              {message.sender === 'ai' && (
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
+            >
+              <div className={`max-w-[85%] ${message.sender === 'user' ? 'order-1' : 'order-2'}`}>
+                {message.sender === 'ai' && (
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Avatar className={`w-8 h-8 bg-gradient-to-br ${
+                      currentPersona.color === 'blue' 
+                        ? 'from-blue-400 to-blue-500' 
+                        : currentPersona.color === 'violet' 
+                          ? 'from-violet-400 to-violet-500'
+                          : 'from-indigo-400 to-indigo-500'
+                    }`}>
+                      <AvatarFallback className="bg-transparent">
+                        <IconComponent className="w-4 h-4 text-white" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm font-medium text-slate-700">{currentPersona.name}</span>
+                  </div>
+                )}
+                
+                <Card className={`p-3 ${
+                  message.sender === 'user'
+                    ? 'bg-gradient-to-r from-violet-500 to-blue-500 text-white ml-4'
+                    : 'bg-white border-violet-200 mr-4 zen-shadow'
+                }`}>
+                  <p className={`leading-relaxed text-sm ${
+                    message.sender === 'user' ? 'text-white' : 'text-slate-700'
+                  }`}>
+                    {message.text}
+                  </p>
+                  <p className={`text-xs mt-2 ${
+                    message.sender === 'user' ? 'text-violet-100' : 'text-slate-400'
+                  }`}>
+                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </Card>
+              </div>
+            </div>
+          ))}
+          
+          {isTyping && (
+            <div className="flex justify-start animate-fade-in">
+              <div className="max-w-[85%]">
                 <div className="flex items-center space-x-2 mb-2">
                   <Avatar className={`w-8 h-8 bg-gradient-to-br ${
                     currentPersona.color === 'blue' 
@@ -177,80 +222,42 @@ const ChatInterface = () => {
                   </Avatar>
                   <span className="text-sm font-medium text-slate-700">{currentPersona.name}</span>
                 </div>
-              )}
-              
-              <Card className={`p-4 ${
-                message.sender === 'user'
-                  ? 'bg-gradient-to-r from-violet-500 to-blue-500 text-white ml-4'
-                  : 'bg-white border-violet-200 mr-4 zen-shadow'
-              }`}>
-                <p className={`leading-relaxed ${
-                  message.sender === 'user' ? 'text-white' : 'text-slate-700'
-                }`}>
-                  {message.text}
-                </p>
-                <p className={`text-xs mt-2 ${
-                  message.sender === 'user' ? 'text-violet-100' : 'text-slate-400'
-                }`}>
-                  {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </p>
-              </Card>
-            </div>
-          </div>
-        ))}
-        
-        {isTyping && (
-          <div className="flex justify-start animate-fade-in">
-            <div className="max-w-[80%]">
-              <div className="flex items-center space-x-2 mb-2">
-                <Avatar className={`w-8 h-8 bg-gradient-to-br ${
-                  currentPersona.color === 'blue' 
-                    ? 'from-blue-400 to-blue-500' 
-                    : currentPersona.color === 'violet' 
-                      ? 'from-violet-400 to-violet-500'
-                      : 'from-indigo-400 to-indigo-500'
-                }`}>
-                  <AvatarFallback className="bg-transparent">
-                    <IconComponent className="w-4 h-4 text-white" />
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-sm font-medium text-slate-700">{currentPersona.name}</span>
+                <Card className="p-3 bg-white border-violet-200 mr-4 zen-shadow">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </Card>
               </div>
-              <Card className="p-4 bg-white border-violet-200 mr-4 zen-shadow">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                </div>
-              </Card>
             </div>
-          </div>
-        )}
-        
-        <div ref={messagesEndRef} />
-      </div>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
 
-      {/* Input */}
-      <div className="p-4 glass-effect border-t border-violet-200">
-        <div className="flex items-center space-x-3">
-          <VoiceRecorder 
-            onTranscriptionComplete={handleVoiceTranscription}
-            disabled={isTyping}
-          />
-          <Input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="说话或输入文字..."
-            className="flex-1 h-12 border-violet-200 rounded-2xl focus:ring-violet-400 bg-white/80"
-          />
-          <Button
-            onClick={handleSendMessage}
-            disabled={!inputValue.trim() || isTyping}
-            className="h-12 w-12 bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white rounded-2xl p-0 transition-all duration-300 hover:scale-105"
-          >
-            <Send className="w-5 h-5" />
-          </Button>
+        {/* Input */}
+        <div className="p-4 glass-effect border-t border-violet-200">
+          <div className="flex items-center space-x-2">
+            <VoiceRecorder 
+              onTranscriptionComplete={handleVoiceTranscription}
+              disabled={isTyping}
+            />
+            <Input
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="说话或输入文字..."
+              className="flex-1 h-10 border-violet-200 rounded-xl focus:ring-violet-400 bg-white/80 text-sm"
+            />
+            <Button
+              onClick={handleSendMessage}
+              disabled={!inputValue.trim() || isTyping}
+              className="h-10 w-10 bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white rounded-xl p-0 transition-all duration-300 hover:scale-105"
+            >
+              <Send className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>
