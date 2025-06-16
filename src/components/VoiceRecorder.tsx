@@ -54,11 +54,6 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
       mediaRecorder.start();
       setIsRecording(true);
       setShowWaveform(true);
-      
-      toast({
-        title: "录音开始",
-        description: "请开始说话...",
-      });
     } catch (error) {
       console.error('Error starting recording:', error);
       toast({
@@ -122,10 +117,6 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
           
           if (data.text && data.text.trim()) {
             onTranscriptionComplete(data.text.trim());
-            toast({
-              title: "语音识别成功",
-              description: `识别文本: ${data.text.trim()}`,
-            });
           } else {
             toast({
               title: "未识别到语音",
