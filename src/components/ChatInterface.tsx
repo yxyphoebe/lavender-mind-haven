@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +6,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Send, Heart, Zap, Star, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import VoiceRecorder from './VoiceRecorder';
 
 interface Message {
   id: string;
@@ -90,7 +90,6 @@ const ChatInterface = () => {
     } catch (error) {
       console.error('Error calling AI:', error);
       
-      // Fallback message in case of error
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: "I'm experiencing some technical difficulties right now. Please try again in a moment.",
@@ -109,6 +108,11 @@ const ChatInterface = () => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleVoiceTranscription = (text: string) => {
+    console.log('Voice transcription received:', text);
+    setInputValue(text);
   };
 
   const IconComponent = currentPersona.icon;
@@ -229,11 +233,15 @@ const ChatInterface = () => {
       {/* Input */}
       <div className="p-4 glass-effect border-t border-violet-200">
         <div className="flex items-center space-x-3">
+          <VoiceRecorder 
+            onTranscriptionComplete={handleVoiceTranscription}
+            disabled={isTyping}
+          />
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Share what's on your mind..."
+            placeholder="说话或输入文字..."
             className="flex-1 h-12 border-violet-200 rounded-2xl focus:ring-violet-400 bg-white/80"
           />
           <Button
