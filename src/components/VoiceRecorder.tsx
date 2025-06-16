@@ -1,7 +1,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Mic, MicOff, Send } from 'lucide-react';
+import { Mic, MicOff, X, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -13,6 +13,7 @@ interface VoiceRecorderProps {
 const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, disabled }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showWaveform, setShowWaveform] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const { toast } = useToast();
@@ -45,12 +46,14 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
 
       mediaRecorder.onstop = async () => {
         console.log('Recording stopped, processing audio...');
+        setShowWaveform(false);
         await processRecording();
         stream.getTracks().forEach(track => track.stop());
       };
 
       mediaRecorder.start();
       setIsRecording(true);
+      setShowWaveform(true);
       
       toast({
         title: "录音开始",
@@ -72,6 +75,21 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
       mediaRecorderRef.current.stop();
       setIsRecording(false);
       setIsProcessing(true);
+    }
+  };
+
+  const cancelRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      console.log('Canceling recording...');
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      setShowWaveform(false);
+      audioChunksRef.current = [];
+      
+      // Stop all tracks
+      if (mediaRecorderRef.current.stream) {
+        mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+      }
     }
   };
 
@@ -140,29 +158,74 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
   };
 
   const handleClick = () => {
-    if (isRecording) {
-      stopRecording();
-    } else {
+    if (!isRecording && !isProcessing) {
       startRecording();
     }
   };
+
+  // Waveform animation component
+  const WaveformAnimation = () => (
+    <div className="flex items-center justify-center space-x-1">
+      {Array.from({ length: 20 }).map((_, i) => (
+        <div
+          key={i}
+          className="w-0.5 bg-current rounded-full animate-pulse"
+          style={{
+            height: `${Math.random() * 20 + 8}px`,
+            animationDelay: `${i * 0.1}s`,
+            animationDuration: `${0.5 + Math.random() * 0.5}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+
+  if (showWaveform && isRecording) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 text-center">
+          <h3 className="text-lg font-medium mb-6 text-gray-800">What can I help with?</h3>
+          
+          <div className="mb-8 h-12 flex items-center justify-center">
+            <WaveformAnimation />
+          </div>
+          
+          <div className="flex items-center justify-center space-x-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={cancelRecording}
+              className="h-12 w-12 rounded-full hover:bg-gray-100"
+            >
+              <X className="w-5 h-5 text-gray-600" />
+            </Button>
+            
+            <div className="text-sm text-gray-500">Tools</div>
+            
+            <Button
+              onClick={stopRecording}
+              className="h-12 w-12 bg-green-500 hover:bg-green-600 text-white rounded-full p-0"
+            >
+              <Check className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Button
       onClick={handleClick}
       disabled={disabled || isProcessing}
-      variant={isRecording ? "destructive" : "outline"}
+      variant="outline"
       size="icon"
-      className={`h-12 w-12 rounded-2xl transition-all duration-300 ${
-        isRecording 
-          ? 'bg-red-500 hover:bg-red-600 scale-110 animate-pulse' 
-          : 'hover:scale-105'
-      } ${isProcessing ? 'opacity-50' : ''}`}
+      className={`h-12 w-12 rounded-2xl transition-all duration-300 hover:scale-105 ${
+        isProcessing ? 'opacity-50' : ''
+      }`}
     >
       {isProcessing ? (
         <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-      ) : isRecording ? (
-        <MicOff className="w-5 h-5 text-white" />
       ) : (
         <Mic className="w-5 h-5" />
       )}
