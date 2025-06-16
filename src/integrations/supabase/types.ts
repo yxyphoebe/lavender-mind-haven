@@ -167,6 +167,42 @@ export type Database = {
           },
         ]
       }
+      therapists: {
+        Row: {
+          age_range: string
+          background_story: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          intro_video_url: string | null
+          name: string
+          style: string | null
+          updated_at: string
+        }
+        Insert: {
+          age_range: string
+          background_story?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          intro_video_url?: string | null
+          name: string
+          style?: string | null
+          updated_at?: string
+        }
+        Update: {
+          age_range?: string
+          background_story?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          intro_video_url?: string | null
+          name?: string
+          style?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           avatar_choice: string | null
