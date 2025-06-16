@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Send, Heart, Zap, Star, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   id: string;
@@ -61,34 +62,45 @@ const ChatInterface = () => {
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponses = [
-        "I hear you, and I want you to know that what you're feeling is completely valid. Would you like to explore this feeling a bit more together?",
-        "Thank you for sharing that with me. It takes courage to open up. How has this been affecting your daily life?",
-        "I'm here to support you through this. Let's take a moment to breathe together. What would feel most helpful for you right now?",
-        "That sounds like a really challenging experience. You're being so brave by talking about it. What do you think might help you feel more grounded?",
-        "I can sense the strength in your words, even through the difficulty. What small step could we take together today?"
-      ];
-
-      const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+    try {
+      console.log('Calling AI chat function...');
       
+      const { data, error } = await supabase.functions.invoke('ai-chat', {
+        body: {
+          message: inputValue,
+          persona: selectedPersona
+        }
+      });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
+
+      console.log('AI response received:', data);
+
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: randomResponse,
+        text: data.response || "I'm sorry, I couldn't process your message right now. Please try again.",
         sender: 'ai',
         timestamp: new Date()
       };
 
       setMessages(prev => [...prev, aiMessage]);
-      setIsTyping(false);
-    }, 2000);
-  };
+    } catch (error) {
+      console.error('Error calling AI:', error);
+      
+      // Fallback message in case of error
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "I'm experiencing some technical difficulties right now. Please try again in a moment.",
+        sender: 'ai',
+        timestamp: new Date()
+      };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsTyping(false);
     }
   };
 
@@ -219,7 +231,7 @@ const ChatInterface = () => {
           />
           <Button
             onClick={handleSendMessage}
-            disabled={!inputValue.trim()}
+            disabled={!inputValue.trim() || isTyping}
             className="h-12 w-12 bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white rounded-2xl p-0 transition-all duration-300 hover:scale-105"
           >
             <Send className="w-5 h-5" />
