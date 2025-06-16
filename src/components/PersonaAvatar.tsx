@@ -1,4 +1,3 @@
-
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Heart, Sun, Flower, Sparkles, BookOpen, Shield } from 'lucide-react';
 
@@ -11,7 +10,7 @@ interface PersonaAvatarProps {
 const PersonaAvatar = ({ personaId, size = 'md', className = '' }: PersonaAvatarProps) => {
   const avatarConfig = {
     nuva: {
-      imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face&sat=-20&brightness=10',
+      imageUrl: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop&crop=face',
       fallbackIcon: Heart,
       gradient: 'from-purple-400 to-pink-500',
       name: 'Nuva'
