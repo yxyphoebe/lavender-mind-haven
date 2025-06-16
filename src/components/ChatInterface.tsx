@@ -234,16 +234,16 @@ const ChatInterface = () => {
       {/* Input */}
       <div className="p-4 glass-effect border-t border-violet-200 max-w-4xl mx-auto w-full">
         <div className="flex items-center space-x-2">
-          <VoiceRecorder 
-            onTranscriptionComplete={handleVoiceTranscription}
-            disabled={isTyping}
-          />
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="说话或输入文字..."
             className="flex-1 h-10 border-violet-200 rounded-xl focus:ring-violet-400 bg-white/80 text-sm"
+          />
+          <VoiceRecorder 
+            onTranscriptionComplete={handleVoiceTranscription}
+            disabled={isTyping}
           />
           <Button
             onClick={handleSendMessage}
