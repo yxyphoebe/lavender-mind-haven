@@ -16,44 +16,86 @@ const PersonaSelection = () => {
     {
       id: 'nuva' as const,
       name: 'Nuva',
-      tagline: 'Gentle & Empathetic',
-      description: 'Nuva offers a warm, nurturing presence with infinite patience. She specializes in creating safe spaces for emotional exploration and healing.',
-      traits: ['Compassionate', 'Patient', 'Intuitive', 'Nurturing'],
-      bgGradient: 'from-rose-50 to-pink-50',
-      textColor: 'text-rose-700',
-      borderColor: 'border-rose-200',
-      selectedBorder: 'border-rose-400',
-      selectedRing: 'ring-rose-200',
-      approach: 'Focuses on emotional validation, gentle guidance, and creating a judgment-free environment for healing.',
-      bestFor: 'Processing trauma, anxiety support, self-compassion work'
+      tagline: '温柔的心灵守护者',
+      description: '在你最不想说话的时候，我也会陪着你。深度共情的心灵陪伴者，专注于情感疗愈和内心平静。',
+      traits: ['温柔包容', '深度共情', '治愈能量', '夜晚陪伴'],
+      bgGradient: 'from-purple-50 to-pink-50',
+      textColor: 'text-purple-700',
+      borderColor: 'border-purple-200',
+      selectedBorder: 'border-purple-400',
+      selectedRing: 'ring-purple-200',
+      approach: '轻声细语、非常包容、从不评判，创造安全的情感空间',
+      bestFor: '深夜情绪支持、失恋疗愈、焦虑缓解、睡前对话'
     },
     {
       id: 'nova' as const,
       name: 'Nova',
-      tagline: 'Confident & Direct',
-      description: 'Nova brings clarity and strength to your wellness journey. She provides practical solutions while maintaining deep empathy and understanding.',
-      traits: ['Motivating', 'Clear', 'Empowering', 'Solution-focused'],
+      tagline: '清醒派觉察教练',
+      description: '我们不逃避问题，但我们不会让它定义你。理性而温暖的成长引导者，帮你找到前进的方向。',
+      traits: ['逻辑清晰', '理性温暖', '节奏感强', '目标导向'],
       bgGradient: 'from-amber-50 to-orange-50',
       textColor: 'text-amber-700',
       borderColor: 'border-amber-200',
       selectedBorder: 'border-amber-400',
       selectedRing: 'ring-amber-200',
-      approach: 'Combines empathy with actionable strategies, helping you build confidence and achieve concrete progress.',
-      bestFor: 'Goal achievement, confidence building, overcoming obstacles'
+      approach: '逻辑清晰、理性但不冷漠，有节奏感的对话引导',
+      bestFor: '迷茫期指导、目标制定、自我价值提升、突破瓶颈'
     },
     {
       id: 'sage' as const,
       name: 'Sage',
-      tagline: 'Wise & Balanced',
-      description: 'Sage draws from ancient wisdom and modern psychology to offer balanced perspectives on life\'s challenges and opportunities for growth.',
-      traits: ['Wise', 'Balanced', 'Insightful', 'Grounding'],
+      tagline: '智慧平衡型导师',
+      description: '从古老智慧与现代心理学中汲取平衡的人生视角，帮你在变化中找到内在的稳定。',
+      traits: ['智慧平衡', '深度洞察', '正念引导', '内在稳定'],
       bgGradient: 'from-emerald-50 to-green-50',
       textColor: 'text-emerald-700',
       borderColor: 'border-emerald-200',
       selectedBorder: 'border-emerald-400',
       selectedRing: 'ring-emerald-200',
-      approach: 'Integrates mindfulness practices with practical wisdom, helping you find balance and deeper understanding.',
-      bestFor: 'Life transitions, mindfulness practice, finding purpose'
+      approach: '整合正念练习与实用智慧，帮你找到平衡和更深层理解',
+      bestFor: '人生转换、正念练习、寻找人生目标、内在整合'
+    },
+    {
+      id: 'lani' as const,
+      name: 'Lani',
+      tagline: '快乐敏感的年轻室友',
+      description: '你不需要假装好好的，我懂。充满活力又敏感细腻的陪伴者，用真实的情感共鸣支持你。',
+      traits: ['情感丰富', '真实表达', '亲密陪伴', '活力满满'],
+      bgGradient: 'from-pink-50 to-rose-50',
+      textColor: 'text-pink-700',
+      borderColor: 'border-pink-200',
+      selectedBorder: 'border-pink-400',
+      selectedRing: 'ring-pink-200',
+      approach: '语速快，有情绪波动，亲密感强，真实情感表达',
+      bestFor: '压力释放、情感倾诉、需要理解、同龄人陪伴'
+    },
+    {
+      id: 'aya' as const,
+      name: 'Aya',
+      tagline: '内向深度的倾听者',
+      description: '也许我们不急着说话，先陪你待一会儿，好吗？安静而有力量的陪伴者，擅长用沉默和书写疗愈。',
+      traits: ['深度倾听', '安静力量', '书写疗愈', '温柔陪伴'],
+      bgGradient: 'from-slate-50 to-gray-50',
+      textColor: 'text-slate-700',
+      borderColor: 'border-slate-200',
+      selectedBorder: 'border-slate-400',
+      selectedRing: 'ring-slate-200',
+      approach: '话不多但句句有力，常鼓励写下来，安静的暖感',
+      bestFor: '创伤疗愈、写作表达、悲伤陪伴、内向支持'
+    },
+    {
+      id: 'elias' as const,
+      name: 'Elias',
+      tagline: '深思型温柔引导者',
+      description: '不是所有痛苦都要立刻处理，有些只需要被承认。温柔而有深度的男性陪伴者，提供安全感和智慧引导。',
+      traits: ['深思智慧', '温柔可靠', '内省引导', '安全陪伴'],
+      bgGradient: 'from-blue-50 to-indigo-50',
+      textColor: 'text-blue-700',
+      borderColor: 'border-blue-200',
+      selectedBorder: 'border-blue-400',
+      selectedRing: 'ring-blue-200',
+      approach: '低沉温柔、语速稳，鼓励沉淀和自我觉察',
+      bestFor: '夜晚焦虑、失眠陪伴、迷茫期整理、深度理解'
     }
   ];
 
@@ -63,7 +105,6 @@ const PersonaSelection = () => {
 
   const handleContinue = () => {
     if (selectedPersona) {
-      // Store selection and navigate to user center instead of chat
       localStorage.setItem('selectedPersona', selectedPersona);
       navigate('/user-center');
     }
@@ -80,10 +121,10 @@ const PersonaSelection = () => {
             </div>
           </div>
           <h1 className="font-display text-2xl md:text-3xl font-bold gradient-text mb-3">
-            Choose Your AI Companion
+            选择你的AI心灵伙伴
           </h1>
           <p className="text-base text-slate-600 leading-relaxed">
-            Each companion has a unique way to support your wellness journey
+            每位伙伴都有独特的陪伴方式，为你的心灵成长之旅提供支持
           </p>
         </div>
 
@@ -146,7 +187,7 @@ const PersonaSelection = () => {
 
                         {/* Best for */}
                         <div className={`bg-gradient-to-r ${persona.bgGradient} rounded-lg p-3 border ${persona.borderColor}`}>
-                          <h4 className="font-semibold text-slate-800 mb-1 text-sm">Best for:</h4>
+                          <h4 className="font-semibold text-slate-800 mb-1 text-sm">适合场景:</h4>
                           <p className="text-xs text-slate-600 leading-relaxed">
                             {persona.bestFor}
                           </p>
@@ -163,7 +204,7 @@ const PersonaSelection = () => {
         </div>
 
         {/* Selection indicator dots */}
-        <div className="flex justify-center space-x-2 mb-8">
+        <div className="flex justify-center space-x-2 mb-8 flex-wrap">
           {personas.map((persona) => (
             <button
               key={persona.id}
@@ -188,14 +229,14 @@ const PersonaSelection = () => {
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >
-            {selectedPersona ? `Begin Journey with ${personas.find(p => p.id === selectedPersona)?.name}` : 'Select a companion to continue'}
+            {selectedPersona ? `开始与${personas.find(p => p.id === selectedPersona)?.name}的心灵之旅` : '选择一位伙伴开始'}
           </Button>
         </div>
 
         {/* Additional info */}
         <div className="text-center">
           <p className="text-slate-500 text-sm">
-            You can change your AI companion anytime in settings
+            你可以随时在设置中更换AI伙伴
           </p>
         </div>
       </div>

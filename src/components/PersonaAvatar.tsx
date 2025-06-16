@@ -1,9 +1,9 @@
 
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Heart, Sun, Flower } from 'lucide-react';
+import { Heart, Sun, Flower, Sparkles, BookOpen, Shield } from 'lucide-react';
 
 interface PersonaAvatarProps {
-  personaId: 'nuva' | 'nova' | 'sage';
+  personaId: 'nuva' | 'nova' | 'sage' | 'lani' | 'aya' | 'elias';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -13,7 +13,7 @@ const PersonaAvatar = ({ personaId, size = 'md', className = '' }: PersonaAvatar
     nuva: {
       imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
       fallbackIcon: Heart,
-      gradient: 'from-rose-400 to-pink-500',
+      gradient: 'from-purple-400 to-pink-500',
       name: 'Nuva'
     },
     nova: {
@@ -27,6 +27,24 @@ const PersonaAvatar = ({ personaId, size = 'md', className = '' }: PersonaAvatar
       fallbackIcon: Flower,
       gradient: 'from-emerald-400 to-green-500',
       name: 'Sage'
+    },
+    lani: {
+      imageUrl: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop&crop=face',
+      fallbackIcon: Sparkles,
+      gradient: 'from-pink-400 to-rose-500',
+      name: 'Lani'
+    },
+    aya: {
+      imageUrl: 'https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=400&h=400&fit=crop&crop=face',
+      fallbackIcon: BookOpen,
+      gradient: 'from-slate-400 to-gray-500',
+      name: 'Aya'
+    },
+    elias: {
+      imageUrl: 'https://images.unsplash.com/photo-1473177104440-ffee2f376098?w=400&h=400&fit=crop&crop=face',
+      fallbackIcon: Shield,
+      gradient: 'from-blue-400 to-indigo-500',
+      name: 'Elias'
     }
   };
 

@@ -23,43 +23,43 @@ const UserCenter = () => {
   // Get current time for greeting
   const hour = new Date().getHours();
   const getGreeting = () => {
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return '早上好';
+    if (hour < 17) return '下午好';
+    return '晚上好';
   };
 
   // Mock user data - simplified for home page
   const user = {
-    name: 'Sarah',
+    name: '朋友',
     currentStreak: 7
   };
 
   const moodOptions = [
-    { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-rose-100 to-rose-200 text-rose-700' },
-    { id: 'bright', label: 'Bright', icon: '✨', color: 'from-purple-100 to-purple-200 text-purple-700' },
-    { id: 'calm', label: 'Calm', icon: '🌊', color: 'from-blue-100 to-blue-200 text-blue-700' },
-    { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-slate-100 to-slate-200 text-slate-700' }
+    { id: 'peaceful', label: '平静', icon: '🌸', color: 'from-rose-100 to-rose-200 text-rose-700' },
+    { id: 'bright', label: '明亮', icon: '✨', color: 'from-purple-100 to-purple-200 text-purple-700' },
+    { id: 'calm', label: '沉静', icon: '🌊', color: 'from-blue-100 to-blue-200 text-blue-700' },
+    { id: 'heavy', label: '沉重', icon: '☁️', color: 'from-slate-100 to-slate-200 text-slate-700' }
   ];
 
   const mainActions = [
     {
       icon: MessageCircle,
-      title: 'Start a Conversation',
-      description: 'Connect through mindful dialogue',
+      title: '开始对话',
+      description: '通过正念对话建立连接',
       color: 'from-violet-400 to-violet-500',
       action: () => navigate('/chat')
     },
     {
       icon: Video,
-      title: 'Video Presence',
-      description: 'Experience deeper connection',
+      title: '视频陪伴',
+      description: '体验更深层的连接',
       color: 'from-blue-400 to-blue-500',
       action: () => navigate('/video-call')
     },
     {
       icon: TrendingUp,
-      title: 'Growth Journey',
-      description: 'Track your progress',
+      title: '成长轨迹',
+      description: '追踪你的进步',
       color: 'from-indigo-400 to-indigo-500',
       action: () => navigate('/growth')
     }
@@ -68,16 +68,22 @@ const UserCenter = () => {
   const personas = {
     nuva: { name: 'Nuva' },
     nova: { name: 'Nova' },
-    sage: { name: 'Sage' }
+    sage: { name: 'Sage' },
+    lani: { name: 'Lani' },
+    aya: { name: 'Aya' },
+    elias: { name: 'Elias' }
   };
 
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
 
   const getPersonalGreeting = () => {
     const greetings = {
-      nuva: "I'm here with you, ready to listen 💕",
-      nova: "Let's shine bright together today! ✨",
-      sage: "I'm here to walk this journey with you 🌸"
+      nuva: "我在这里陪着你，准备好倾听 💕",
+      nova: "让我们一起闪闪发光吧！ ✨",
+      sage: "我在这里与你一同走过这段旅程 🌸",
+      lani: "嘿！我懂你的感受，一起聊聊吧 🌈",
+      aya: "无需着急，我们可以慢慢来 📖",
+      elias: "我在这里，愿意陪你静静坐一会儿 🕯️"
     };
     return greetings[selectedPersona as keyof typeof greetings] || greetings.nuva;
   };
@@ -101,14 +107,14 @@ const UserCenter = () => {
         <div className="text-center mb-8 pt-4">
           <div className="flex items-center justify-center mb-4">
             <PersonaAvatar 
-              personaId={selectedPersona as 'nuva' | 'nova' | 'sage'} 
+              personaId={selectedPersona as 'nuva' | 'nova' | 'sage' | 'lani' | 'aya' | 'elias'} 
               size="lg" 
               className="animate-fade-in"
             />
           </div>
           
           <h1 className="font-display text-3xl font-bold gradient-text mb-2">
-            {getGreeting()}, {user.name}
+            {getGreeting()}，{user.name}
           </h1>
           <p className="text-slate-600 text-lg mb-4">
             {getPersonalGreeting()}
@@ -117,7 +123,7 @@ const UserCenter = () => {
           {/* Streak indicator */}
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 backdrop-blur-sm rounded-full px-4 py-2 zen-shadow border border-blue-100">
             <Sparkles className="w-4 h-4 text-purple-500" />
-            <span className="text-sm text-slate-700 font-medium">{user.currentStreak} day streak</span>
+            <span className="text-sm text-slate-700 font-medium">{user.currentStreak} 天连续</span>
           </div>
         </div>
 
@@ -125,7 +131,7 @@ const UserCenter = () => {
         <Card className="mb-8 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
           <CardContent className="p-6">
             <h3 className="font-display text-lg font-semibold text-slate-800 mb-4 text-center">
-              How are you feeling today?
+              今天感觉如何？
             </h3>
             
             <div className="grid grid-cols-2 gap-3">
