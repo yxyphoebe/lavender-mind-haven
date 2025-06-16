@@ -163,17 +163,16 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
     }
   };
 
-  // Waveform animation component
+  // ChatGPT-style waveform animation
   const WaveformAnimation = () => (
     <div className="flex items-center justify-center space-x-1">
-      {Array.from({ length: 20 }).map((_, i) => (
+      {Array.from({ length: 5 }).map((_, i) => (
         <div
           key={i}
-          className="w-0.5 bg-current rounded-full animate-pulse"
+          className="w-1 bg-gray-400 rounded-full"
           style={{
-            height: `${Math.random() * 20 + 8}px`,
-            animationDelay: `${i * 0.1}s`,
-            animationDuration: `${0.5 + Math.random() * 0.5}s`
+            height: `${20 + Math.sin(Date.now() / 200 + i) * 15}px`,
+            animation: `pulse 1.5s ease-in-out ${i * 0.2}s infinite alternate`
           }}
         />
       ))}
@@ -182,32 +181,38 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
 
   if (showWaveform && isRecording) {
     return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 text-center">
-          <h3 className="text-lg font-medium mb-6 text-gray-800">What can I help with?</h3>
-          
-          <div className="mb-8 h-12 flex items-center justify-center">
+      <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div className="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 text-center shadow-2xl">
+          {/* Waveform visualization */}
+          <div className="mb-8 h-16 flex items-center justify-center">
             <WaveformAnimation />
           </div>
           
-          <div className="flex items-center justify-center space-x-4">
+          {/* Control buttons */}
+          <div className="flex items-center justify-center space-x-8">
+            {/* Cancel button */}
             <Button
               variant="ghost"
               size="icon"
               onClick={cancelRecording}
-              className="h-12 w-12 rounded-full hover:bg-gray-100"
+              className="h-12 w-12 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600"
             >
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="w-6 h-6" />
             </Button>
             
-            <div className="text-sm text-gray-500">Tools</div>
-            
+            {/* Stop/Send button */}
             <Button
               onClick={stopRecording}
-              className="h-12 w-12 bg-green-500 hover:bg-green-600 text-white rounded-full p-0"
+              className="h-14 w-14 bg-black hover:bg-gray-800 text-white rounded-full p-0 shadow-lg"
             >
-              <Check className="w-5 h-5" />
+              <div className="w-4 h-4 bg-white rounded-sm" />
             </Button>
+          </div>
+          
+          {/* Recording indicator */}
+          <div className="mt-4 text-sm text-gray-500 flex items-center justify-center space-x-2">
+            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+            <span>Recording...</span>
           </div>
         </div>
       </div>
@@ -220,14 +225,14 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
       disabled={disabled || isProcessing}
       variant="outline"
       size="icon"
-      className={`h-12 w-12 rounded-2xl transition-all duration-300 hover:scale-105 ${
+      className={`h-10 w-10 rounded-full border-gray-300 hover:bg-gray-50 ${
         isProcessing ? 'opacity-50' : ''
       }`}
     >
       {isProcessing ? (
-        <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+        <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
       ) : (
-        <Mic className="w-5 h-5" />
+        <Mic className="w-4 h-4 text-gray-600" />
       )}
     </Button>
   );
