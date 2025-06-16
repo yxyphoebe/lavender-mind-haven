@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -82,7 +81,7 @@ const VideoChat = () => {
     }
     setIsConnected(false);
     setConnectionTime(0);
-    navigate('/chat');
+    navigate('/user-center');
   };
 
   const toggleVideo = () => {
@@ -116,7 +115,7 @@ const VideoChat = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate('/chat')}
+              onClick={() => navigate('/user-center')}
               className="text-white hover:bg-white/20 rounded-xl"
             >
               <ArrowLeft className="w-5 h-5" />
