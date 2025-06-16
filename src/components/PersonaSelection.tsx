@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,9 +16,9 @@ const PersonaSelection = () => {
       id: 'nuva' as const,
       name: 'Nuva',
       tagline: '温柔的心灵守护者',
-      description: '在你最不想说话的时候，我也会陪着你。深度共情的心灵陪伴者，专注于情感疗愈和内心平静。',
-      traits: ['温柔包容', '深度共情', '治愈能量', '夜晚陪伴'],
-      bgGradient: 'from-purple-50 to-pink-50',
+      description: '今晚的你，愿意让我陪你待一会儿吗？我不会催你说什么，也不会问你是不是"还好吗"。我在这，只为你而在。',
+      traits: ['温柔陪伴', '深度共情', '治愈能量', '无条件接纳'],
+      bgGradient: 'from-purple-50 via-slate-50 to-blue-50',
       textColor: 'text-purple-700',
       borderColor: 'border-purple-200',
       selectedBorder: 'border-purple-400',

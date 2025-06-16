@@ -11,7 +11,7 @@ interface PersonaAvatarProps {
 const PersonaAvatar = ({ personaId, size = 'md', className = '' }: PersonaAvatarProps) => {
   const avatarConfig = {
     nuva: {
-      imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
+      imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face&sat=-20&brightness=10',
       fallbackIcon: Heart,
       gradient: 'from-purple-400 to-pink-500',
       name: 'Nuva'
