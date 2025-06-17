@@ -26,7 +26,7 @@ const PersonaSelection = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
@@ -34,7 +34,7 @@ const PersonaSelection = () => {
 
   if (error || !therapists || therapists.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-lg text-gray-600 mb-4">No therapists available</p>
           <Button onClick={() => navigate('/therapist-manager')}>
@@ -46,19 +46,19 @@ const PersonaSelection = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 p-4 safe-area-top safe-area-bottom">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 p-4 safe-area-top safe-area-bottom">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-pink-400 rounded-3xl flex items-center justify-center zen-shadow">
-              <Heart className="w-8 h-8 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-violet-400 rounded-xl flex items-center justify-center zen-shadow">
+              <Heart className="w-6 h-6 text-white" />
             </div>
           </div>
-          <h1 className="font-display text-2xl md:text-3xl font-bold gradient-text mb-3">
+          <h1 className="font-display text-xl font-bold gradient-text mb-1">
             Choose Your AI Companion
           </h1>
-          <p className="text-base text-slate-600 leading-relaxed">
+          <p className="text-slate-600 font-light text-sm leading-relaxed">
             Each companion has a unique approach to support your mental wellness journey
           </p>
         </div>
@@ -75,8 +75,8 @@ const PersonaSelection = () => {
                     <Card
                       className={`cursor-pointer transition-all duration-300 border-2 bg-white/90 backdrop-blur-sm h-full ${
                         isSelected
-                          ? 'border-rose-400 shadow-xl zen-shadow ring-4 ring-rose-200'
-                          : 'border-rose-200 hover:border-rose-400 hover:shadow-lg'
+                          ? 'border-blue-400 bg-blue-50 zen-shadow ring-4 ring-blue-200'
+                          : 'border-blue-200 hover:border-blue-300 hover:bg-blue-25'
                       }`}
                       onClick={() => handleSelectTherapist(therapist.id)}
                     >
@@ -84,7 +84,7 @@ const PersonaSelection = () => {
                         {/* Selection indicator */}
                         {isSelected && (
                           <div className="absolute top-4 right-4">
-                            <CheckCircle className="w-5 h-5 text-rose-600 fill-current" />
+                            <CheckCircle className="w-5 h-5 text-blue-600 fill-current" />
                           </div>
                         )}
 
@@ -96,7 +96,7 @@ const PersonaSelection = () => {
                               alt={`${therapist.name} avatar`}
                               className="object-cover"
                             />
-                            <AvatarFallback className="bg-gradient-to-br from-rose-400 to-pink-500 text-white text-3xl">
+                            <AvatarFallback className="bg-gradient-to-br from-blue-400 to-violet-500 text-white text-3xl">
                               {therapist.name.charAt(0)}
                             </AvatarFallback>
                           </Avatar>
@@ -110,7 +110,7 @@ const PersonaSelection = () => {
                         </div>
 
                         {/* Style only */}
-                        <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-lg p-4 border border-rose-200 flex-grow">
+                        <div className="bg-gradient-to-r from-blue-50 to-violet-50 rounded-lg p-4 border border-blue-200 flex-grow">
                           <h4 className="font-semibold text-slate-800 mb-2 text-sm">Therapy Style:</h4>
                           <p className="text-sm text-slate-600 leading-relaxed">
                             {therapist.style}
@@ -135,7 +135,7 @@ const PersonaSelection = () => {
               onClick={() => handleSelectTherapist(therapist.id)}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 selectedTherapist === therapist.id
-                  ? 'bg-rose-400 w-6'
+                  ? 'bg-blue-400 w-6'
                   : 'bg-slate-300 hover:bg-slate-400'
               }`}
             />
@@ -149,7 +149,7 @@ const PersonaSelection = () => {
             disabled={!selectedTherapist}
             className={`w-full mobile-button text-base font-medium transition-all duration-300 ${
               selectedTherapist
-                ? 'bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white hover:scale-105 zen-shadow'
+                ? 'bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white hover:scale-105 zen-shadow'
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >
