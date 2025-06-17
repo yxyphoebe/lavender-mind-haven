@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Brain, Star, CheckCircle, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Heart, Brain, Star, CheckCircle, ArrowLeft, ArrowRight, MessageSquare, Coffee, FileText, Sunset, Lightbulb } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface OnboardingStep {
@@ -29,39 +29,53 @@ const OnboardingPage = () => {
   const steps: OnboardingStep[] = [
     {
       id: 0,
-      title: "What brings you here today?",
-      description: "Understanding your goals helps us personalize your experience",
-      question: "What would you like to focus on? (Select all that apply)",
-      multiSelect: true,
+      title: "When you're going through something, how do you usually process it?",
+      description: "Understanding your natural processing style helps us support you better",
+      question: "Select the option that best describes you:",
       options: [
-        { id: 'stress', label: 'Managing stress & anxiety', icon: Brain },
-        { id: 'emotional', label: 'Processing emotions', icon: Heart },
-        { id: 'growth', label: 'Personal growth', icon: Star },
-        { id: 'relationships', label: 'Improving relationships', icon: Heart },
-        { id: 'confidence', label: 'Building confidence', icon: Star },
-        { id: 'mindfulness', label: 'Developing mindfulness', icon: Brain }
+        { id: 'talk-emotions', label: "I need to talk it out, emotions first.", icon: MessageSquare },
+        { id: 'logical-thinking', label: "I try to stay logical and figure it out in my head.", icon: Brain },
+        { id: 'hold-until-break', label: "I hold it in until I break.", icon: Heart },
+        { id: 'understanding-without-explaining', label: "I just need someone who gets it without needing me to explain much.", icon: Star }
       ]
     },
     {
       id: 1,
-      title: "How familiar are you with therapy or counseling?",
-      description: "This helps us adjust our approach to your comfort level",
-      question: "Select the option that best describes you:",
+      title: "Which of these do you relate to most right now?",
+      description: "This helps us understand what you're going through at the moment",
+      question: "Choose what resonates with you:",
       options: [
-        { id: 'new', label: "I'm completely new to this" },
-        { id: 'some', label: "I have some experience" },
-        { id: 'experienced', label: "I'm quite experienced" }
+        { id: 'emotionally-overwhelmed', label: "I feel emotionally overwhelmed or lost.", icon: Heart },
+        { id: 'stuck-decisions', label: "I'm stuck in work/life decisions and don't know the next step.", icon: Brain },
+        { id: 'breakup-identity', label: "I'm going through a breakup or identity shift.", icon: Star },
+        { id: 'quiet-emptiness', label: "I feel a quiet emptiness I can't name.", icon: MessageSquare },
+        { id: 'need-non-judgmental', label: "I just want someone to talk to who won't judge me.", icon: Lightbulb }
       ]
     },
     {
       id: 2,
-      title: "What's your preferred communication style?",
-      description: "We'll match you with an AI companion that fits your preferences",
-      question: "How do you prefer to receive support?",
+      title: "What kind of support would feel most comforting to you now?",
+      description: "We'll match you with a companion that provides the right kind of energy",
+      question: "Select the support style that appeals to you:",
       options: [
-        { id: 'gentle', label: "Gentle and nurturing" },
-        { id: 'direct', label: "Direct and solution-focused" },
-        { id: 'balanced', label: "Balanced approach" }
+        { id: 'warm-motherly', label: "Warm, motherly energy — someone who really listens and holds space.", icon: Heart },
+        { id: 'calm-grounded', label: "Someone who helps me stay calm and grounded.", icon: Brain },
+        { id: 'positive-uplifting', label: "Someone full of life and positivity who lifts me up.", icon: Star },
+        { id: 'thoughtful-explorer', label: "A thoughtful friend to explore things with me.", icon: MessageSquare },
+        { id: 'clear-insightful', label: "Someone clear, insightful, and emotionally mature.", icon: Lightbulb }
+      ]
+    },
+    {
+      id: 3,
+      title: "If you had to choose a vibe right now...",
+      description: "Your preferred atmosphere tells us about your current emotional needs",
+      question: "Which of these feels most appealing?",
+      options: [
+        { id: 'cozy-tea', label: "Cozy tea and a soft blanket", icon: Coffee },
+        { id: 'clean-desk', label: "Clean desk and a fresh to-do list", icon: FileText },
+        { id: 'sunny-walk', label: "Wind in your hair on a sunny walk", icon: Sunset },
+        { id: 'candlelit-journal', label: "A candle-lit journal night", icon: Heart },
+        { id: 'wise-conversation', label: "A quiet conversation with a wise elder", icon: Lightbulb }
       ]
     }
   ];
