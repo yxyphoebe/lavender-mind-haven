@@ -88,36 +88,31 @@ const PersonaSelection = () => {
                           </div>
                         )}
 
-                        {/* Avatar */}
-                        <div className="flex justify-center mb-4">
-                          <Avatar className="w-24 h-24 zen-shadow">
+                        {/* Avatar - Made larger */}
+                        <div className="flex justify-center mb-6">
+                          <Avatar className="w-32 h-32 zen-shadow">
                             <AvatarImage 
                               src={therapist.image_url || ''} 
                               alt={`${therapist.name} avatar`}
                               className="object-cover"
                             />
-                            <AvatarFallback className="bg-gradient-to-br from-rose-400 to-pink-500 text-white text-2xl">
+                            <AvatarFallback className="bg-gradient-to-br from-rose-400 to-pink-500 text-white text-3xl">
                               {therapist.name.charAt(0)}
                             </AvatarFallback>
                           </Avatar>
                         </div>
 
                         {/* Name only */}
-                        <div className="text-center mb-4">
+                        <div className="text-center mb-6">
                           <h3 className="font-display text-xl font-bold text-slate-800 mb-2">
                             {therapist.name}
                           </h3>
                         </div>
 
-                        {/* Background story */}
-                        <p className="text-slate-600 mb-4 leading-relaxed text-center text-sm flex-grow line-clamp-4">
-                          {therapist.background_story}
-                        </p>
-
-                        {/* Style */}
-                        <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-lg p-3 border border-rose-200">
-                          <h4 className="font-semibold text-slate-800 mb-1 text-sm">治疗风格:</h4>
-                          <p className="text-xs text-slate-600 leading-relaxed">
+                        {/* Style only */}
+                        <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-lg p-4 border border-rose-200 flex-grow">
+                          <h4 className="font-semibold text-slate-800 mb-2 text-sm">治疗风格:</h4>
+                          <p className="text-sm text-slate-600 leading-relaxed">
                             {therapist.style}
                           </p>
                         </div>
