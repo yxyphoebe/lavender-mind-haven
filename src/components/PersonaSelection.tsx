@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -43,9 +44,10 @@ const PersonaSelection = () => {
     return recommendations.find(rec => rec.name === therapistName) || null;
   };
 
-  const isRecommended = (therapistName: string): boolean => {
-    return recommendations.some(rec => rec.name === therapistName);
-  };
+  // Filter therapists to only show recommended ones
+  const recommendedTherapists = therapists?.filter(therapist => 
+    recommendations.some(rec => rec.name === therapist.name)
+  ) || [];
 
   if (isLoading) {
     return (
@@ -55,13 +57,13 @@ const PersonaSelection = () => {
     );
   }
 
-  if (error || !therapists || therapists.length === 0) {
+  if (error || !therapists || therapists.length === 0 || recommendedTherapists.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-lg text-gray-600 mb-4">No therapists available</p>
-          <Button onClick={() => navigate('/therapist-manager')}>
-            Manage Therapists
+          <p className="text-lg text-gray-600 mb-4">No therapist recommendations available</p>
+          <Button onClick={() => navigate('/onboarding')}>
+            Take Assessment Again
           </Button>
         </div>
       </div>
@@ -79,10 +81,10 @@ const PersonaSelection = () => {
             </div>
           </div>
           <h1 className="font-display text-xl font-bold gradient-text mb-1">
-            Choose Your AI Companion
+            Meet Your Perfect Matches
           </h1>
           <p className="text-slate-600 font-light text-sm leading-relaxed">
-            Based on your answers, we've highlighted your top matches ✨
+            Based on your unique needs, here are your top 3 AI companions ✨
           </p>
         </div>
 
@@ -90,10 +92,9 @@ const PersonaSelection = () => {
         <div className="mb-8">
           <Carousel className="w-full">
             <CarouselContent className="-ml-2 md:-ml-4">
-              {therapists.map((therapist) => {
+              {recommendedTherapists.map((therapist) => {
                 const isSelected = selectedTherapist === therapist.id;
                 const recommendation = getTherapistRecommendation(therapist.name);
-                const recommended = isRecommended(therapist.name);
                 
                 return (
                   <CarouselItem key={therapist.id} className="pl-2 md:pl-4 basis-[85%] sm:basis-[80%]">
@@ -101,21 +102,17 @@ const PersonaSelection = () => {
                       className={`cursor-pointer transition-all duration-300 border-2 bg-white/90 backdrop-blur-sm h-full relative ${
                         isSelected
                           ? 'border-blue-400 bg-blue-50 zen-shadow ring-4 ring-blue-200'
-                          : recommended
-                          ? 'border-gradient-to-r from-yellow-400 to-orange-400 bg-gradient-to-r from-yellow-50 to-orange-50 zen-shadow'
-                          : 'border-blue-200 hover:border-blue-300 hover:bg-blue-25'
+                          : 'border-gradient-to-r from-yellow-400 to-orange-400 bg-gradient-to-r from-yellow-50 to-orange-50 zen-shadow'
                       }`}
                       onClick={() => handleSelectTherapist(therapist.id)}
                     >
                       <CardContent className="p-6 relative h-full flex flex-col">
                         {/* Recommendation badge */}
-                        {recommended && (
-                          <div className="absolute top-2 left-2 z-10">
-                            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                              #{recommendation?.rank} Match
-                            </div>
+                        <div className="absolute top-2 left-2 z-10">
+                          <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            #{recommendation?.rank} Perfect Match
                           </div>
-                        )}
+                        </div>
 
                         {/* Selection indicator */}
                         {isSelected && (
@@ -126,7 +123,7 @@ const PersonaSelection = () => {
 
                         {/* Avatar */}
                         <div className="flex justify-center mb-6">
-                          <Avatar className={`w-32 h-32 zen-shadow ${recommended ? 'ring-4 ring-yellow-300' : ''}`}>
+                          <Avatar className="w-32 h-32 zen-shadow ring-4 ring-yellow-300">
                             <AvatarImage 
                               src={therapist.image_url || ''} 
                               alt={`${therapist.name} avatar`}
@@ -143,19 +140,13 @@ const PersonaSelection = () => {
                           <h3 className="font-display text-xl font-bold text-slate-800 mb-2">
                             {therapist.name}
                           </h3>
-                          {recommendation && (
-                            <div className="text-sm text-orange-600 font-semibold">
-                              Match Score: {recommendation.score}/4
-                            </div>
-                          )}
+                          <div className="text-sm text-orange-600 font-semibold">
+                            Compatibility: {recommendation?.score}/4 ⭐
+                          </div>
                         </div>
 
                         {/* Style */}
-                        <div className={`rounded-lg p-4 border flex-grow ${
-                          recommended 
-                            ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200'
-                            : 'bg-gradient-to-r from-blue-50 to-violet-50 border-blue-200'
-                        }`}>
+                        <div className="rounded-lg p-4 border flex-grow bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
                           <h4 className="font-semibold text-slate-800 mb-2 text-sm">Therapy Style:</h4>
                           <p className="text-sm text-slate-600 leading-relaxed">
                             {therapist.style}
@@ -174,22 +165,17 @@ const PersonaSelection = () => {
 
         {/* Selection indicator dots */}
         <div className="flex justify-center space-x-2 mb-8 flex-wrap">
-          {therapists.map((therapist) => {
-            const recommended = isRecommended(therapist.name);
-            return (
-              <button
-                key={therapist.id}
-                onClick={() => handleSelectTherapist(therapist.id)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  selectedTherapist === therapist.id
-                    ? 'bg-blue-400 w-6'
-                    : recommended
-                    ? 'bg-yellow-400 hover:bg-yellow-500'
-                    : 'bg-slate-300 hover:bg-slate-400'
-                }`}
-              />
-            );
-          })}
+          {recommendedTherapists.map((therapist) => (
+            <button
+              key={therapist.id}
+              onClick={() => handleSelectTherapist(therapist.id)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                selectedTherapist === therapist.id
+                  ? 'bg-blue-400 w-6'
+                  : 'bg-yellow-400 hover:bg-yellow-500'
+              }`}
+            />
+          ))}
         </div>
 
         {/* Continue button */}
@@ -203,7 +189,7 @@ const PersonaSelection = () => {
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >
-            {selectedTherapist ? `Start Your Journey with ${therapists.find(t => t.id === selectedTherapist)?.name}` : 'Choose a Companion to Begin'}
+            {selectedTherapist ? `Begin Your Journey with ${recommendedTherapists.find(t => t.id === selectedTherapist)?.name}` : 'Choose Your Perfect Match to Begin'}
           </Button>
         </div>
 
