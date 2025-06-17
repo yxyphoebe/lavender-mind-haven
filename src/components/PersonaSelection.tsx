@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,11 +6,27 @@ import { Heart, CheckCircle, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapists } from '@/hooks/useTherapists';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { TherapistRecommendation } from '@/utils/therapistRecommendation';
 
 const PersonaSelection = () => {
   const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
+  const [recommendations, setRecommendations] = useState<TherapistRecommendation[]>([]);
   const navigate = useNavigate();
   const { data: therapists, isLoading, error } = useTherapists();
+
+  // Load recommendations on component mount
+  useState(() => {
+    const savedRecommendations = localStorage.getItem('therapistRecommendations');
+    if (savedRecommendations) {
+      try {
+        const parsed = JSON.parse(savedRecommendations);
+        setRecommendations(parsed);
+        console.log('Loaded therapist recommendations:', parsed);
+      } catch (e) {
+        console.error('Failed to parse recommendations:', e);
+      }
+    }
+  });
 
   const handleSelectTherapist = (therapistId: string) => {
     setSelectedTherapist(therapistId);
@@ -22,6 +37,14 @@ const PersonaSelection = () => {
       localStorage.setItem('selectedTherapistId', selectedTherapist);
       navigate('/user-center');
     }
+  };
+
+  const getTherapistRecommendation = (therapistName: string): TherapistRecommendation | null => {
+    return recommendations.find(rec => rec.name === therapistName) || null;
+  };
+
+  const isRecommended = (therapistName: string): boolean => {
+    return recommendations.some(rec => rec.name === therapistName);
   };
 
   if (isLoading) {
@@ -59,7 +82,7 @@ const PersonaSelection = () => {
             Choose Your AI Companion
           </h1>
           <p className="text-slate-600 font-light text-sm leading-relaxed">
-            Each companion has a unique approach to support your mental wellness journey
+            Based on your answers, we've highlighted your top matches ✨
           </p>
         </div>
 
@@ -69,28 +92,41 @@ const PersonaSelection = () => {
             <CarouselContent className="-ml-2 md:-ml-4">
               {therapists.map((therapist) => {
                 const isSelected = selectedTherapist === therapist.id;
+                const recommendation = getTherapistRecommendation(therapist.name);
+                const recommended = isRecommended(therapist.name);
                 
                 return (
                   <CarouselItem key={therapist.id} className="pl-2 md:pl-4 basis-[85%] sm:basis-[80%]">
                     <Card
-                      className={`cursor-pointer transition-all duration-300 border-2 bg-white/90 backdrop-blur-sm h-full ${
+                      className={`cursor-pointer transition-all duration-300 border-2 bg-white/90 backdrop-blur-sm h-full relative ${
                         isSelected
                           ? 'border-blue-400 bg-blue-50 zen-shadow ring-4 ring-blue-200'
+                          : recommended
+                          ? 'border-gradient-to-r from-yellow-400 to-orange-400 bg-gradient-to-r from-yellow-50 to-orange-50 zen-shadow'
                           : 'border-blue-200 hover:border-blue-300 hover:bg-blue-25'
                       }`}
                       onClick={() => handleSelectTherapist(therapist.id)}
                     >
                       <CardContent className="p-6 relative h-full flex flex-col">
+                        {/* Recommendation badge */}
+                        {recommended && (
+                          <div className="absolute top-2 left-2 z-10">
+                            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                              #{recommendation?.rank} Match
+                            </div>
+                          </div>
+                        )}
+
                         {/* Selection indicator */}
                         {isSelected && (
-                          <div className="absolute top-4 right-4">
+                          <div className="absolute top-4 right-4 z-10">
                             <CheckCircle className="w-5 h-5 text-blue-600 fill-current" />
                           </div>
                         )}
 
-                        {/* Avatar - Made larger */}
+                        {/* Avatar */}
                         <div className="flex justify-center mb-6">
-                          <Avatar className="w-32 h-32 zen-shadow">
+                          <Avatar className={`w-32 h-32 zen-shadow ${recommended ? 'ring-4 ring-yellow-300' : ''}`}>
                             <AvatarImage 
                               src={therapist.image_url || ''} 
                               alt={`${therapist.name} avatar`}
@@ -102,15 +138,24 @@ const PersonaSelection = () => {
                           </Avatar>
                         </div>
 
-                        {/* Name only */}
+                        {/* Name and score */}
                         <div className="text-center mb-6">
                           <h3 className="font-display text-xl font-bold text-slate-800 mb-2">
                             {therapist.name}
                           </h3>
+                          {recommendation && (
+                            <div className="text-sm text-orange-600 font-semibold">
+                              Match Score: {recommendation.score}/4
+                            </div>
+                          )}
                         </div>
 
-                        {/* Style only */}
-                        <div className="bg-gradient-to-r from-blue-50 to-violet-50 rounded-lg p-4 border border-blue-200 flex-grow">
+                        {/* Style */}
+                        <div className={`rounded-lg p-4 border flex-grow ${
+                          recommended 
+                            ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200'
+                            : 'bg-gradient-to-r from-blue-50 to-violet-50 border-blue-200'
+                        }`}>
                           <h4 className="font-semibold text-slate-800 mb-2 text-sm">Therapy Style:</h4>
                           <p className="text-sm text-slate-600 leading-relaxed">
                             {therapist.style}
@@ -129,17 +174,22 @@ const PersonaSelection = () => {
 
         {/* Selection indicator dots */}
         <div className="flex justify-center space-x-2 mb-8 flex-wrap">
-          {therapists.map((therapist) => (
-            <button
-              key={therapist.id}
-              onClick={() => handleSelectTherapist(therapist.id)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                selectedTherapist === therapist.id
-                  ? 'bg-blue-400 w-6'
-                  : 'bg-slate-300 hover:bg-slate-400'
-              }`}
-            />
-          ))}
+          {therapists.map((therapist) => {
+            const recommended = isRecommended(therapist.name);
+            return (
+              <button
+                key={therapist.id}
+                onClick={() => handleSelectTherapist(therapist.id)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  selectedTherapist === therapist.id
+                    ? 'bg-blue-400 w-6'
+                    : recommended
+                    ? 'bg-yellow-400 hover:bg-yellow-500'
+                    : 'bg-slate-300 hover:bg-slate-400'
+                }`}
+              />
+            );
+          })}
         </div>
 
         {/* Continue button */}

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Heart, Brain, Star, CheckCircle, ArrowLeft, ArrowRight, MessageSquare, Coffee, FileText, Sunset, Lightbulb } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { calculateTherapistRecommendations } from '@/utils/therapistRecommendation';
 
 interface OnboardingStep {
   id: number;
@@ -123,9 +123,16 @@ const OnboardingPage = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Onboarding complete
+      // Onboarding complete - calculate recommendations
+      console.log('Onboarding completed with answers:', answers);
+      
+      const recommendations = calculateTherapistRecommendations(answers);
+      console.log('Top 3 therapist recommendations:', recommendations);
+      
       localStorage.setItem('onboardingComplete', 'true');
       localStorage.setItem('onboardingAnswers', JSON.stringify(answers));
+      localStorage.setItem('therapistRecommendations', JSON.stringify(recommendations));
+      
       navigate('/persona-selection');
     }
   };
