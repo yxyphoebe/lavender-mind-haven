@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Heart, CheckCircle, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -103,14 +102,11 @@ const PersonaSelection = () => {
                           </Avatar>
                         </div>
 
-                        {/* Name and age */}
+                        {/* Name only */}
                         <div className="text-center mb-4">
                           <h3 className="font-display text-xl font-bold text-slate-800 mb-2">
                             {therapist.name}
                           </h3>
-                          <Badge variant="secondary" className="text-rose-700 bg-gradient-to-r from-rose-50 to-pink-50 border-0 text-sm px-3 py-1">
-                            Age {therapist.age_range}
-                          </Badge>
                         </div>
 
                         {/* Background story */}
