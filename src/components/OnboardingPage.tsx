@@ -31,7 +31,8 @@ const OnboardingPage = () => {
       id: 0,
       title: "When you're going through something, how do you usually process it?",
       description: "Understanding your natural processing style helps us support you better",
-      question: "Select the option that best describes you:",
+      question: "Select all that apply to you:",
+      multiSelect: true,
       options: [
         { id: 'talk-emotions', label: "I need to talk it out, emotions first.", icon: MessageSquare },
         { id: 'logical-thinking', label: "I try to stay logical and figure it out in my head.", icon: Brain },
@@ -43,7 +44,8 @@ const OnboardingPage = () => {
       id: 1,
       title: "Which of these do you relate to most right now?",
       description: "This helps us understand what you're going through at the moment",
-      question: "Choose what resonates with you:",
+      question: "Choose all that resonate with you:",
+      multiSelect: true,
       options: [
         { id: 'emotionally-overwhelmed', label: "I feel emotionally overwhelmed or lost.", icon: Heart },
         { id: 'stuck-decisions', label: "I'm stuck in work/life decisions and don't know the next step.", icon: Brain },
@@ -56,7 +58,8 @@ const OnboardingPage = () => {
       id: 2,
       title: "What kind of support would feel most comforting to you now?",
       description: "We'll match you with a companion that provides the right kind of energy",
-      question: "Select the support style that appeals to you:",
+      question: "Select all support styles that appeal to you:",
+      multiSelect: true,
       options: [
         { id: 'warm-motherly', label: "Warm, motherly energy — someone who really listens and holds space.", icon: Heart },
         { id: 'calm-grounded', label: "Someone who helps me stay calm and grounded.", icon: Brain },
@@ -69,7 +72,8 @@ const OnboardingPage = () => {
       id: 3,
       title: "If you had to choose a vibe right now...",
       description: "Your preferred atmosphere tells us about your current emotional needs",
-      question: "Which of these feels most appealing?",
+      question: "Select all that feel appealing:",
+      multiSelect: true,
       options: [
         { id: 'cozy-tea', label: "Cozy tea and a soft blanket", icon: Coffee },
         { id: 'clean-desk', label: "Clean desk and a fresh to-do list", icon: FileText },
