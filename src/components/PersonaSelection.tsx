@@ -56,10 +56,10 @@ const PersonaSelection = () => {
             </div>
           </div>
           <h1 className="font-display text-2xl md:text-3xl font-bold gradient-text mb-3">
-            选择你的AI心灵伙伴
+            Choose Your AI Companion
           </h1>
           <p className="text-base text-slate-600 leading-relaxed">
-            每位伙伴都有独特的陪伴方式，为你的心灵成长之旅提供支持
+            Each companion has a unique approach to support your mental wellness journey
           </p>
         </div>
 
@@ -111,7 +111,7 @@ const PersonaSelection = () => {
 
                         {/* Style only */}
                         <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-lg p-4 border border-rose-200 flex-grow">
-                          <h4 className="font-semibold text-slate-800 mb-2 text-sm">治疗风格:</h4>
+                          <h4 className="font-semibold text-slate-800 mb-2 text-sm">Therapy Style:</h4>
                           <p className="text-sm text-slate-600 leading-relaxed">
                             {therapist.style}
                           </p>
@@ -153,14 +153,14 @@ const PersonaSelection = () => {
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >
-            {selectedTherapist ? `开始与${therapists.find(t => t.id === selectedTherapist)?.name}的心灵之旅` : '选择一位伙伴开始'}
+            {selectedTherapist ? `Start Your Journey with ${therapists.find(t => t.id === selectedTherapist)?.name}` : 'Choose a Companion to Begin'}
           </Button>
         </div>
 
         {/* Additional info */}
         <div className="text-center">
           <p className="text-slate-500 text-sm">
-            你可以随时在设置中更换AI伙伴
+            You can change your AI companion anytime in settings
           </p>
         </div>
       </div>
