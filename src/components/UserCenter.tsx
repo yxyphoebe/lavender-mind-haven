@@ -7,18 +7,18 @@ import {
   TrendingUp, 
   User, 
   Sparkles,
-  Sun,
-  Moon,
-  Sunrise
+  Loader2
 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PersonaAvatar from './PersonaAvatar';
+import { useTherapist } from '@/hooks/useTherapists';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const UserCenter = () => {
   const navigate = useNavigate();
-  const selectedPersona = localStorage.getItem('selectedPersona') || 'nuva';
+  const selectedTherapistId = localStorage.getItem('selectedTherapistId') || '';
   const [selectedMood, setSelectedMood] = useState('');
+  const { data: therapist, isLoading } = useTherapist(selectedTherapistId);
   
   // Get current time for greeting
   const hour = new Date().getHours();
@@ -65,28 +65,26 @@ const UserCenter = () => {
     }
   ];
 
-  const personas = {
-    nuva: { name: 'Nuva' },
-    nova: { name: 'Nova' },
-    sage: { name: 'Sage' },
-    lani: { name: 'Lani' },
-    aya: { name: 'Aya' },
-    elias: { name: 'Elias' }
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
 
-  const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
-
-  const getPersonalGreeting = () => {
-    const greetings = {
-      nuva: "我在这里陪着你，准备好倾听 💕",
-      nova: "让我们一起闪闪发光吧！ ✨",
-      sage: "我在这里与你一同走过这段旅程 🌸",
-      lani: "嘿！我懂你的感受，一起聊聊吧 🌈",
-      aya: "无需着急，我们可以慢慢来 📖",
-      elias: "我在这里，愿意陪你静静坐一会儿 🕯️"
-    };
-    return greetings[selectedPersona as keyof typeof greetings] || greetings.nuva;
-  };
+  if (!therapist) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg text-gray-600 mb-4">请先选择一位心灵伙伴</p>
+          <Button onClick={() => navigate('/persona-selection')}>
+            选择伙伴
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
@@ -106,18 +104,23 @@ const UserCenter = () => {
         {/* Zen Greeting with AI Therapist Avatar */}
         <div className="text-center mb-8 pt-4">
           <div className="flex items-center justify-center mb-4">
-            <PersonaAvatar 
-              personaId={selectedPersona as 'nuva' | 'nova' | 'sage' | 'lani' | 'aya' | 'elias'} 
-              size="lg" 
-              className="animate-fade-in"
-            />
+            <Avatar className="w-32 h-32 zen-shadow animate-fade-in">
+              <AvatarImage 
+                src={therapist.image_url || ''} 
+                alt={`${therapist.name} avatar`}
+                className="object-cover"
+              />
+              <AvatarFallback className="bg-gradient-to-br from-rose-400 to-pink-500 text-white text-4xl">
+                {therapist.name.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
           </div>
           
           <h1 className="font-display text-3xl font-bold gradient-text mb-2">
             {getGreeting()}，{user.name}
           </h1>
           <p className="text-slate-600 text-lg mb-4">
-            {getPersonalGreeting()}
+            我是 {therapist.name}，很高兴陪伴你的心灵之旅
           </p>
           
           {/* Streak indicator */}

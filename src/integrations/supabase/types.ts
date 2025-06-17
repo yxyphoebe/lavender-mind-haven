@@ -9,36 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      avatars: {
-        Row: {
-          created_at: string | null
-          id: string
-          image_url: string | null
-          intro: string | null
-          name: string | null
-          style: string | null
-          tavus_template_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id: string
-          image_url?: string | null
-          intro?: string | null
-          name?: string | null
-          style?: string | null
-          tavus_template_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          image_url?: string | null
-          intro?: string | null
-          name?: string | null
-          style?: string | null
-          tavus_template_id?: string | null
-        }
-        Relationships: []
-      }
       gratitudes: {
         Row: {
           created_at: string | null
