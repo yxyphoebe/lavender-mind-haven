@@ -23,43 +23,43 @@ const UserCenter = () => {
   // Get current time for greeting
   const hour = new Date().getHours();
   const getGreeting = () => {
-    if (hour < 12) return '早上好';
-    if (hour < 17) return '下午好';
-    return '晚上好';
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
   };
 
   // Mock user data - simplified for home page
   const user = {
-    name: '朋友',
+    name: 'friend',
     currentStreak: 7
   };
 
   const moodOptions = [
-    { id: 'peaceful', label: '平静', icon: '🌸', color: 'from-rose-100 to-rose-200 text-rose-700' },
-    { id: 'bright', label: '明亮', icon: '✨', color: 'from-purple-100 to-purple-200 text-purple-700' },
-    { id: 'calm', label: '沉静', icon: '🌊', color: 'from-blue-100 to-blue-200 text-blue-700' },
-    { id: 'heavy', label: '沉重', icon: '☁️', color: 'from-slate-100 to-slate-200 text-slate-700' }
+    { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-rose-100 to-rose-200 text-rose-700' },
+    { id: 'bright', label: 'Bright', icon: '✨', color: 'from-purple-100 to-purple-200 text-purple-700' },
+    { id: 'calm', label: 'Calm', icon: '🌊', color: 'from-blue-100 to-blue-200 text-blue-700' },
+    { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-slate-100 to-slate-200 text-slate-700' }
   ];
 
   const mainActions = [
     {
       icon: MessageCircle,
-      title: '开始对话',
-      description: '通过正念对话建立连接',
+      title: 'Start Conversation',
+      description: 'Connect through mindful dialogue',
       color: 'from-violet-400 to-violet-500',
       action: () => navigate('/chat')
     },
     {
       icon: Video,
-      title: '视频陪伴',
-      description: '体验更深层的连接',
+      title: 'Video Companion',
+      description: 'Experience deeper connection',
       color: 'from-blue-400 to-blue-500',
       action: () => navigate('/video-call')
     },
     {
       icon: TrendingUp,
-      title: '成长轨迹',
-      description: '追踪你的进步',
+      title: 'Growth Journey',
+      description: 'Track your progress',
       color: 'from-indigo-400 to-indigo-500',
       action: () => navigate('/growth')
     }
@@ -77,9 +77,9 @@ const UserCenter = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-lg text-gray-600 mb-4">请先选择一位心灵伙伴</p>
+          <p className="text-lg text-gray-600 mb-4">Please select a soul companion first</p>
           <Button onClick={() => navigate('/persona-selection')}>
-            选择伙伴
+            Choose Companion
           </Button>
         </div>
       </div>
@@ -117,16 +117,16 @@ const UserCenter = () => {
           </div>
           
           <h1 className="font-display text-3xl font-bold gradient-text mb-2">
-            {getGreeting()}，{user.name}
+            {getGreeting()}, {user.name}
           </h1>
           <p className="text-slate-600 text-lg mb-4">
-            我是 {therapist.name}，很高兴陪伴你的心灵之旅
+            I'm {therapist.name}, delighted to accompany your soul journey
           </p>
           
           {/* Streak indicator */}
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 backdrop-blur-sm rounded-full px-4 py-2 zen-shadow border border-blue-100">
             <Sparkles className="w-4 h-4 text-purple-500" />
-            <span className="text-sm text-slate-700 font-medium">{user.currentStreak} 天连续</span>
+            <span className="text-sm text-slate-700 font-medium">{user.currentStreak} day streak</span>
           </div>
         </div>
 
@@ -134,7 +134,7 @@ const UserCenter = () => {
         <Card className="mb-8 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
           <CardContent className="p-6">
             <h3 className="font-display text-lg font-semibold text-slate-800 mb-4 text-center">
-              今天感觉如何？
+              How are you feeling today?
             </h3>
             
             <div className="grid grid-cols-2 gap-3">

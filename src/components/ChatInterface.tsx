@@ -238,7 +238,7 @@ const ChatInterface = () => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="说话或输入文字..."
+            placeholder="Speak or type your message..."
             className="flex-1 h-10 border-violet-200 rounded-xl focus:ring-violet-400 bg-white/80 text-sm"
           />
           <VoiceRecorder 
