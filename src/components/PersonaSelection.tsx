@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -44,10 +43,14 @@ const PersonaSelection = () => {
     return recommendations.find(rec => rec.name === therapistName) || null;
   };
 
-  // Filter therapists to only show recommended ones
+  // Filter therapists to only show recommended ones and sort by rank
   const recommendedTherapists = therapists?.filter(therapist => 
     recommendations.some(rec => rec.name === therapist.name)
-  ) || [];
+  ).sort((a, b) => {
+    const aRec = getTherapistRecommendation(a.name);
+    const bRec = getTherapistRecommendation(b.name);
+    return (aRec?.rank || 999) - (bRec?.rank || 999);
+  }) || [];
 
   if (isLoading) {
     return (
