@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
-import { QueryClient } from '@tanstack/react-query';
-import Index from './pages/index';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Index from './pages/Index';
 import AuthPage from './pages/AuthPage';
 import NotFound from './pages/NotFound';
 import UserCenter from './components/UserCenter';
@@ -14,9 +15,11 @@ import PersonaSelection from './components/PersonaSelection';
 import TherapistManager from './components/TherapistManager';
 import OnboardingFlow from './components/OnboardingFlow';
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <QueryClient>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Toaster />
         <Routes>
@@ -33,7 +36,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-    </QueryClient>
+    </QueryClientProvider>
   );
 }
 
