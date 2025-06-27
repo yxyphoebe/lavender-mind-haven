@@ -16,8 +16,6 @@ export type Database = {
           conversation_started_at: string | null
           created_at: string
           id: string
-          message: string
-          message_type: string
           therapist_id: string | null
           updated_at: string
           user_id: string
@@ -28,8 +26,6 @@ export type Database = {
           conversation_started_at?: string | null
           created_at?: string
           id?: string
-          message: string
-          message_type: string
           therapist_id?: string | null
           updated_at?: string
           user_id: string
@@ -40,8 +36,6 @@ export type Database = {
           conversation_started_at?: string | null
           created_at?: string
           id?: string
-          message?: string
-          message_type?: string
           therapist_id?: string | null
           updated_at?: string
           user_id?: string

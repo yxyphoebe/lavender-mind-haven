@@ -189,9 +189,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
           const { error } = await supabase
             .from('chats')
             .update({ 
-              conversation: updatedConversation as any,
-              message: userMessage,
-              message_type: 'user'
+              conversation: updatedConversation as any
             })
             .eq('id', currentChatId);
 
@@ -208,8 +206,6 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
             therapist_id: selectedTherapistId || null,
             conversation: [conversationPair] as any,
             conversation_started_at: new Date().toISOString(),
-            message: userMessage,
-            message_type: 'user',
             attachments: userAttachments || []
           })
           .select()
