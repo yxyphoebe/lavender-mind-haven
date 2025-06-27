@@ -74,7 +74,12 @@ const ChatInterface = () => {
           text: chat.message,
           sender: chat.message_type as 'user' | 'ai',
           timestamp: new Date(chat.created_at),
-          attachments: chat.attachments && Array.isArray(chat.attachments) ? chat.attachments : undefined
+          attachments: chat.attachments && Array.isArray(chat.attachments) && chat.attachments.length > 0
+            ? chat.attachments.filter(att => att && typeof att === 'object' && 'url' in att && 'type' in att) as Array<{
+                url: string;
+                type: 'image' | 'video';
+              }>
+            : undefined
         }));
         setMessages(formattedMessages);
       } else {
