@@ -63,7 +63,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         const latestChat = chats[chats.length - 1];
         setCurrentChatId(latestChat.id);
         
-        const conversationPairs = (latestChat.conversation as ConversationPair[]) || [];
+        const conversationPairs = (latestChat.conversation as unknown as ConversationPair[]) || [];
         const formattedMessages: Message[] = [];
         
         conversationPairs.forEach((pair, index) => {
@@ -124,7 +124,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
           .single();
 
         if (existingChat) {
-          const existingConversation = (existingChat.conversation as ConversationPair[]) || [];
+          const existingConversation = (existingChat.conversation as unknown as ConversationPair[]) || [];
           const updatedConversation = [...existingConversation, conversationPair];
 
           const { error } = await supabase
