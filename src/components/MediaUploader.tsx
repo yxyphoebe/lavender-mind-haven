@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Paperclip, X, Loader2 } from 'lucide-react';
+import { Paperclip, X, Loader2, Image, Video } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -79,14 +79,14 @@ const MediaUploader = ({ onMediaSelect, onUploadComplete, disabled }: MediaUploa
       setSelectedFiles([]);
       
       toast({
-        title: "Upload successful",
-        description: `Successfully uploaded ${uploadedUrls.length} file(s)`,
+        title: "上传成功",
+        description: `成功上传 ${uploadedUrls.length} 个文件`,
       });
     } catch (error) {
       console.error('Upload failed:', error);
       toast({
-        title: "Upload failed",
-        description: "Failed to upload files, please try again",
+        title: "上传失败",
+        description: "文件上传失败，请重试",
         variant: "destructive",
       });
     } finally {
@@ -95,7 +95,7 @@ const MediaUploader = ({ onMediaSelect, onUploadComplete, disabled }: MediaUploa
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <Input
         ref={fileInputRef}
         type="file"
@@ -112,10 +112,10 @@ const MediaUploader = ({ onMediaSelect, onUploadComplete, disabled }: MediaUploa
           size="sm"
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled || isUploading}
-          className="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
+          className="flex items-center space-x-2 text-slate-600 hover:text-slate-800 hover:bg-white/50 rounded-full px-4 py-2 transition-all duration-300"
         >
           <Paperclip className="w-4 h-4" />
-          <span>Attach</span>
+          <span>添加文件</span>
         </Button>
 
         {selectedFiles.length > 0 && (
@@ -124,44 +124,49 @@ const MediaUploader = ({ onMediaSelect, onUploadComplete, disabled }: MediaUploa
             size="sm"
             onClick={uploadFiles}
             disabled={disabled || isUploading}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-full px-4 py-2 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105"
           >
             {isUploading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <span>Send {selectedFiles.length} file(s)</span>
-            )}
+              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            ) : null}
+            {isUploading ? '上传中...' : `发送 ${selectedFiles.length} 个文件`}
           </Button>
         )}
       </div>
 
       {selectedFiles.length > 0 && (
-        <div className="flex flex-wrap gap-2 p-2 bg-gray-50 rounded-lg">
-          {selectedFiles.map((mediaFile, index) => (
-            <div key={index} className="relative">
-              <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 border">
-                {mediaFile.type === 'image' ? (
-                  <img
-                    src={mediaFile.preview}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <video
-                    src={mediaFile.preview}
-                    className="w-full h-full object-cover"
-                    muted
-                  />
-                )}
+        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 border border-white/30 shadow-sm">
+          <div className="flex flex-wrap gap-3">
+            {selectedFiles.map((mediaFile, index) => (
+              <div key={index} className="relative group">
+                <div className="w-20 h-20 rounded-xl overflow-hidden bg-white shadow-sm border border-white/50">
+                  {mediaFile.type === 'image' ? (
+                    <>
+                      <img
+                        src={mediaFile.preview}
+                        alt="预览"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200" />
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                        <Video className="w-8 h-8 text-slate-500" />
+                      </div>
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200" />
+                    </>
+                  )}
+                </div>
+                <button
+                  onClick={() => removeFile(index)}
+                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs shadow-md transition-all duration-200 hover:scale-110"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </div>
-              <button
-                onClick={() => removeFile(index)}
-                className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Play } from 'lucide-react';
+import { Play, Loader2 } from 'lucide-react';
 
 interface MediaMessageProps {
   url: string;
@@ -16,23 +16,26 @@ const MediaMessage = ({ url, type, className = '' }: MediaMessageProps) => {
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <div className={`relative cursor-pointer rounded-lg overflow-hidden ${className}`}>
+          <div className={`relative cursor-pointer rounded-2xl overflow-hidden group ${className}`}>
             <img
               src={url}
-              alt="Shared image"
-              className="max-w-xs max-h-48 object-cover rounded-lg hover:opacity-90 transition-opacity"
+              alt="分享的图片"
+              className="max-w-xs max-h-60 object-cover rounded-2xl shadow-md transition-all duration-300 group-hover:shadow-lg group-hover:scale-[1.02]"
               onLoad={() => setIsLoading(false)}
             />
             {isLoading && (
-              <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200 animate-pulse rounded-2xl flex items-center justify-center">
+                <Loader2 className="w-6 h-6 text-slate-400 animate-spin" />
+              </div>
             )}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 rounded-2xl" />
           </div>
         </DialogTrigger>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-4xl bg-white/95 backdrop-blur-xl border-white/50">
           <img
             src={url}
-            alt="Shared image"
-            className="w-full h-auto max-h-[80vh] object-contain"
+            alt="分享的图片"
+            className="w-full h-auto max-h-[80vh] object-contain rounded-xl"
           />
         </DialogContent>
       </Dialog>
@@ -41,18 +44,18 @@ const MediaMessage = ({ url, type, className = '' }: MediaMessageProps) => {
 
   if (type === 'video') {
     return (
-      <div className={`relative rounded-lg overflow-hidden ${className}`}>
+      <div className={`relative rounded-2xl overflow-hidden group ${className}`}>
         <video
           src={url}
           controls
-          className="max-w-xs max-h-48 rounded-lg"
+          className="max-w-xs max-h-60 rounded-2xl shadow-md transition-all duration-300 group-hover:shadow-lg"
           onLoadStart={() => setIsLoading(false)}
         >
           您的浏览器不支持视频播放
         </video>
         {isLoading && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
-            <Play className="w-8 h-8 text-gray-400" />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200 animate-pulse rounded-2xl flex items-center justify-center">
+            <Play className="w-8 h-8 text-slate-400" />
           </div>
         )}
       </div>
