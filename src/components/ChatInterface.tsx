@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,12 +32,93 @@ const ChatInterface = () => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [selectedMediaFiles, setSelectedMediaFiles] = useState<MediaFile[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   // Get selected therapist from localStorage
   const selectedTherapistId = localStorage.getItem('selectedTherapistId') || '';
   const { data: therapist, isLoading } = useTherapist(selectedTherapistId);
+
+  // Get current user and load chat history
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setCurrentUserId(session.user.id);
+        await loadChatHistory(session.user.id);
+      }
+    };
+
+    getCurrentUser();
+  }, [selectedTherapistId]);
+
+  // Load chat history from database
+  const loadChatHistory = async (userId: string) => {
+    try {
+      const { data: chats, error } = await supabase
+        .from('chats')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('therapist_id', selectedTherapistId)
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        console.error('Error loading chat history:', error);
+        return;
+      }
+
+      if (chats && chats.length > 0) {
+        const formattedMessages: Message[] = chats.map(chat => ({
+          id: chat.id,
+          text: chat.message,
+          sender: chat.message_type as 'user' | 'ai',
+          timestamp: new Date(chat.created_at),
+          attachments: chat.attachments && Array.isArray(chat.attachments) ? chat.attachments : undefined
+        }));
+        setMessages(formattedMessages);
+      } else {
+        // If no chat history, add welcome message
+        if (therapist) {
+          const welcomeMessage: Message = {
+            id: 'welcome',
+            text: `Hello! I'm ${therapist.name}. How can I help you today?`,
+            sender: 'ai',
+            timestamp: new Date()
+          };
+          setMessages([welcomeMessage]);
+          
+          // Save welcome message to database
+          await saveMessageToDatabase(welcomeMessage, userId);
+        }
+      }
+    } catch (error) {
+      console.error('Error in loadChatHistory:', error);
+    }
+  };
+
+  // Save message to database
+  const saveMessageToDatabase = async (message: Message, userId: string) => {
+    if (!userId || message.id === 'welcome') return;
+
+    try {
+      const { error } = await supabase
+        .from('chats')
+        .insert({
+          user_id: userId,
+          therapist_id: selectedTherapistId || null,
+          message: message.text,
+          message_type: message.sender,
+          attachments: message.attachments || []
+        });
+
+      if (error) {
+        console.error('Error saving message:', error);
+      }
+    } catch (error) {
+      console.error('Error in saveMessageToDatabase:', error);
+    }
+  };
 
   // Get persona based on therapist name or default to nuva
   const getPersona = (therapistName: string) => {
@@ -51,18 +131,6 @@ const ChatInterface = () => {
     return 'nuva';
   };
 
-  // Initialize welcome message when therapist data is loaded
-  useEffect(() => {
-    if (therapist && messages.length === 0) {
-      setMessages([{
-        id: '1',
-        text: `Hello! I'm ${therapist.name}. How can I help you today?`,
-        sender: 'ai',
-        timestamp: new Date()
-      }]);
-    }
-  }, [therapist, messages.length]);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -73,6 +141,7 @@ const ChatInterface = () => {
 
   const handleSendMessage = async (mediaUrls: string[] = []) => {
     if (!inputValue.trim() && mediaUrls.length === 0) return;
+    if (!currentUserId) return;
 
     const attachments = mediaUrls.map(url => ({
       url,
@@ -92,16 +161,26 @@ const ChatInterface = () => {
     setSelectedMediaFiles([]);
     setIsTyping(true);
 
+    // Save user message to database
+    await saveMessageToDatabase(userMessage, currentUserId);
+
     try {
       console.log('Calling AI chat function...');
       
       const persona = therapist ? getPersona(therapist.name) : 'nuva';
       
+      // Prepare chat history for AI context
+      const chatHistory = messages.map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.text
+      }));
+
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
           message: inputValue,
           persona: persona,
-          attachments: attachments
+          attachments: attachments,
+          chatHistory: chatHistory
         }
       });
 
@@ -120,6 +199,10 @@ const ChatInterface = () => {
       };
 
       setMessages(prev => [...prev, aiMessage]);
+      
+      // Save AI message to database
+      await saveMessageToDatabase(aiMessage, currentUserId);
+
     } catch (error) {
       console.error('Error calling AI:', error);
       
@@ -131,6 +214,9 @@ const ChatInterface = () => {
       };
 
       setMessages(prev => [...prev, errorMessage]);
+      
+      // Save error message to database
+      await saveMessageToDatabase(errorMessage, currentUserId);
     } finally {
       setIsTyping(false);
     }
