@@ -1,214 +1,206 @@
-
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Star, Heart, Check } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Heart, CheckCircle, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { useUser } from '@/hooks/useUser';
 import { useTherapists } from '@/hooks/useTherapists';
-import { useToast } from '@/hooks/use-toast';
-import { Tables } from '@/integrations/supabase/types';
-
-type TherapistRecommendation = Tables<'therapist_recommendations'>;
-type Therapist = Tables<'therapists'>;
-
-interface TherapistWithScore extends Therapist {
-  recommendation_score: number;
-  reasoning: any;
-}
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { TherapistRecommendation } from '@/utils/therapistRecommendation';
 
 const PersonaSelection = () => {
-  const [selectedTherapist, setSelectedTherapist] = useState<string>('');
-  const [recommendations, setRecommendations] = useState<TherapistWithScore[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
+  const [recommendations, setRecommendations] = useState<TherapistRecommendation[]>([]);
   const navigate = useNavigate();
-  const { user, completeOnboarding } = useUser();
-  const { data: allTherapists } = useTherapists();
-  const { toast } = useToast();
+  const { data: therapists, isLoading, error } = useTherapists();
 
-  useEffect(() => {
-    if (user && allTherapists) {
-      fetchRecommendations();
-    }
-  }, [user, allTherapists]);
-
-  const fetchRecommendations = async () => {
-    try {
-      if (!user || !allTherapists) return;
-
-      const { data, error } = await supabase
-        .from('therapist_recommendations')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('recommendation_score', { ascending: false });
-
-      if (error) throw error;
-
-      // Merge therapist data with recommendations
-      const therapistsWithScores = allTherapists.map(therapist => {
-        const recommendation = data?.find(r => r.therapist_id === therapist.id);
-        return {
-          ...therapist,
-          recommendation_score: recommendation?.recommendation_score || 0.5,
-          reasoning: recommendation?.reasoning || {}
-        };
-      }).sort((a, b) => b.recommendation_score - a.recommendation_score);
-
-      setRecommendations(therapistsWithScores);
-    } catch (error) {
-      console.error('Error fetching recommendations:', error);
-      // Fallback to showing all therapists
-      if (allTherapists) {
-        setRecommendations(allTherapists.map(t => ({
-          ...t,
-          recommendation_score: 0.5,
-          reasoning: {}
-        })));
+  // Load recommendations on component mount
+  useState(() => {
+    const savedRecommendations = localStorage.getItem('therapistRecommendations');
+    if (savedRecommendations) {
+      try {
+        const parsed = JSON.parse(savedRecommendations);
+        setRecommendations(parsed);
+        console.log('Loaded therapist recommendations:', parsed);
+      } catch (e) {
+        console.error('Failed to parse recommendations:', e);
       }
-    } finally {
-      setLoading(false);
     }
+  });
+
+  const handleSelectTherapist = (therapistId: string) => {
+    setSelectedTherapist(therapistId);
   };
 
-  const handleSelectTherapist = async () => {
-    try {
-      if (!selectedTherapist || !user) return;
-
-      await completeOnboarding(selectedTherapist);
-      
-      toast({
-        title: "Perfect Choice!",
-        description: "Your soul companion is ready to begin this journey with you.",
-      });
-      
+  const handleContinue = () => {
+    if (selectedTherapist) {
+      localStorage.setItem('selectedTherapistId', selectedTherapist);
       navigate('/user-center');
-    } catch (error) {
-      console.error('Error selecting therapist:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save your selection. Please try again.",
-        variant: "destructive",
-      });
     }
   };
 
-  const getRecommendationBadge = (score: number) => {
-    if (score >= 0.8) return { text: 'Perfect Match', color: 'bg-green-500' };
-    if (score >= 0.6) return { text: 'Great Match', color: 'bg-blue-500' };
-    if (score >= 0.4) return { text: 'Good Match', color: 'bg-yellow-500' };
-    return { text: 'Possible Match', color: 'bg-gray-500' };
+  const getTherapistRecommendation = (therapistName: string): TherapistRecommendation | null => {
+    return recommendations.find(rec => rec.name === therapistName) || null;
   };
 
-  if (loading) {
+  // Filter therapists to only show recommended ones and sort by rank
+  const recommendedTherapists = therapists?.filter(therapist => 
+    recommendations.some(rec => rec.name === therapist.name)
+  ).sort((a, b) => {
+    const aRec = getTherapistRecommendation(a.name);
+    const bRec = getTherapistRecommendation(b.name);
+    return (aRec?.rank || 999) - (bRec?.rank || 999);
+  }) || [];
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (error || !therapists || therapists.length === 0 || recommendedTherapists.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4"></div>
-          <p className="text-lg">Finding your perfect soul companion...</p>
+          <p className="text-lg text-gray-600 mb-4">No therapist recommendations available</p>
+          <Button onClick={() => navigate('/onboarding')}>
+            Take Assessment Again
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 p-4">
-      <div className="container mx-auto max-w-4xl">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold gradient-text mb-4">Choose Your Soul Companion</h1>
-          <p className="text-lg text-gray-600">
-            Based on your responses, we've found companions who resonate with your journey
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 p-4 safe-area-top safe-area-bottom">
+      <div className="max-w-md mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8 animate-fade-in">
+          <div className="flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-violet-400 rounded-xl flex items-center justify-center zen-shadow">
+              <Heart className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <h1 className="font-display text-xl font-bold gradient-text mb-1">
+            Meet Your Perfect Matches
+          </h1>
+          <p className="text-slate-600 font-light text-sm leading-relaxed">
+            Based on your unique needs, here are your top 3 AI companions ✨
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {recommendations.map((therapist, index) => {
-            const badge = getRecommendationBadge(therapist.recommendation_score);
-            const isSelected = selectedTherapist === therapist.id;
-            const isTopMatch = index === 0;
-
-            return (
-              <Card
-                key={therapist.id}
-                className={`cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                  isSelected 
-                    ? 'ring-2 ring-violet-500 bg-violet-50' 
-                    : 'hover:shadow-lg'
-                } ${isTopMatch ? 'border-2 border-violet-300' : ''}`}
-                onClick={() => setSelectedTherapist(therapist.id)}
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="relative">
-                      <Avatar className="w-16 h-16">
-                        <AvatarImage 
-                          src={therapist.image_url || ''} 
-                          alt={`${therapist.name} avatar`}
-                          className="object-cover"
-                        />
-                        <AvatarFallback className="bg-gradient-to-br from-violet-400 to-violet-500 text-white text-xl">
-                          {therapist.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      {isSelected && (
-                        <div className="absolute -top-1 -right-1 bg-violet-500 rounded-full p-1">
-                          <Check className="w-3 h-3 text-white" />
+        {/* Therapist Carousel */}
+        <div className="mb-8">
+          <Carousel className="w-full">
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {recommendedTherapists.map((therapist) => {
+                const isSelected = selectedTherapist === therapist.id;
+                const recommendation = getTherapistRecommendation(therapist.name);
+                
+                return (
+                  <CarouselItem key={therapist.id} className="pl-2 md:pl-4 basis-[85%] sm:basis-[80%]">
+                    <Card
+                      className={`cursor-pointer transition-all duration-300 border-2 bg-white/90 backdrop-blur-sm h-full relative ${
+                        isSelected
+                          ? 'border-blue-400 bg-blue-50 zen-shadow ring-4 ring-blue-200'
+                          : 'border-gradient-to-r from-yellow-400 to-orange-400 bg-gradient-to-r from-yellow-50 to-orange-50 zen-shadow'
+                      }`}
+                      onClick={() => handleSelectTherapist(therapist.id)}
+                    >
+                      <CardContent className="p-6 relative h-full flex flex-col">
+                        {/* Recommendation badge */}
+                        <div className="absolute top-2 left-2 z-10">
+                          <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            #{recommendation?.rank} Perfect Match
+                          </div>
                         </div>
-                      )}
-                    </div>
 
-                    <div className="flex-1 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-800">
+                        {/* Selection indicator */}
+                        {isSelected && (
+                          <div className="absolute top-4 right-4 z-10">
+                            <CheckCircle className="w-5 h-5 text-blue-600 fill-current" />
+                          </div>
+                        )}
+
+                        {/* Avatar */}
+                        <div className="flex justify-center mb-6">
+                          <Avatar className="w-32 h-32 zen-shadow ring-4 ring-yellow-300">
+                            <AvatarImage 
+                              src={therapist.image_url || ''} 
+                              alt={`${therapist.name} avatar`}
+                              className="object-cover"
+                            />
+                            <AvatarFallback className="bg-gradient-to-br from-blue-400 to-violet-500 text-white text-3xl">
+                              {therapist.name.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                        </div>
+
+                        {/* Name and score */}
+                        <div className="text-center mb-6">
+                          <h3 className="font-display text-xl font-bold text-slate-800 mb-2">
                             {therapist.name}
                           </h3>
-                          <p className="text-sm text-gray-600">Age: {therapist.age_range}</p>
+                          <div className="text-sm text-orange-600 font-semibold">
+                            Compatibility: {recommendation?.score}/4 ⭐
+                          </div>
                         </div>
-                        <div className="flex flex-col items-end space-y-1">
-                          <Badge className={`${badge.color} text-white text-xs`}>
-                            {badge.text}
-                          </Badge>
-                          {isTopMatch && (
-                            <div className="flex items-center text-yellow-500">
-                              <Star className="w-4 h-4 mr-1" />
-                              <span className="text-xs">Top Match</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
 
-                      <p className="text-sm text-gray-700 leading-relaxed">
-                        {therapist.style}
-                      </p>
-
-                      <div className="flex items-center space-x-2">
-                        <div className="flex items-center text-pink-500">
-                          <Heart className="w-4 h-4 mr-1" />
-                          <span className="text-xs">
-                            {Math.round(therapist.recommendation_score * 100)}% compatibility
-                          </span>
+                        {/* Style */}
+                        <div className="rounded-lg p-4 border flex-grow bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
+                          <h4 className="font-semibold text-slate-800 mb-2 text-sm">Therapy Style:</h4>
+                          <p className="text-sm text-slate-600 leading-relaxed">
+                            {therapist.style}
+                          </p>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+                      </CardContent>
+                    </Card>
+                  </CarouselItem>
+                );
+              })}
+            </CarouselContent>
+            <CarouselPrevious className="left-2" />
+            <CarouselNext className="right-2" />
+          </Carousel>
         </div>
 
-        <div className="text-center mt-8">
+        {/* Selection indicator dots */}
+        <div className="flex justify-center space-x-2 mb-8 flex-wrap">
+          {recommendedTherapists.map((therapist) => (
+            <button
+              key={therapist.id}
+              onClick={() => handleSelectTherapist(therapist.id)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                selectedTherapist === therapist.id
+                  ? 'bg-blue-400 w-6'
+                  : 'bg-yellow-400 hover:bg-yellow-500'
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Continue button */}
+        <div className="text-center mb-6">
           <Button
-            onClick={handleSelectTherapist}
+            onClick={handleContinue}
             disabled={!selectedTherapist}
-            size="lg"
-            className="bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white px-8 py-3 text-lg"
+            className={`w-full mobile-button text-base font-medium transition-all duration-300 ${
+              selectedTherapist
+                ? 'bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white hover:scale-105 zen-shadow'
+                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+            }`}
           >
-            Begin Your Journey Together
+            {selectedTherapist ? `Begin Your Journey with ${recommendedTherapists.find(t => t.id === selectedTherapist)?.name}` : 'Choose Your Perfect Match to Begin'}
           </Button>
+        </div>
+
+        {/* Additional info */}
+        <div className="text-center">
+          <p className="text-slate-500 text-sm">
+            You can change your AI companion anytime in settings
+          </p>
         </div>
       </div>
     </div>

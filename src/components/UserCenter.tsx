@@ -9,33 +9,16 @@ import {
   Sparkles,
   Loader2
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '@/hooks/useUser';
 import { useTherapist } from '@/hooks/useTherapists';
-import { useSessionMemories } from '@/hooks/useSessionMemories';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const UserCenter = () => {
   const navigate = useNavigate();
-  const { user, loading: userLoading } = useUser();
-  const { data: therapist, isLoading: therapistLoading } = useTherapist(user?.selected_therapist_id || '');
-  const { memories } = useSessionMemories(user?.id);
+  const selectedTherapistId = localStorage.getItem('selectedTherapistId') || '';
   const [selectedMood, setSelectedMood] = useState('');
-  
-  // Redirect to onboarding if user hasn't completed it
-  useEffect(() => {
-    if (!userLoading && user && !user.onboarding_completed) {
-      navigate('/onboarding');
-    }
-  }, [user, userLoading, navigate]);
-
-  // Redirect to therapist selection if no therapist selected
-  useEffect(() => {
-    if (!userLoading && user && user.onboarding_completed && !user.selected_therapist_id) {
-      navigate('/persona-selection');
-    }
-  }, [user, userLoading, navigate]);
+  const { data: therapist, isLoading } = useTherapist(selectedTherapistId);
   
   // Get current time for greeting
   const hour = new Date().getHours();
@@ -45,10 +28,10 @@ const UserCenter = () => {
     return 'Good evening';
   };
 
-  // Calculate streak (mock for now)
-  const getCurrentStreak = () => {
-    // This could be calculated based on session data
-    return Math.floor(Math.random() * 14) + 1;
+  // Mock user data - simplified for home page
+  const user = {
+    name: 'friend',
+    currentStreak: 7
   };
 
   const moodOptions = [
@@ -82,23 +65,10 @@ const UserCenter = () => {
     }
   ];
 
-  if (userLoading || therapistLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin" />
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg text-gray-600 mb-4">Please log in to continue</p>
-          <Button onClick={() => navigate('/auth')}>
-            Sign In
-          </Button>
-        </div>
       </div>
     );
   }
@@ -156,7 +126,7 @@ const UserCenter = () => {
           {/* Streak indicator */}
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 backdrop-blur-sm rounded-full px-4 py-2 zen-shadow border border-blue-100">
             <Sparkles className="w-4 h-4 text-purple-500" />
-            <span className="text-sm text-slate-700 font-medium">{getCurrentStreak()} day streak</span>
+            <span className="text-sm text-slate-700 font-medium">{user.currentStreak} day streak</span>
           </div>
         </div>
 
@@ -186,25 +156,6 @@ const UserCenter = () => {
             </div>
           </CardContent>
         </Card>
-
-        {/* Recent Insights */}
-        {memories.length > 0 && (
-          <Card className="mb-8 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 zen-shadow">
-            <CardContent className="p-6">
-              <h3 className="font-display text-lg font-semibold text-slate-800 mb-4 text-center">
-                Recent Insights
-              </h3>
-              <div className="space-y-3">
-                {memories.slice(0, 2).map((memory) => (
-                  <div key={memory.id} className="bg-white/60 rounded-lg p-3">
-                    <h4 className="font-medium text-sm text-slate-800">{memory.title}</h4>
-                    <p className="text-xs text-slate-600 mt-1">{memory.content.substring(0, 100)}...</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Main Navigation */}
         <div className="space-y-4 mb-8">
