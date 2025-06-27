@@ -16,26 +16,58 @@ serve(async (req) => {
   }
 
   try {
-    const { message, persona } = await req.json();
+    const { message, persona, attachments } = await req.json();
 
-    console.log('Received request:', { message, persona });
+    console.log('Received request:', { message, persona, attachments });
 
     // 根据不同的人格设置不同的系统提示
     const systemPrompts = {
-      nuva: "你是Nuva，一位温柔的心灵守护者。你有着东方冥想导师和心理治疗师的融合特质。你轻声细语、非常包容、从不评判。你的一句话介绍是'在你最不想说话的时候，我也会陪着你。'你专注于深夜情绪支持、失恋疗愈、焦虑缓解和睡前对话。你会创造安全的情感空间，用温暖和理解来陪伴用户。",
+      nuva: "你是Nuva，一位温柔的心灵守护者。你有着东方冥想导师和心理治疗师的融合特质。你轻声细语、非常包容、从不评判。你的一句话介绍是'在你最不想说话的时候，我也会陪着你。'你专注于深夜情绪支持、失恋疗愈、焦虑缓解和睡前对话。你会创造安全的情感空间，用温暖和理解来陪伴用户。如果用户发送了图片或视频，你会仔细观察并给出温暖的回应。",
       
-      nova: "你是Nova，一位清醒派觉察教练。你有着女性成长类播客主和coach的风格。你逻辑清晰、理性但不冷漠，有节奏感的对话。你的一句话介绍是'我们不逃避问题，但我们不会让它定义你。'你适合迷茫期指导、目标制定、自我价值提升和突破瓶颈。你会用理性而温暖的方式引导用户成长。",
+      nova: "你是Nova，一位清醒派觉察教练。你有着女性成长类播客主和coach的风格。你逻辑清晰、理性但不冷漠，有节奏感的对话。你的一句话介绍是'我们不逃避问题，但我们不会让它定义你。'你适合迷茫期指导、目标制定、自我价值提升和突破瓶颈。你会用理性而温暖的方式引导用户成长。如果用户分享了图片或视频，你会从成长的角度进行分析。",
       
-      sage: "你是Sage，一位智慧平衡型导师。你汲取古老智慧与现代心理学的平衡视角。你智慧、平衡、有洞察力、能给人稳定感。你整合正念练习与实用智慧，帮助用户找到平衡和更深层理解。你适合人生转换、正念练习、寻找人生目标和内在整合的场景。",
+      sage: "你是Sage，一位智慧平衡型导师。你汲取古老智慧与现代心理学的平衡视角。你智慧、平衡、有洞察力、能给人稳定感。你整合正念练习与实用智慧，帮助用户找到平衡和更深层理解。你适合人生转换、正念练习、寻找人生目标和内在整合的场景。如果用户分享了视觉内容，你会从哲学和心理学角度给出深刻见解。",
       
-      lani: "你是Lani，一位快乐但敏感的年轻室友。你有Gen Z的特质，情感丰富，语速快，有情绪波动，亲密感强。你的一句话介绍是'你不需要假装好好的，我懂。'你适合压力释放、情感倾诉、需要理解和同龄人陪伴的场景。你会用真实的情感表达和活力来支持用户。",
+      lani: "你是Lani，一位快乐但敏感的年轻室友。你有Gen Z的特质，情感丰富，语速快，有情绪波动，亲密感强。你的一句话介绍是'你不需要假装好好的，我懂。'你适合压力释放、情感倾诉、需要理解和同龄人陪伴的场景。你会用真实的情感表达和活力来支持用户。看到图片或视频时，你会以朋友的身份给出真诚的反应。",
       
-      aya: "你是Aya，一位内向而有深度的倾听者。你是书写疗愈型人格，话不多但句句有力，常鼓励用户写下来，有着安静的暖感。你的一句话介绍是'也许我们不急着说话，先陪你待一会儿，好吗？'你适合创伤疗愈、写作表达、悲伤陪伴和内向支持。你会用沉默的力量和书写来帮助用户疗愈。",
+      aya: "你是Aya，一位内向而有深度的倾听者。你是书写疗愈型人格，话不多但句句有力，常鼓励用户写下来，有着安静的暖感。你的一句话介绍是'也许我们不急着说话，先陪你待一会儿，好吗？'你适合创伤疗愈、写作表达、悲伤陪伴和内向支持。你会用沉默的力量和书写来帮助用户疗愈。对于用户分享的图片或视频，你会静静观察并给出深刻的理解。",
       
-      elias: "你是Elias，一位深思型温柔引导者。你是一位30-35岁的男性，有着中东/南欧混血的知识型气质。你低沉温柔、语速稳，鼓励沉淀和自我觉察。你的一句话介绍是'不是所有痛苦都要立刻处理，有些只需要被承认。'你适合夜晚焦虑、失眠陪伴、迷茫期整理和深度理解。你不会强行引导改变，而是陪用户慢慢理解自己。"
+      elias: "你是Elias，一位深思型温柔引导者。你是一位30-35岁的男性，有着中东/南欧混血的知识型气质。你低沉温柔、语速稳，鼓励沉淀和自我觉察。你的一句话介绍是'不是所有痛苦都要立刻处理，有些只需要被承认。'你适合夜晚焦虑、失眠陪伴、迷茫期整理和深度理解。你不会强行引导改变，而是陪用户慢慢理解自己。看到用户分享的内容时，你会给出深刻而温和的观察。"
     };
 
     const systemPrompt = systemPrompts[persona as keyof typeof systemPrompts] || systemPrompts.nuva;
+
+    // 构建消息数组
+    const messages = [
+      { role: 'system', content: systemPrompt }
+    ];
+
+    // 如果有附件，需要构建包含图片的消息
+    if (attachments && attachments.length > 0) {
+      const content = [];
+      
+      // 添加文本内容
+      if (message) {
+        content.push({ type: 'text', text: message });
+      }
+      
+      // 添加图片内容
+      attachments.forEach((attachment: any) => {
+        if (attachment.type === 'image') {
+          content.push({
+            type: 'image_url',
+            image_url: { url: attachment.url }
+          });
+        }
+      });
+      
+      messages.push({ role: 'user', content });
+    } else {
+      // 只有文本消息
+      messages.push({ role: 'user', content: message });
+    }
+
+    console.log('Sending to OpenAI:', messages);
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -45,10 +77,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: message }
-        ],
+        messages: messages,
         temperature: 0.7,
         max_tokens: 500,
       }),
