@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, ArrowLeft, Loader2 } from 'lucide-react';
+import { Send, ArrowLeft, Loader2, Paperclip, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useTherapist } from '@/hooks/useTherapists';
@@ -46,7 +46,7 @@ const ChatInterface = () => {
     if (therapist && messages.length === 0) {
       setMessages([{
         id: '1',
-        text: `Hello! I'm ${therapist.name}, so glad you're here. How are you feeling today? Take your time - there's no rush.`,
+        text: `Hello! I'm ${therapist.name}. How can I help you today?`,
         sender: 'ai',
         timestamp: new Date()
       }]);
@@ -88,7 +88,7 @@ const ChatInterface = () => {
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
           message: inputValue,
-          therapist: therapist?.name || 'AI Assistant',
+          persona: therapist?.persona || 'nuva',
           attachments: attachments
         }
       });
@@ -146,18 +146,18 @@ const ChatInterface = () => {
 
   if (isLoading) {
     return (
-      <div className="h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin" />
+      <div className="h-screen bg-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
       </div>
     );
   }
 
   if (!therapist) {
     return (
-      <div className="h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg text-gray-600 mb-4">Please select a therapist first</p>
-          <Button onClick={() => navigate('/persona-selection')}>
+      <div className="h-screen bg-white flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <p className="text-lg text-gray-600 mb-6">Please select a therapist to start chatting</p>
+          <Button onClick={() => navigate('/persona-selection')} className="bg-black hover:bg-gray-800 text-white">
             Choose Therapist
           </Button>
         </div>
@@ -166,157 +166,163 @@ const ChatInterface = () => {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex flex-col">
+    <div className="h-screen bg-white flex flex-col">
       {/* Header */}
-      <div className="glass-effect border-b border-violet-200 p-4 flex items-center justify-between">
+      <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/user-center')}
-            className="hover:bg-violet-100 rounded-xl"
+            className="hover:bg-gray-100"
           >
-            <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <ArrowLeft className="w-5 h-5" />
           </Button>
           
-          <Avatar className="w-10 h-10 zen-shadow">
-            <AvatarImage 
-              src={therapist.image_url || ''} 
-              alt={`${therapist.name} avatar`}
-              className="object-cover"
-            />
-            <AvatarFallback className="bg-gradient-to-br from-violet-400 to-violet-500 text-white">
-              {therapist.name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          
-          <div>
-            <h2 className="font-display text-lg font-semibold text-slate-800">
-              {therapist.name}
-            </h2>
-            <p className="text-sm text-slate-500">
-              {isTyping ? 'Typing...' : 'Here to support you'}
-            </p>
+          <div className="flex items-center space-x-2">
+            <Avatar className="w-8 h-8">
+              <AvatarImage 
+                src={therapist.image_url || ''} 
+                alt={therapist.name}
+                className="object-cover"
+              />
+              <AvatarFallback className="bg-blue-500 text-white text-sm">
+                {therapist.name.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <h1 className="text-lg font-medium text-gray-900">{therapist.name}</h1>
           </div>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 max-w-4xl mx-auto w-full">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
-          >
-            <div className={`max-w-[85%] ${message.sender === 'user' ? 'order-1' : 'order-2'}`}>
-              {message.sender === 'ai' && (
-                <div className="flex items-center space-x-2 mb-2">
-                  <Avatar className="w-8 h-8 zen-shadow">
-                    <AvatarImage 
-                      src={therapist.image_url || ''} 
-                      alt={`${therapist.name} avatar`}
-                      className="object-cover"
-                    />
-                    <AvatarFallback className="bg-gradient-to-br from-violet-400 to-violet-500 text-white">
-                      {therapist.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm font-medium text-slate-700">{therapist.name}</span>
-                </div>
-              )}
-              
-              <Card className={`p-3 ${
-                message.sender === 'user'
-                  ? 'bg-gradient-to-r from-violet-500 to-blue-500 text-white ml-4'
-                  : 'bg-white border-violet-200 mr-4 zen-shadow'
-              }`}>
-                {message.text && (
-                  <p className={`leading-relaxed text-sm ${
-                    message.sender === 'user' ? 'text-white' : 'text-slate-700'
-                  }`}>
-                    {message.text}
-                  </p>
-                )}
-
-                {message.attachments && message.attachments.length > 0 && (
-                  <div className={`${message.text ? 'mt-2' : ''} space-y-2`}>
-                    {message.attachments.map((attachment, index) => (
-                      <MediaMessage
-                        key={index}
-                        url={attachment.url}
-                        type={attachment.type}
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-3xl mx-auto px-4 py-6">
+          {messages.map((message) => (
+            <div key={message.id} className="mb-6">
+              <div className="flex items-start space-x-3">
+                {/* Avatar */}
+                <div className="flex-shrink-0">
+                  {message.sender === 'ai' ? (
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage 
+                        src={therapist.image_url || ''} 
+                        alt={therapist.name}
+                        className="object-cover"
                       />
-                    ))}
-                  </div>
-                )}
+                      <AvatarFallback className="bg-blue-500 text-white text-sm">
+                        {therapist.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </div>
 
-                <p className={`text-xs mt-2 ${
-                  message.sender === 'user' ? 'text-violet-100' : 'text-slate-400'
-                }`}>
-                  {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </p>
-              </Card>
+                {/* Message Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center mb-1">
+                    <span className="text-sm font-medium text-gray-900">
+                      {message.sender === 'ai' ? therapist.name : 'You'}
+                    </span>
+                  </div>
+                  
+                  <div className="prose prose-sm max-w-none">
+                    {message.text && (
+                      <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                        {message.text}
+                      </p>
+                    )}
+
+                    {message.attachments && message.attachments.length > 0 && (
+                      <div className={`${message.text ? 'mt-3' : ''} space-y-2`}>
+                        {message.attachments.map((attachment, index) => (
+                          <MediaMessage
+                            key={index}
+                            url={attachment.url}
+                            type={attachment.type}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
-        
-        {isTyping && (
-          <div className="flex justify-start animate-fade-in">
-            <div className="max-w-[85%]">
-              <div className="flex items-center space-x-2 mb-2">
-                <Avatar className="w-8 h-8 zen-shadow">
+          ))}
+          
+          {isTyping && (
+            <div className="mb-6">
+              <div className="flex items-start space-x-3">
+                <Avatar className="w-8 h-8">
                   <AvatarImage 
                     src={therapist.image_url || ''} 
-                    alt={`${therapist.name} avatar`}
+                    alt={therapist.name}
                     className="object-cover"
                   />
-                  <AvatarFallback className="bg-gradient-to-br from-violet-400 to-violet-500 text-white">
+                  <AvatarFallback className="bg-blue-500 text-white text-sm">
                     {therapist.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-medium text-slate-700">{therapist.name}</span>
-              </div>
-              <Card className="p-3 bg-white border-violet-200 mr-4 zen-shadow">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div className="flex-1">
+                  <div className="flex items-center mb-1">
+                    <span className="text-sm font-medium text-gray-900">{therapist.name}</span>
+                  </div>
+                  <div className="flex items-center space-x-1 text-gray-500">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
                 </div>
-              </Card>
+              </div>
             </div>
-          </div>
-        )}
-        
+          )}
+        </div>
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <div className="p-4 glass-effect border-t border-violet-200 max-w-4xl mx-auto w-full">
-        <MediaUploader
-          onMediaSelect={handleMediaSelect}
-          onUploadComplete={handleUploadComplete}
-          disabled={isTyping}
-        />
-        
-        <div className="flex items-center space-x-2 mt-3">
-          <Input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Speak or type your message..."
-            className="flex-1 h-10 border-violet-200 rounded-xl focus:ring-violet-400 bg-white/80 text-sm"
-          />
-          <VoiceRecorder 
-            onTranscriptionComplete={handleVoiceTranscription}
+      {/* Input Area */}
+      <div className="bg-white border-t border-gray-200 px-4 py-4">
+        <div className="max-w-3xl mx-auto">
+          {/* Media Uploader */}
+          <MediaUploader
+            onMediaSelect={handleMediaSelect}
+            onUploadComplete={handleUploadComplete}
             disabled={isTyping}
           />
-          <Button
-            onClick={() => handleSendMessage()}
-            disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
-            className="h-10 w-10 bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white rounded-xl p-0 transition-all duration-300 hover:scale-105"
-          >
-            <Send className="w-4 h-4" />
-          </Button>
+          
+          {/* Input Box */}
+          <div className="relative mt-2">
+            <div className="flex items-end space-x-2 bg-gray-50 rounded-lg p-3">
+              <div className="flex-1">
+                <Input
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Message..."
+                  className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-base placeholder:text-gray-500 p-0"
+                  disabled={isTyping}
+                />
+              </div>
+              
+              <div className="flex items-center space-x-1">
+                <VoiceRecorder 
+                  onTranscriptionComplete={handleVoiceTranscription}
+                  disabled={isTyping}
+                />
+                <Button
+                  onClick={() => handleSendMessage()}
+                  disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
+                  size="sm"
+                  className="bg-black hover:bg-gray-800 text-white rounded-md px-3 py-2 h-8"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
