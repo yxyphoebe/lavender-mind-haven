@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Paperclip, X, Loader2, Image, Video } from 'lucide-react';
+import { Plus, X, Loader2, Video } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -109,13 +109,12 @@ const MediaUploader = ({ onMediaSelect, onUploadComplete, disabled }: MediaUploa
         <Button
           type="button"
           variant="ghost"
-          size="sm"
+          size="icon"
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled || isUploading}
-          className="flex items-center space-x-2 text-slate-600 hover:text-slate-800 hover:bg-white/50 rounded-full px-4 py-2 transition-all duration-300"
+          className="w-8 h-8 rounded-full hover:bg-gray-100 text-gray-600 hover:text-gray-800 transition-colors duration-200"
         >
-          <Paperclip className="w-4 h-4" />
-          <span>添加文件</span>
+          <Plus className="w-4 h-4" />
         </Button>
 
         {selectedFiles.length > 0 && (
@@ -124,7 +123,7 @@ const MediaUploader = ({ onMediaSelect, onUploadComplete, disabled }: MediaUploa
             size="sm"
             onClick={uploadFiles}
             disabled={disabled || isUploading}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-full px-4 py-2 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105"
+            className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 py-2 text-sm transition-colors duration-200"
           >
             {isUploading ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -135,32 +134,26 @@ const MediaUploader = ({ onMediaSelect, onUploadComplete, disabled }: MediaUploa
       </div>
 
       {selectedFiles.length > 0 && (
-        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 border border-white/30 shadow-sm">
-          <div className="flex flex-wrap gap-3">
+        <div className="bg-gray-50 rounded-lg p-3 border">
+          <div className="flex flex-wrap gap-2">
             {selectedFiles.map((mediaFile, index) => (
               <div key={index} className="relative group">
-                <div className="w-20 h-20 rounded-xl overflow-hidden bg-white shadow-sm border border-white/50">
+                <div className="w-16 h-16 rounded-lg overflow-hidden bg-white shadow-sm border">
                   {mediaFile.type === 'image' ? (
-                    <>
-                      <img
-                        src={mediaFile.preview}
-                        alt="预览"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200" />
-                    </>
+                    <img
+                      src={mediaFile.preview}
+                      alt="预览"
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
-                    <>
-                      <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                        <Video className="w-8 h-8 text-slate-500" />
-                      </div>
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200" />
-                    </>
+                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                      <Video className="w-6 h-6 text-gray-500" />
+                    </div>
                   )}
                 </div>
                 <button
                   onClick={() => removeFile(index)}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs shadow-md transition-all duration-200 hover:scale-110"
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-gray-600 hover:bg-gray-700 text-white rounded-full flex items-center justify-center text-xs transition-colors duration-200"
                 >
                   <X className="w-3 h-3" />
                 </button>
