@@ -1,8 +1,9 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, ArrowLeft, Loader2, User, Plus } from 'lucide-react';
+import { Send, ArrowLeft, Loader2, User, Plus, Video, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useTherapist } from '@/hooks/useTherapists';
