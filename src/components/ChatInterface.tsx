@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -208,19 +207,21 @@ const ChatInterface = () => {
             </Button>
             
             <div className="flex items-center space-x-3">
-              <Avatar className="w-10 h-10 ring-2 ring-white/50 shadow-lg">
-                <AvatarImage 
-                  src={therapist.image_url || ''} 
-                  alt={therapist.name}
-                  className="object-cover"
-                />
-                <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-400 text-white text-sm font-medium">
-                  {therapist.name.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className="w-10 h-10 ring-2 ring-white/50 shadow-lg">
+                  <AvatarImage 
+                    src={therapist.image_url || ''} 
+                    alt={therapist.name}
+                    className="object-cover"
+                  />
+                  <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-400 text-white text-sm font-medium">
+                    {therapist.name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+              </div>
               <div>
                 <h1 className="text-lg font-medium text-slate-800">{therapist.name}</h1>
-                <p className="text-sm text-slate-500">在线</p>
               </div>
             </div>
           </div>
