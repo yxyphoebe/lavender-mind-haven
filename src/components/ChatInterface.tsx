@@ -9,18 +9,31 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useTherapist } from '@/hooks/useTherapists';
 import VoiceRecorder from './VoiceRecorder';
+import MediaUploader from './MediaUploader';
+import MediaMessage from './MediaMessage';
 
 interface Message {
   id: string;
   text: string;
   sender: 'user' | 'ai';
   timestamp: Date;
+  attachments?: Array<{
+    url: string;
+    type: 'image' | 'video';
+  }>;
+}
+
+interface MediaFile {
+  file: File;
+  preview: string;
+  type: 'image' | 'video';
 }
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [selectedMediaFiles, setSelectedMediaFiles] = useState<MediaFile[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -48,18 +61,25 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+  const handleSendMessage = async (mediaUrls: string[] = []) => {
+    if (!inputValue.trim() && mediaUrls.length === 0) return;
+
+    const attachments = mediaUrls.map(url => ({
+      url,
+      type: (url.includes('.mp4') || url.includes('.mov') || url.includes('.avi')) ? 'video' as const : 'image' as const
+    }));
 
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputValue,
       sender: 'user',
-      timestamp: new Date()
+      timestamp: new Date(),
+      attachments: attachments.length > 0 ? attachments : undefined
     };
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
+    setSelectedMediaFiles([]);
     setIsTyping(true);
 
     try {
@@ -68,7 +88,8 @@ const ChatInterface = () => {
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
           message: inputValue,
-          therapist: therapist?.name || 'AI Assistant'
+          therapist: therapist?.name || 'AI Assistant',
+          attachments: attachments
         }
       });
 
@@ -113,6 +134,14 @@ const ChatInterface = () => {
   const handleVoiceTranscription = (text: string) => {
     console.log('Voice transcription received:', text);
     setInputValue(text);
+  };
+
+  const handleMediaSelect = (files: MediaFile[]) => {
+    setSelectedMediaFiles(files);
+  };
+
+  const handleUploadComplete = (urls: string[]) => {
+    handleSendMessage(urls);
   };
 
   if (isLoading) {
@@ -201,11 +230,26 @@ const ChatInterface = () => {
                   ? 'bg-gradient-to-r from-violet-500 to-blue-500 text-white ml-4'
                   : 'bg-white border-violet-200 mr-4 zen-shadow'
               }`}>
-                <p className={`leading-relaxed text-sm ${
-                  message.sender === 'user' ? 'text-white' : 'text-slate-700'
-                }`}>
-                  {message.text}
-                </p>
+                {message.text && (
+                  <p className={`leading-relaxed text-sm ${
+                    message.sender === 'user' ? 'text-white' : 'text-slate-700'
+                  }`}>
+                    {message.text}
+                  </p>
+                )}
+
+                {message.attachments && message.attachments.length > 0 && (
+                  <div className={`${message.text ? 'mt-2' : ''} space-y-2`}>
+                    {message.attachments.map((attachment, index) => (
+                      <MediaMessage
+                        key={index}
+                        url={attachment.url}
+                        type={attachment.type}
+                      />
+                    ))}
+                  </div>
+                )}
+
                 <p className={`text-xs mt-2 ${
                   message.sender === 'user' ? 'text-violet-100' : 'text-slate-400'
                 }`}>
@@ -248,7 +292,13 @@ const ChatInterface = () => {
 
       {/* Input */}
       <div className="p-4 glass-effect border-t border-violet-200 max-w-4xl mx-auto w-full">
-        <div className="flex items-center space-x-2">
+        <MediaUploader
+          onMediaSelect={handleMediaSelect}
+          onUploadComplete={handleUploadComplete}
+          disabled={isTyping}
+        />
+        
+        <div className="flex items-center space-x-2 mt-3">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -261,8 +311,8 @@ const ChatInterface = () => {
             disabled={isTyping}
           />
           <Button
-            onClick={handleSendMessage}
-            disabled={!inputValue.trim() || isTyping}
+            onClick={() => handleSendMessage()}
+            disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
             className="h-10 w-10 bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 text-white rounded-xl p-0 transition-all duration-300 hover:scale-105"
           >
             <Send className="w-4 h-4" />
