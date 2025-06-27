@@ -13,11 +13,22 @@ interface Message {
   }>;
 }
 
+interface ConversationPair {
+  user_message: string;
+  ai_response: string;
+  timestamp: string;
+  user_attachments?: Array<{
+    url: string;
+    type: 'image' | 'video';
+  }>;
+}
+
 export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
 
   // Get current user and load chat history
   useEffect(() => {
@@ -40,7 +51,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         .select('*')
         .eq('user_id', userId)
         .eq('therapist_id', selectedTherapistId)
-        .order('created_at', { ascending: true });
+        .order('conversation_started_at', { ascending: true });
 
       if (error) {
         console.error('Error loading chat history:', error);
@@ -48,21 +59,35 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
       }
 
       if (chats && chats.length > 0) {
-        const formattedMessages: Message[] = chats.map(chat => ({
-          id: chat.id,
-          text: chat.message,
-          sender: chat.message_type as 'user' | 'ai',
-          timestamp: new Date(chat.created_at),
-          attachments: chat.attachments && Array.isArray(chat.attachments) && chat.attachments.length > 0
-            ? chat.attachments.filter(att => att && typeof att === 'object' && 'url' in att && 'type' in att) as Array<{
-                url: string;
-                type: 'image' | 'video';
-              }>
-            : undefined
-        }));
+        // Use the most recent chat record
+        const latestChat = chats[chats.length - 1];
+        setCurrentChatId(latestChat.id);
+        
+        const conversationPairs = latestChat.conversation as ConversationPair[] || [];
+        const formattedMessages: Message[] = [];
+        
+        conversationPairs.forEach((pair, index) => {
+          // Add user message
+          formattedMessages.push({
+            id: `user-${index}`,
+            text: pair.user_message,
+            sender: 'user',
+            timestamp: new Date(pair.timestamp),
+            attachments: pair.user_attachments
+          });
+          
+          // Add AI response
+          formattedMessages.push({
+            id: `ai-${index}`,
+            text: pair.ai_response,
+            sender: 'ai',
+            timestamp: new Date(pair.timestamp)
+          });
+        });
+        
         setMessages(formattedMessages);
       } else {
-        // If no chat history, add welcome message
+        // If no chat history, add welcome message and create new chat record
         if (therapist) {
           const welcomeMessage: Message = {
             id: 'welcome',
@@ -71,9 +96,6 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
             timestamp: new Date()
           };
           setMessages([welcomeMessage]);
-          
-          // Save welcome message to database
-          await saveMessageToDatabase(welcomeMessage, userId);
         }
       }
     } catch (error) {
@@ -81,26 +103,67 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     }
   };
 
-  // Save message to database
-  const saveMessageToDatabase = async (message: Message, userId: string) => {
-    if (!userId || message.id === 'welcome') return;
+  // Save conversation pair to database
+  const saveConversationPair = async (userMessage: string, aiResponse: string, userAttachments?: Array<{url: string; type: 'image' | 'video'}>) => {
+    if (!currentUserId) return;
 
     try {
-      const { error } = await supabase
-        .from('chats')
-        .insert({
-          user_id: userId,
-          therapist_id: selectedTherapistId || null,
-          message: message.text,
-          message_type: message.sender,
-          attachments: message.attachments || []
-        });
+      const conversationPair: ConversationPair = {
+        user_message: userMessage,
+        ai_response: aiResponse,
+        timestamp: new Date().toISOString(),
+        user_attachments: userAttachments
+      };
 
-      if (error) {
-        console.error('Error saving message:', error);
+      if (currentChatId) {
+        // Update existing chat record
+        const { data: existingChat } = await supabase
+          .from('chats')
+          .select('conversation')
+          .eq('id', currentChatId)
+          .single();
+
+        if (existingChat) {
+          const existingConversation = existingChat.conversation as ConversationPair[] || [];
+          const updatedConversation = [...existingConversation, conversationPair];
+
+          const { error } = await supabase
+            .from('chats')
+            .update({ 
+              conversation: updatedConversation,
+              message: userMessage, // Keep for backward compatibility
+              message_type: 'user' // Keep for backward compatibility
+            })
+            .eq('id', currentChatId);
+
+          if (error) {
+            console.error('Error updating conversation:', error);
+          }
+        }
+      } else {
+        // Create new chat record
+        const { data, error } = await supabase
+          .from('chats')
+          .insert({
+            user_id: currentUserId,
+            therapist_id: selectedTherapistId || null,
+            conversation: [conversationPair],
+            conversation_started_at: new Date().toISOString(),
+            message: userMessage, // Keep for backward compatibility
+            message_type: 'user', // Keep for backward compatibility
+            attachments: userAttachments || []
+          })
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Error creating new chat:', error);
+        } else if (data) {
+          setCurrentChatId(data.id);
+        }
       }
     } catch (error) {
-      console.error('Error in saveMessageToDatabase:', error);
+      console.error('Error in saveConversationPair:', error);
     }
   };
 
@@ -133,26 +196,25 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentInputValue = inputValue;
     setInputValue('');
     setIsTyping(true);
-
-    // Save user message to database
-    await saveMessageToDatabase(userMessage, currentUserId);
 
     try {
       console.log('Calling AI chat function...');
       
       const persona = therapist ? getPersona(therapist.name) : 'nuva';
       
-      // Prepare chat history for AI context
-      const chatHistory = messages.map(msg => ({
+      // Prepare chat history for AI context (only recent messages to avoid too much context)
+      const recentMessages = messages.slice(-10);
+      const chatHistory = recentMessages.map(msg => ({
         role: msg.sender === 'user' ? 'user' : 'assistant',
         content: msg.text
       }));
 
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
-          message: inputValue,
+          message: currentInputValue,
           persona: persona,
           attachments: attachments,
           chatHistory: chatHistory
@@ -166,17 +228,19 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
 
       console.log('AI response received:', data);
 
+      const aiResponse = data.response || "I'm sorry, I couldn't process your message right now. Please try again.";
+      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.response || "I'm sorry, I couldn't process your message right now. Please try again.",
+        text: aiResponse,
         sender: 'ai',
         timestamp: new Date()
       };
 
       setMessages(prev => [...prev, aiMessage]);
       
-      // Save AI message to database
-      await saveMessageToDatabase(aiMessage, currentUserId);
+      // Save the complete conversation pair to database
+      await saveConversationPair(currentInputValue, aiResponse, attachments.length > 0 ? attachments : undefined);
 
     } catch (error) {
       console.error('Error calling AI:', error);
@@ -190,8 +254,8 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
 
       setMessages(prev => [...prev, errorMessage]);
       
-      // Save error message to database
-      await saveMessageToDatabase(errorMessage, currentUserId);
+      // Save error conversation pair
+      await saveConversationPair(currentInputValue, errorMessage.text);
     } finally {
       setIsTyping(false);
     }
