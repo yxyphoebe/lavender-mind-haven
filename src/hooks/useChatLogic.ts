@@ -75,96 +75,87 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     return [];
   };
 
-  // Get current user and load chat history
+  // Create a new chat session when component mounts
+  const createNewChatSession = async (userId: string) => {
+    try {
+      console.log('Creating new chat session for user:', userId, 'therapist:', selectedTherapistId);
+      
+      const { data, error } = await supabase
+        .from('chats')
+        .insert({
+          user_id: userId,
+          therapist_id: selectedTherapistId || null,
+          conversation: [] as any,
+          conversation_started_at: new Date().toISOString(),
+          attachments: []
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating new chat session:', error);
+        return null;
+      }
+
+      console.log('New chat session created:', data.id);
+      return data.id;
+    } catch (error) {
+      console.error('Error in createNewChatSession:', error);
+      return null;
+    }
+  };
+
+  // Get current user and initialize chat session
   useEffect(() => {
-    const getCurrentUser = async () => {
+    const initializeChatSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
         setCurrentUserId(session.user.id);
+        
+        // Create new chat session immediately
+        const newChatId = await createNewChatSession(session.user.id);
+        if (newChatId) {
+          setCurrentChatId(newChatId);
+        }
+        
+        // Load historical messages from local storage for display
         await loadChatHistory(session.user.id);
       }
     };
 
-    getCurrentUser();
+    initializeChatSession();
   }, [selectedTherapistId]);
 
-  // Load chat history from local storage first, then sync with cloud
+  // Load chat history from local storage for display only
   const loadChatHistory = async (userId: string) => {
     try {
-      // First, load from local storage for instant display
+      // Load from local storage for instant display of historical messages
       const localMessages = loadFromLocalStorage(userId, selectedTherapistId);
       if (localMessages.length > 0) {
         setMessages(localMessages);
-        console.log('Loaded chat from local storage');
-      }
-
-      // Then sync with cloud data
-      const { data: chats, error } = await supabase
-        .from('chats')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('therapist_id', selectedTherapistId)
-        .order('conversation_started_at', { ascending: true });
-
-      if (error) {
-        console.error('Error loading chat history:', error);
-        return;
-      }
-
-      if (chats && chats.length > 0) {
-        // Use the most recent chat record
-        const latestChat = chats[chats.length - 1];
-        setCurrentChatId(latestChat.id);
-        
-        const conversationPairs = (latestChat.conversation as unknown as ConversationPair[]) || [];
-        const formattedMessages: Message[] = [];
-        
-        conversationPairs.forEach((pair, index) => {
-          // Add user message
-          formattedMessages.push({
-            id: `user-${index}`,
-            text: pair.user_message,
-            sender: 'user',
-            timestamp: new Date(pair.timestamp),
-            attachments: pair.user_attachments
-          });
-          
-          // Add AI response
-          formattedMessages.push({
-            id: `ai-${index}`,
-            text: pair.ai_response,
-            sender: 'ai',
-            timestamp: new Date(pair.timestamp)
-          });
-        });
-        
-        // Update local storage with cloud data if it's newer or different
-        if (formattedMessages.length > localMessages.length) {
-          setMessages(formattedMessages);
-          saveToLocalStorage(userId, selectedTherapistId, formattedMessages);
-          console.log('Synced chat from cloud to local storage');
-        }
-      } else {
-        // If no cloud history and no local history, add welcome message
-        if (localMessages.length === 0 && therapist) {
-          const welcomeMessage: Message = {
-            id: 'welcome',
-            text: `Hello! I'm ${therapist.name}. How can I help you today?`,
-            sender: 'ai',
-            timestamp: new Date()
-          };
-          setMessages([welcomeMessage]);
-          saveToLocalStorage(userId, selectedTherapistId, [welcomeMessage]);
-        }
+        console.log('Loaded historical chat from local storage');
+      } else if (therapist) {
+        // If no local history, add welcome message
+        const welcomeMessage: Message = {
+          id: 'welcome',
+          text: `Hello! I'm ${therapist.name}. How can I help you today?`,
+          sender: 'ai',
+          timestamp: new Date()
+        };
+        setMessages([welcomeMessage]);
+        saveToLocalStorage(userId, selectedTherapistId, [welcomeMessage]);
       }
     } catch (error) {
       console.error('Error in loadChatHistory:', error);
     }
   };
 
-  // Save conversation pair to database and local storage
+  // Save conversation pair to current chat session
   const saveConversationPair = async (userMessage: string, aiResponse: string, userAttachments?: Array<{url: string; type: 'image' | 'video'}>) => {
-    if (!currentUserId) return;
+    if (!currentUserId || !currentChatId) {
+      console.error('No current user or chat session');
+      return;
+    }
 
     try {
       const conversationPair: ConversationPair = {
@@ -174,47 +165,28 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         user_attachments: userAttachments
       };
 
-      if (currentChatId) {
-        // Update existing chat record
-        const { data: existingChat } = await supabase
+      // Get current conversation from the chat session
+      const { data: existingChat } = await supabase
+        .from('chats')
+        .select('conversation')
+        .eq('id', currentChatId)
+        .single();
+
+      if (existingChat) {
+        const existingConversation = (existingChat.conversation as unknown as ConversationPair[]) || [];
+        const updatedConversation = [...existingConversation, conversationPair];
+
+        const { error } = await supabase
           .from('chats')
-          .select('conversation')
-          .eq('id', currentChatId)
-          .single();
-
-        if (existingChat) {
-          const existingConversation = (existingChat.conversation as unknown as ConversationPair[]) || [];
-          const updatedConversation = [...existingConversation, conversationPair];
-
-          const { error } = await supabase
-            .from('chats')
-            .update({ 
-              conversation: updatedConversation as any
-            })
-            .eq('id', currentChatId);
-
-          if (error) {
-            console.error('Error updating conversation:', error);
-          }
-        }
-      } else {
-        // Create new chat record
-        const { data, error } = await supabase
-          .from('chats')
-          .insert({
-            user_id: currentUserId,
-            therapist_id: selectedTherapistId || null,
-            conversation: [conversationPair] as any,
-            conversation_started_at: new Date().toISOString(),
-            attachments: userAttachments || []
+          .update({ 
+            conversation: updatedConversation as any
           })
-          .select()
-          .single();
+          .eq('id', currentChatId);
 
         if (error) {
-          console.error('Error creating new chat:', error);
-        } else if (data) {
-          setCurrentChatId(data.id);
+          console.error('Error updating conversation:', error);
+        } else {
+          console.log('Conversation updated successfully');
         }
       }
     } catch (error) {
@@ -305,7 +277,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
       // Save updated messages to local storage
       saveToLocalStorage(currentUserId, selectedTherapistId, finalMessages);
       
-      // Save the complete conversation pair to database
+      // Save the complete conversation pair to current chat session
       await saveConversationPair(currentInputValue, aiResponse, attachments.length > 0 ? attachments : undefined);
 
     } catch (error) {
