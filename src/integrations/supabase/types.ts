@@ -87,13 +87,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "gratitudes_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "sessions"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "gratitudes_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -128,13 +121,6 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "memories_source_session_id_fkey"
-            columns: ["source_session_id"]
-            isOneToOne: false
-            referencedRelation: "sessions"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "memories_user_id_fkey"
             columns: ["user_id"]
@@ -175,138 +161,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "onboarding_responses_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      session_memories: {
-        Row: {
-          content: string
-          created_at: string | null
-          emotional_tone: string | null
-          id: string
-          importance_score: number | null
-          keywords: string[] | null
-          memory_type: string
-          session_id: string
-          title: string
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          content: string
-          created_at?: string | null
-          emotional_tone?: string | null
-          id?: string
-          importance_score?: number | null
-          keywords?: string[] | null
-          memory_type: string
-          session_id: string
-          title: string
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          content?: string
-          created_at?: string | null
-          emotional_tone?: string | null
-          id?: string
-          importance_score?: number | null
-          keywords?: string[] | null
-          memory_type?: string
-          session_id?: string
-          title?: string
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "session_memories_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "sessions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "session_memories_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      sessions: {
-        Row: {
-          ai_insights: Json | null
-          attachments: Json | null
-          ended_at: string | null
-          id: string
-          key_points: Json | null
-          messages: Json | null
-          mood_after: string | null
-          mood_before: string | null
-          sentiment: string | null
-          session_duration: number | null
-          session_notes: string | null
-          session_rating: number | null
-          session_type: string | null
-          started_at: string | null
-          summary: string | null
-          therapist_id: string | null
-          user_id: string | null
-        }
-        Insert: {
-          ai_insights?: Json | null
-          attachments?: Json | null
-          ended_at?: string | null
-          id?: string
-          key_points?: Json | null
-          messages?: Json | null
-          mood_after?: string | null
-          mood_before?: string | null
-          sentiment?: string | null
-          session_duration?: number | null
-          session_notes?: string | null
-          session_rating?: number | null
-          session_type?: string | null
-          started_at?: string | null
-          summary?: string | null
-          therapist_id?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          ai_insights?: Json | null
-          attachments?: Json | null
-          ended_at?: string | null
-          id?: string
-          key_points?: Json | null
-          messages?: Json | null
-          mood_after?: string | null
-          mood_before?: string | null
-          sentiment?: string | null
-          session_duration?: number | null
-          session_notes?: string | null
-          session_rating?: number | null
-          session_type?: string | null
-          started_at?: string | null
-          summary?: string | null
-          therapist_id?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "sessions_therapist_id_fkey"
-            columns: ["therapist_id"]
-            isOneToOne: false
-            referencedRelation: "therapists"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "sessions_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
@@ -391,95 +245,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
-      }
-      user_emotions: {
-        Row: {
-          context: string | null
-          emotion_type: string
-          id: string
-          intensity: number
-          recorded_at: string | null
-          session_id: string | null
-          user_id: string
-        }
-        Insert: {
-          context?: string | null
-          emotion_type: string
-          id?: string
-          intensity: number
-          recorded_at?: string | null
-          session_id?: string | null
-          user_id: string
-        }
-        Update: {
-          context?: string | null
-          emotion_type?: string
-          id?: string
-          intensity?: number
-          recorded_at?: string | null
-          session_id?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_emotions_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "sessions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_emotions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_goals: {
-        Row: {
-          created_at: string | null
-          goal_description: string | null
-          goal_title: string
-          id: string
-          progress_percentage: number | null
-          status: string | null
-          target_date: string | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          goal_description?: string | null
-          goal_title: string
-          id?: string
-          progress_percentage?: number | null
-          status?: string | null
-          target_date?: string | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          goal_description?: string | null
-          goal_title?: string
-          id?: string
-          progress_percentage?: number | null
-          status?: string | null
-          target_date?: string | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_goals_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       user_preferences: {
         Row: {
@@ -610,13 +375,6 @@ export type Database = {
           video_url?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "videos_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "sessions"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "videos_user_id_fkey"
             columns: ["user_id"]

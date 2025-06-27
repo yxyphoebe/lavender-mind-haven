@@ -1,9 +1,10 @@
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Send, Plus, Video, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useIsMobile } from '@/hooks/use-mobile';
 import VoiceRecorder from './VoiceRecorder';
 
 interface MediaFile {
@@ -21,11 +22,25 @@ interface ChatInputProps {
 
 const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatInputProps) => {
   const [selectedMediaFiles, setSelectedMediaFiles] = useState<MediaFile[]>([]);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isMobile = useIsMobile();
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  // Auto-adjust textarea height
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      const scrollHeight = textareaRef.current.scrollHeight;
+      const maxHeight = isMobile ? 120 : 160; // 6 lines on mobile, 8 lines on desktop
+      textareaRef.current.style.height = Math.min(scrollHeight, maxHeight) + 'px';
+    }
+  }, [inputValue, isMobile]);
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      onSendMessage();
+      if (inputValue.trim() || selectedMediaFiles.length > 0) {
+        onSendMessage();
+      }
     }
   };
 
@@ -140,25 +155,27 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
               size="icon"
               onClick={handleMediaSelect}
               disabled={isTyping}
-              className="w-9 h-9 rounded-full hover:bg-white/50 text-slate-500 hover:text-slate-700 transition-all duration-300 hover:scale-105 flex-shrink-0"
+              className="w-9 h-9 rounded-full hover:bg-white/50 text-slate-500 hover:text-slate-700 transition-all duration-300 hover:scale-105 flex-shrink-0 mb-1"
             >
               <Plus className="w-5 h-5" />
             </Button>
             
-            {/* Input field */}
+            {/* Textarea field */}
             <div className="flex-1">
-              <Input
+              <Textarea
+                ref={textareaRef}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
                 placeholder="输入消息..."
-                className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-slate-400 px-0 py-2"
+                className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-slate-400 px-0 py-2 resize-none min-h-[2.5rem] max-h-none overflow-y-auto"
                 disabled={isTyping}
+                style={{ height: 'auto' }}
               />
             </div>
             
             {/* Voice recorder and send button */}
-            <div className="flex items-center space-x-2 flex-shrink-0">
+            <div className="flex items-center space-x-2 flex-shrink-0 mb-1">
               <VoiceRecorder 
                 onTranscriptionComplete={handleVoiceTranscription}
                 disabled={isTyping}
