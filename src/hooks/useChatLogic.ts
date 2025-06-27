@@ -23,12 +23,57 @@ interface ConversationPair {
   }>;
 }
 
+interface LocalChatData {
+  therapistId: string;
+  messages: Message[];
+  lastUpdated: string;
+}
+
 export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+
+  // Local storage keys
+  const getLocalStorageKey = (userId: string, therapistId: string) => 
+    `chat_${userId}_${therapistId}`;
+
+  // Save messages to local storage
+  const saveToLocalStorage = (userId: string, therapistId: string, messages: Message[]) => {
+    try {
+      const chatData: LocalChatData = {
+        therapistId,
+        messages,
+        lastUpdated: new Date().toISOString()
+      };
+      const key = getLocalStorageKey(userId, therapistId);
+      localStorage.setItem(key, JSON.stringify(chatData));
+      console.log('Chat saved to local storage');
+    } catch (error) {
+      console.error('Error saving to local storage:', error);
+    }
+  };
+
+  // Load messages from local storage
+  const loadFromLocalStorage = (userId: string, therapistId: string): Message[] => {
+    try {
+      const key = getLocalStorageKey(userId, therapistId);
+      const stored = localStorage.getItem(key);
+      if (stored) {
+        const chatData: LocalChatData = JSON.parse(stored);
+        // Convert timestamp strings back to Date objects
+        return chatData.messages.map(msg => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading from local storage:', error);
+    }
+    return [];
+  };
 
   // Get current user and load chat history
   useEffect(() => {
@@ -43,9 +88,17 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     getCurrentUser();
   }, [selectedTherapistId]);
 
-  // Load chat history from database
+  // Load chat history from local storage first, then sync with cloud
   const loadChatHistory = async (userId: string) => {
     try {
+      // First, load from local storage for instant display
+      const localMessages = loadFromLocalStorage(userId, selectedTherapistId);
+      if (localMessages.length > 0) {
+        setMessages(localMessages);
+        console.log('Loaded chat from local storage');
+      }
+
+      // Then sync with cloud data
       const { data: chats, error } = await supabase
         .from('chats')
         .select('*')
@@ -85,10 +138,15 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
           });
         });
         
-        setMessages(formattedMessages);
+        // Update local storage with cloud data if it's newer or different
+        if (formattedMessages.length > localMessages.length) {
+          setMessages(formattedMessages);
+          saveToLocalStorage(userId, selectedTherapistId, formattedMessages);
+          console.log('Synced chat from cloud to local storage');
+        }
       } else {
-        // If no chat history, add welcome message and create new chat record
-        if (therapist) {
+        // If no cloud history and no local history, add welcome message
+        if (localMessages.length === 0 && therapist) {
           const welcomeMessage: Message = {
             id: 'welcome',
             text: `Hello! I'm ${therapist.name}. How can I help you today?`,
@@ -96,6 +154,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
             timestamp: new Date()
           };
           setMessages([welcomeMessage]);
+          saveToLocalStorage(userId, selectedTherapistId, [welcomeMessage]);
         }
       }
     } catch (error) {
@@ -103,7 +162,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     }
   };
 
-  // Save conversation pair to database
+  // Save conversation pair to database and local storage
   const saveConversationPair = async (userMessage: string, aiResponse: string, userAttachments?: Array<{url: string; type: 'image' | 'video'}>) => {
     if (!currentUserId) return;
 
@@ -131,8 +190,8 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
             .from('chats')
             .update({ 
               conversation: updatedConversation as any,
-              message: userMessage, // Keep for backward compatibility
-              message_type: 'user' // Keep for backward compatibility
+              message: userMessage,
+              message_type: 'user'
             })
             .eq('id', currentChatId);
 
@@ -149,8 +208,8 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
             therapist_id: selectedTherapistId || null,
             conversation: [conversationPair] as any,
             conversation_started_at: new Date().toISOString(),
-            message: userMessage, // Keep for backward compatibility
-            message_type: 'user', // Keep for backward compatibility
+            message: userMessage,
+            message_type: 'user',
             attachments: userAttachments || []
           })
           .select()
@@ -195,7 +254,13 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
       attachments: attachments.length > 0 ? attachments : undefined
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    // Update messages state immediately
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
+    
+    // Save to local storage immediately
+    saveToLocalStorage(currentUserId, selectedTherapistId, newMessages);
+    
     const currentInputValue = inputValue;
     setInputValue('');
     setIsTyping(true);
@@ -237,7 +302,12 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         timestamp: new Date()
       };
 
-      setMessages(prev => [...prev, aiMessage]);
+      // Update messages with AI response
+      const finalMessages = [...newMessages, aiMessage];
+      setMessages(finalMessages);
+      
+      // Save updated messages to local storage
+      saveToLocalStorage(currentUserId, selectedTherapistId, finalMessages);
       
       // Save the complete conversation pair to database
       await saveConversationPair(currentInputValue, aiResponse, attachments.length > 0 ? attachments : undefined);
@@ -252,7 +322,11 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         timestamp: new Date()
       };
 
-      setMessages(prev => [...prev, errorMessage]);
+      const finalMessages = [...newMessages, errorMessage];
+      setMessages(finalMessages);
+      
+      // Save error message to local storage
+      saveToLocalStorage(currentUserId, selectedTherapistId, finalMessages);
       
       // Save error conversation pair
       await saveConversationPair(currentInputValue, errorMessage.text);
@@ -261,11 +335,22 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     }
   };
 
+  // Function to clear chat history (for user deletion)
+  const clearChatHistory = () => {
+    if (currentUserId) {
+      const key = getLocalStorageKey(currentUserId, selectedTherapistId);
+      localStorage.removeItem(key);
+      setMessages([]);
+      console.log('Chat history cleared from local storage');
+    }
+  };
+
   return {
     messages,
     inputValue,
     setInputValue,
     isTyping,
-    handleSendMessage
+    handleSendMessage,
+    clearChatHistory
   };
 };
