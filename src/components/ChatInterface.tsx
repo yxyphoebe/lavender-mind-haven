@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -376,6 +375,8 @@ const ChatInterface = () => {
                             .from('chat-media')
                             .getPublicUrl(data.path);
                           uploadedUrls.push(publicUrl);
+                        } else {
+                          console.error('Upload error:', error);
                         }
                       }
                       handleSendMessage(uploadedUrls);
