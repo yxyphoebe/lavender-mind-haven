@@ -3,10 +3,11 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, Heart, Zap, Star, ArrowLeft } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Send, ArrowLeft, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useTherapist } from '@/hooks/useTherapists';
 import VoiceRecorder from './VoiceRecorder';
 
 interface Message {
@@ -17,29 +18,27 @@ interface Message {
 }
 
 const ChatInterface = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: "Hello! I'm so glad you're here. How are you feeling today? Take your time - there's no rush.",
-      sender: 'ai',
-      timestamp: new Date()
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Get selected persona from localStorage
-  const selectedPersona = localStorage.getItem('selectedPersona') || 'nuva';
-  
-  const personas = {
-    nuva: { name: 'Nuva', icon: Heart, color: 'violet' },
-    nova: { name: 'Nova', icon: Zap, color: 'blue' },
-    sage: { name: 'Sage', icon: Star, color: 'indigo' }
-  };
+  // Get selected therapist from localStorage
+  const selectedTherapistId = localStorage.getItem('selectedTherapistId') || '';
+  const { data: therapist, isLoading } = useTherapist(selectedTherapistId);
 
-  const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
+  // Initialize welcome message when therapist data is loaded
+  useEffect(() => {
+    if (therapist && messages.length === 0) {
+      setMessages([{
+        id: '1',
+        text: `Hello! I'm ${therapist.name}, so glad you're here. How are you feeling today? Take your time - there's no rush.`,
+        sender: 'ai',
+        timestamp: new Date()
+      }]);
+    }
+  }, [therapist, messages.length]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -69,7 +68,7 @@ const ChatInterface = () => {
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
           message: inputValue,
-          persona: selectedPersona
+          therapist: therapist?.name || 'AI Assistant'
         }
       });
 
@@ -116,7 +115,26 @@ const ChatInterface = () => {
     setInputValue(text);
   };
 
-  const IconComponent = currentPersona.icon;
+  if (isLoading) {
+    return (
+      <div className="h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!therapist) {
+    return (
+      <div className="h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg text-gray-600 mb-4">Please select a therapist first</p>
+          <Button onClick={() => navigate('/persona-selection')}>
+            Choose Therapist
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex flex-col">
@@ -132,21 +150,20 @@ const ChatInterface = () => {
             <ArrowLeft className="w-5 h-5 text-slate-600" />
           </Button>
           
-          <Avatar className={`w-10 h-10 bg-gradient-to-br ${
-            currentPersona.color === 'blue' 
-              ? 'from-blue-400 to-blue-500' 
-              : currentPersona.color === 'violet' 
-                ? 'from-violet-400 to-violet-500'
-                : 'from-indigo-400 to-indigo-500'
-          }`}>
-            <AvatarFallback className="bg-transparent">
-              <IconComponent className="w-6 h-6 text-white" />
+          <Avatar className="w-10 h-10 zen-shadow">
+            <AvatarImage 
+              src={therapist.image_url || ''} 
+              alt={`${therapist.name} avatar`}
+              className="object-cover"
+            />
+            <AvatarFallback className="bg-gradient-to-br from-violet-400 to-violet-500 text-white">
+              {therapist.name.charAt(0)}
             </AvatarFallback>
           </Avatar>
           
           <div>
             <h2 className="font-display text-lg font-semibold text-slate-800">
-              {currentPersona.name}
+              {therapist.name}
             </h2>
             <p className="text-sm text-slate-500">
               {isTyping ? 'Typing...' : 'Here to support you'}
@@ -165,18 +182,17 @@ const ChatInterface = () => {
             <div className={`max-w-[85%] ${message.sender === 'user' ? 'order-1' : 'order-2'}`}>
               {message.sender === 'ai' && (
                 <div className="flex items-center space-x-2 mb-2">
-                  <Avatar className={`w-8 h-8 bg-gradient-to-br ${
-                    currentPersona.color === 'blue' 
-                      ? 'from-blue-400 to-blue-500' 
-                      : currentPersona.color === 'violet' 
-                        ? 'from-violet-400 to-violet-500'
-                        : 'from-indigo-400 to-indigo-500'
-                  }`}>
-                    <AvatarFallback className="bg-transparent">
-                      <IconComponent className="w-4 h-4 text-white" />
+                  <Avatar className="w-8 h-8 zen-shadow">
+                    <AvatarImage 
+                      src={therapist.image_url || ''} 
+                      alt={`${therapist.name} avatar`}
+                      className="object-cover"
+                    />
+                    <AvatarFallback className="bg-gradient-to-br from-violet-400 to-violet-500 text-white">
+                      {therapist.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium text-slate-700">{currentPersona.name}</span>
+                  <span className="text-sm font-medium text-slate-700">{therapist.name}</span>
                 </div>
               )}
               
@@ -204,18 +220,17 @@ const ChatInterface = () => {
           <div className="flex justify-start animate-fade-in">
             <div className="max-w-[85%]">
               <div className="flex items-center space-x-2 mb-2">
-                <Avatar className={`w-8 h-8 bg-gradient-to-br ${
-                  currentPersona.color === 'blue' 
-                    ? 'from-blue-400 to-blue-500' 
-                    : currentPersona.color === 'violet' 
-                      ? 'from-violet-400 to-violet-500'
-                      : 'from-indigo-400 to-indigo-500'
-                }`}>
-                  <AvatarFallback className="bg-transparent">
-                    <IconComponent className="w-4 h-4 text-white" />
+                <Avatar className="w-8 h-8 zen-shadow">
+                  <AvatarImage 
+                    src={therapist.image_url || ''} 
+                    alt={`${therapist.name} avatar`}
+                    className="object-cover"
+                  />
+                  <AvatarFallback className="bg-gradient-to-br from-violet-400 to-violet-500 text-white">
+                    {therapist.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-medium text-slate-700">{currentPersona.name}</span>
+                <span className="text-sm font-medium text-slate-700">{therapist.name}</span>
               </div>
               <Card className="p-3 bg-white border-violet-200 mr-4 zen-shadow">
                 <div className="flex space-x-1">
