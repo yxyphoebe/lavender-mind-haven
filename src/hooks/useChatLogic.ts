@@ -63,7 +63,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         const latestChat = chats[chats.length - 1];
         setCurrentChatId(latestChat.id);
         
-        const conversationPairs = latestChat.conversation as ConversationPair[] || [];
+        const conversationPairs = (latestChat.conversation as ConversationPair[]) || [];
         const formattedMessages: Message[] = [];
         
         conversationPairs.forEach((pair, index) => {
@@ -124,13 +124,13 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
           .single();
 
         if (existingChat) {
-          const existingConversation = existingChat.conversation as ConversationPair[] || [];
+          const existingConversation = (existingChat.conversation as ConversationPair[]) || [];
           const updatedConversation = [...existingConversation, conversationPair];
 
           const { error } = await supabase
             .from('chats')
             .update({ 
-              conversation: updatedConversation,
+              conversation: updatedConversation as any,
               message: userMessage, // Keep for backward compatibility
               message_type: 'user' // Keep for backward compatibility
             })
@@ -147,7 +147,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
           .insert({
             user_id: currentUserId,
             therapist_id: selectedTherapistId || null,
-            conversation: [conversationPair],
+            conversation: [conversationPair] as any,
             conversation_started_at: new Date().toISOString(),
             message: userMessage, // Keep for backward compatibility
             message_type: 'user', // Keep for backward compatibility
