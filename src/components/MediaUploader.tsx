@@ -105,63 +105,65 @@ const MediaUploader = ({ onMediaSelect, onUploadComplete, disabled }: MediaUploa
         className="hidden"
       />
       
-      <div className="flex items-center justify-between">
+      {selectedFiles.length > 0 && (
+        <>
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 border border-white/30 shadow-sm">
+            <div className="flex flex-wrap gap-3">
+              {selectedFiles.map((mediaFile, index) => (
+                <div key={index} className="relative group">
+                  <div className="w-20 h-20 rounded-xl overflow-hidden bg-white shadow-sm border border-white/50">
+                    {mediaFile.type === 'image' ? (
+                      <img
+                        src={mediaFile.preview}
+                        alt="预览"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                        <Video className="w-8 h-8 text-slate-500" />
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => removeFile(index)}
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-400/80 hover:bg-red-500 text-white rounded-full flex items-center justify-center text-xs shadow-md transition-all duration-200 hover:scale-110 backdrop-blur-sm"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="flex justify-center">
+            <Button
+              type="button"
+              size="sm"
+              onClick={uploadFiles}
+              disabled={disabled || isUploading}
+              className="bg-gradient-to-r from-blue-400/80 to-purple-400/80 hover:from-blue-500/80 hover:to-purple-500/80 text-white rounded-full px-6 py-2 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 backdrop-blur-sm"
+            >
+              {isUploading ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              ) : null}
+              {isUploading ? '上传中...' : `发送 ${selectedFiles.length} 个文件`}
+            </Button>
+          </div>
+        </>
+      )}
+
+      <div className="flex justify-center">
         <Button
           type="button"
           variant="ghost"
           size="icon"
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled || isUploading}
-          className="w-8 h-8 rounded-full hover:bg-gray-100 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+          className="w-10 h-10 rounded-full hover:bg-white/50 text-slate-500 hover:text-slate-700 transition-all duration-300 hover:scale-105"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-5 h-5" />
         </Button>
-
-        {selectedFiles.length > 0 && (
-          <Button
-            type="button"
-            size="sm"
-            onClick={uploadFiles}
-            disabled={disabled || isUploading}
-            className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 py-2 text-sm transition-colors duration-200"
-          >
-            {isUploading ? (
-              <Loader2 className="w-4 h-4 animate-spin mr-2" />
-            ) : null}
-            {isUploading ? '上传中...' : `发送 ${selectedFiles.length} 个文件`}
-          </Button>
-        )}
       </div>
-
-      {selectedFiles.length > 0 && (
-        <div className="bg-gray-50 rounded-lg p-3 border">
-          <div className="flex flex-wrap gap-2">
-            {selectedFiles.map((mediaFile, index) => (
-              <div key={index} className="relative group">
-                <div className="w-16 h-16 rounded-lg overflow-hidden bg-white shadow-sm border">
-                  {mediaFile.type === 'image' ? (
-                    <img
-                      src={mediaFile.preview}
-                      alt="预览"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                      <Video className="w-6 h-6 text-gray-500" />
-                    </div>
-                  )}
-                </div>
-                <button
-                  onClick={() => removeFile(index)}
-                  className="absolute -top-1 -right-1 w-5 h-5 bg-gray-600 hover:bg-gray-700 text-white rounded-full flex items-center justify-center text-xs transition-colors duration-200"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
