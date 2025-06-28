@@ -161,8 +161,8 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
           </div>
           
           {/* Button row - Second row */}
-          <div className="flex items-center justify-center space-x-3">
-            {/* Plus button */}
+          <div className="flex items-center justify-between">
+            {/* Plus button - Far left */}
             <Button
               type="button"
               variant="ghost"
@@ -174,21 +174,22 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
               <Plus className="w-5 h-5" />
             </Button>
             
-            {/* Voice recorder */}
-            <VoiceRecorder 
-              onTranscriptionComplete={handleVoiceTranscription}
-              disabled={isTyping}
-            />
-            
-            {/* Send button */}
-            <Button
-              onClick={() => onSendMessage()}
-              disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
-              size="sm"
-              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-full px-4 py-2 h-9 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
+            {/* Voice and Send buttons - Far right */}
+            <div className="flex items-center space-x-3">
+              <VoiceRecorder 
+                onTranscriptionComplete={handleVoiceTranscription}
+                disabled={isTyping}
+              />
+              
+              <Button
+                onClick={() => onSendMessage()}
+                disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
+                size="sm"
+                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-full px-4 py-2 h-9 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
