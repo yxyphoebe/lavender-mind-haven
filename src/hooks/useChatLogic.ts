@@ -75,7 +75,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     return [];
   };
 
-  // Create a new chat session when component mounts
+  // Create a new chat session when user sends first message
   const createNewChatSession = async (userId: string) => {
     try {
       console.log('Creating new chat session for user:', userId, 'therapist:', selectedTherapistId);
@@ -105,25 +105,19 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     }
   };
 
-  // Get current user and initialize chat session
+  // Get current user and load chat history (but don't create session yet)
   useEffect(() => {
-    const initializeChatSession = async () => {
+    const initializeChatHistory = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
         setCurrentUserId(session.user.id);
-        
-        // Create new chat session immediately
-        const newChatId = await createNewChatSession(session.user.id);
-        if (newChatId) {
-          setCurrentChatId(newChatId);
-        }
         
         // Load historical messages from local storage for display
         await loadChatHistory(session.user.id);
       }
     };
 
-    initializeChatSession();
+    initializeChatHistory();
   }, [selectedTherapistId]);
 
   // Load chat history from local storage for display only
@@ -135,7 +129,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         setMessages(localMessages);
         console.log('Loaded historical chat from local storage');
       } else if (therapist) {
-        // If no local history, add welcome message
+        // If no local history, add welcome message (local only, not saved to DB)
         const welcomeMessage: Message = {
           id: 'welcome',
           text: `Hello! I'm ${therapist.name}. How can I help you today?`,
@@ -143,7 +137,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
           timestamp: new Date()
         };
         setMessages([welcomeMessage]);
-        saveToLocalStorage(userId, selectedTherapistId, [welcomeMessage]);
+        // Note: We don't save welcome message to localStorage or DB
       }
     } catch (error) {
       console.error('Error in loadChatHistory:', error);
@@ -208,6 +202,18 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
   const handleSendMessage = async (mediaUrls: string[] = []) => {
     if (!inputValue.trim() && mediaUrls.length === 0) return;
     if (!currentUserId) return;
+
+    // Create chat session on first message if it doesn't exist
+    if (!currentChatId) {
+      console.log('First message - creating chat session');
+      const newChatId = await createNewChatSession(currentUserId);
+      if (newChatId) {
+        setCurrentChatId(newChatId);
+      } else {
+        console.error('Failed to create chat session');
+        return;
+      }
+    }
 
     const attachments = mediaUrls.map(url => ({
       url,
