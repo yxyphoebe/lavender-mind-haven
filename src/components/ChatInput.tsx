@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -147,7 +148,7 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
         {/* Input Box */}
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 p-4">
           {/* Textarea field - First row */}
-          <div className="mb-3">
+          <div className="mb-2">
             <Textarea
               ref={textareaRef}
               value={inputValue}
