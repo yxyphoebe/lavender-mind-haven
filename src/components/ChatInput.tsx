@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -146,8 +145,23 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
         )}
         
         {/* Input Box */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 p-2">
-          <div className="flex items-end space-x-3 px-4 py-2">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 p-4">
+          {/* Textarea field - First row */}
+          <div className="mb-3">
+            <Textarea
+              ref={textareaRef}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyPress}
+              placeholder="输入消息..."
+              className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-slate-400 px-0 py-2 resize-none min-h-[2.5rem] max-h-none overflow-y-auto"
+              disabled={isTyping}
+              style={{ height: 'auto' }}
+            />
+          </div>
+          
+          {/* Button row - Second row */}
+          <div className="flex items-center justify-center space-x-3">
             {/* Plus button */}
             <Button
               type="button"
@@ -155,40 +169,26 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
               size="icon"
               onClick={handleMediaSelect}
               disabled={isTyping}
-              className="w-9 h-9 rounded-full hover:bg-white/50 text-slate-500 hover:text-slate-700 transition-all duration-300 hover:scale-105 flex-shrink-0 mb-1"
+              className="w-9 h-9 rounded-full hover:bg-white/50 text-slate-500 hover:text-slate-700 transition-all duration-300 hover:scale-105 flex-shrink-0"
             >
               <Plus className="w-5 h-5" />
             </Button>
             
-            {/* Textarea field */}
-            <div className="flex-1">
-              <Textarea
-                ref={textareaRef}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyPress}
-                placeholder="输入消息..."
-                className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-slate-400 px-0 py-2 resize-none min-h-[2.5rem] max-h-none overflow-y-auto"
-                disabled={isTyping}
-                style={{ height: 'auto' }}
-              />
-            </div>
+            {/* Voice recorder */}
+            <VoiceRecorder 
+              onTranscriptionComplete={handleVoiceTranscription}
+              disabled={isTyping}
+            />
             
-            {/* Voice recorder and send button */}
-            <div className="flex items-center space-x-2 flex-shrink-0 mb-1">
-              <VoiceRecorder 
-                onTranscriptionComplete={handleVoiceTranscription}
-                disabled={isTyping}
-              />
-              <Button
-                onClick={() => onSendMessage()}
-                disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
-                size="sm"
-                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-full px-4 py-2 h-9 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
+            {/* Send button */}
+            <Button
+              onClick={() => onSendMessage()}
+              disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
+              size="sm"
+              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-full px-4 py-2 h-9 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            >
+              <Send className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </div>
