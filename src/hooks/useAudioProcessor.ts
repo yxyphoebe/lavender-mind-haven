@@ -18,8 +18,9 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
   // 开始录音处理
   const startAudioProcessing = useCallback(async (stream: MediaStream) => {
     try {
+      // 使用 WAV 格式而不是 webm
       const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus'
+        mimeType: 'audio/wav'
       });
       
       mediaRecorderRef.current = mediaRecorder;
@@ -59,11 +60,56 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
       };
     } catch (error) {
       console.error('Error starting audio processing:', error);
-      toast({
-        title: "音频处理失败",
-        description: "无法开始音频处理",
-        variant: "destructive"
-      });
+      
+      // 如果 WAV 不支持，尝试其他格式
+      try {
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'audio/webm;codecs=opus'
+        });
+        
+        mediaRecorderRef.current = mediaRecorder;
+        audioChunksRef.current = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = async () => {
+          await processAudioChunks();
+        };
+
+        // 每2秒处理一次音频
+        const processInterval = setInterval(() => {
+          if (mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            setTimeout(() => {
+              if (mediaRecorder.state === 'inactive') {
+                mediaRecorder.start();
+              }
+            }, 100);
+          }
+        }, 2000);
+
+        mediaRecorder.start();
+        setIsConnected(true);
+        
+        return () => {
+          clearInterval(processInterval);
+          if (mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+          }
+          setIsConnected(false);
+        };
+      } catch (fallbackError) {
+        console.error('Fallback audio processing also failed:', fallbackError);
+        toast({
+          title: "音频处理失败",
+          description: "无法开始音频处理",
+          variant: "destructive"
+        });
+      }
     }
   }, [toast]);
 
@@ -74,8 +120,12 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
     setIsProcessing(true);
     
     try {
-      const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+      const audioBlob = new Blob(audioChunksRef.current, { 
+        type: audioChunksRef.current[0].type 
+      });
       audioChunksRef.current = [];
+
+      console.log('Processing audio blob:', audioBlob.type, audioBlob.size);
 
       // 转换为base64
       const reader = new FileReader();
