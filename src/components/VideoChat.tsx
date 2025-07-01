@@ -25,9 +25,7 @@ const VideoChat = () => {
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
   const [showControls, setShowControls] = useState(false);
-  const [isAutoJoining, setIsAutoJoining] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Use the Tavus hook for video functionality
   const {
@@ -50,47 +48,6 @@ const VideoChat = () => {
 
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
   const IconComponent = currentPersona.icon;
-
-  // Auto-join functionality
-  useEffect(() => {
-    if (isConnected && conversation?.conversation_url && iframeRef.current) {
-      setIsAutoJoining(true);
-      console.log('Starting auto-join process for conversation:', conversation.conversation_id);
-      
-      const autoJoinTimeout = setTimeout(() => {
-        console.log('Auto-join process completed');
-        setIsAutoJoining(false);
-      }, 5000);
-
-      // Listen for iframe load events
-      const iframe = iframeRef.current;
-      const handleIframeLoad = () => {
-        console.log('Iframe loaded, attempting to auto-join');
-        
-        // Try to auto-click join button after iframe loads
-        setTimeout(() => {
-          try {
-            // Send message to iframe to auto-join
-            iframe.contentWindow?.postMessage({
-              type: 'AUTO_JOIN',
-              action: 'click_join_button'
-            }, '*');
-            console.log('Auto-join message sent to iframe');
-          } catch (error) {
-            console.log('Could not send auto-join message:', error);
-          }
-          setIsAutoJoining(false);
-        }, 2000);
-      };
-
-      iframe.addEventListener('load', handleIframeLoad);
-
-      return () => {
-        clearTimeout(autoJoinTimeout);
-        iframe.removeEventListener('load', handleIframeLoad);
-      };
-    }
-  }, [isConnected, conversation]);
 
   const handleStartCall = async () => {
     if (!therapist) {
@@ -145,10 +102,9 @@ const VideoChat = () => {
         {/* Video Window */}
         <div className="w-[80vw] max-w-4xl h-[60vh] min-h-[400px] rounded-2xl shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm border border-white/60">
           {isConnected && conversation?.conversation_url ? (
-            // Tavus video iframe
+            // Tavus video iframe - with auto-join parameters
             <iframe
-              ref={iframeRef}
-              src={conversation.conversation_url}
+              src={`${conversation.conversation_url}?autoJoin=true&skipIntro=true&hideControls=false`}
               className="w-full h-full border-0 rounded-2xl"
               allow="camera; microphone; fullscreen"
               title="视频通话"
@@ -157,17 +113,13 @@ const VideoChat = () => {
             // Placeholder when not connected
             <div className="w-full h-full bg-gradient-to-br from-slate-50 to-white flex items-center justify-center">
               <div className="text-center">
-                {isConnecting || isAutoJoining ? (
+                {isConnecting ? (
                   <div className="flex flex-col items-center">
                     <div className="w-16 h-16 mb-6">
                       <Loader2 className="w-full h-full animate-spin text-violet-400" />
                     </div>
-                    <h3 className="text-xl font-medium text-slate-700 mb-2">
-                      {isAutoJoining ? '正在自动连接...' : '正在为您连接...'}
-                    </h3>
-                    <p className="text-slate-500">
-                      {isAutoJoining ? '自动处理中，请稍等' : '请稍等片刻'}
-                    </p>
+                    <h3 className="text-xl font-medium text-slate-700 mb-2">正在连接...</h3>
+                    <p className="text-slate-500">即将开始对话</p>
                   </div>
                 ) : error ? (
                   <div className="flex flex-col items-center">
@@ -204,13 +156,13 @@ const VideoChat = () => {
                     <h3 className="text-xl font-medium text-slate-700 mb-2">
                       {therapist?.name || `Dr. ${currentPersona.name}`}
                     </h3>
-                    <p className="text-slate-500 mb-8">准备开始</p>
+                    <p className="text-slate-500 mb-8">准备开始对话</p>
                     <Button
                       onClick={handleStartCall}
                       disabled={!therapist}
                       className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-4 rounded-xl text-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg"
                     >
-                      开始视频通话
+                      开始对话
                     </Button>
                   </div>
                 )}
@@ -219,8 +171,8 @@ const VideoChat = () => {
           )}
         </div>
 
-        {/* Hidden Controls - Only show when connected and on hover */}
-        {isConnected && !isAutoJoining && (
+        {/* Controls - Only show when connected */}
+        {isConnected && (
           <div className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 transition-all duration-300 ${
             showControls ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
           }`}>
@@ -269,7 +221,7 @@ const VideoChat = () => {
         </p>
       </div>
 
-      {/* Subtle Back Button - Only visible when not in call */}
+      {/* Back Button - Only visible when not in call */}
       {!isConnected && (
         <button
           onClick={() => navigate('/user-center')}
