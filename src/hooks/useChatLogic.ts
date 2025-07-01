@@ -145,9 +145,11 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
   };
 
   // Save conversation pair to current chat session
-  const saveConversationPair = async (userMessage: string, aiResponse: string, userAttachments?: Array<{url: string; type: 'image' | 'video'}>) => {
-    if (!currentUserId || !currentChatId) {
-      console.error('No current user or chat session');
+  const saveConversationPair = async (userMessage: string, aiResponse: string, userAttachments?: Array<{url: string; type: 'image' | 'video'}>, chatId?: string) => {
+    const chatIdToUse = chatId || currentChatId;
+    
+    if (!currentUserId || !chatIdToUse) {
+      console.error('No current user or chat session', { currentUserId, chatIdToUse });
       return;
     }
 
@@ -163,7 +165,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
       const { data: existingChat } = await supabase
         .from('chats')
         .select('conversation')
-        .eq('id', currentChatId)
+        .eq('id', chatIdToUse)
         .single();
 
       if (existingChat) {
@@ -175,7 +177,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
           .update({ 
             conversation: updatedConversation as any
           })
-          .eq('id', currentChatId);
+          .eq('id', chatIdToUse);
 
         if (error) {
           console.error('Error updating conversation:', error);
@@ -203,12 +205,15 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     if (!inputValue.trim() && mediaUrls.length === 0) return;
     if (!currentUserId) return;
 
+    let chatIdToUse = currentChatId;
+
     // Create chat session on first message if it doesn't exist
-    if (!currentChatId) {
+    if (!chatIdToUse) {
       console.log('First message - creating chat session');
       const newChatId = await createNewChatSession(currentUserId);
       if (newChatId) {
         setCurrentChatId(newChatId);
+        chatIdToUse = newChatId;
       } else {
         console.error('Failed to create chat session');
         return;
@@ -283,8 +288,8 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
       // Save updated messages to local storage
       saveToLocalStorage(currentUserId, selectedTherapistId, finalMessages);
       
-      // Save the complete conversation pair to current chat session
-      await saveConversationPair(currentInputValue, aiResponse, attachments.length > 0 ? attachments : undefined);
+      // Save the complete conversation pair to current chat session with the correct chatId
+      await saveConversationPair(currentInputValue, aiResponse, attachments.length > 0 ? attachments : undefined, chatIdToUse);
 
     } catch (error) {
       console.error('Error calling AI:', error);
@@ -302,8 +307,8 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
       // Save error message to local storage
       saveToLocalStorage(currentUserId, selectedTherapistId, finalMessages);
       
-      // Save error conversation pair
-      await saveConversationPair(currentInputValue, errorMessage.text);
+      // Save error conversation pair with the correct chatId
+      await saveConversationPair(currentInputValue, errorMessage.text, undefined, chatIdToUse);
     } finally {
       setIsTyping(false);
     }
