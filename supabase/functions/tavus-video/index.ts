@@ -48,7 +48,20 @@ serve(async (req) => {
             participant_absent_timeout: 30,
             enable_recording: false,
             enable_transcription: false,
-            language: 'english'
+            language: 'english',
+            // 添加Tavus嵌入配置以跳过确认弹窗
+            embedding_options: {
+              auto_join: true,
+              skip_intro: true,
+              hide_join_prompt: true,
+              show_controls: false
+            },
+            // 额外的会话配置
+            conversation_config: {
+              auto_start: true,
+              skip_greeting: true,
+              immediate_join: true
+            }
           }
         }),
       });

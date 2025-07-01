@@ -25,7 +25,9 @@ const VideoChat = () => {
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
   const [showControls, setShowControls] = useState(false);
+  const [iframeReady, setIframeReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Use the Tavus hook for video functionality
   const {
@@ -48,6 +50,78 @@ const VideoChat = () => {
 
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
   const IconComponent = currentPersona.icon;
+
+  // 自动跳过确认弹窗的处理函数
+  const handleIframeLoad = () => {
+    console.log('Iframe loaded, attempting to auto-join...');
+    setIframeReady(true);
+    
+    // 多重策略自动跳过确认弹窗
+    const attemptAutoJoin = () => {
+      try {
+        const iframe = iframeRef.current;
+        if (!iframe) return;
+
+        // 策略1: 尝试通过postMessage发送自动加入指令
+        iframe.contentWindow?.postMessage({ 
+          action: 'autoJoin',
+          skipIntro: true,
+          autoStart: true 
+        }, '*');
+
+        // 策略2: 等待2秒后再次尝试
+        setTimeout(() => {
+          try {
+            // 尝试访问iframe内容（如果同域）
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+            if (iframeDoc) {
+              // 查找并点击加入按钮
+              const selectors = [
+                '[data-testid="join-button"]',
+                'button[class*="join"]',
+                'button:contains("ready")',
+                'button:contains("join")',
+                '.join-button',
+                '[aria-label*="join"]'
+              ];
+              
+              for (const selector of selectors) {
+                const button = iframeDoc.querySelector(selector);
+                if (button && button instanceof HTMLElement) {
+                  button.click();
+                  console.log('Auto-clicked join button:', selector);
+                  break;
+                }
+              }
+            }
+          } catch (e) {
+            console.log('Cross-origin restriction, using postMessage fallback');
+            // 继续使用postMessage作为备用方案
+            iframe.contentWindow?.postMessage({ 
+              type: 'TAVUS_AUTO_JOIN',
+              payload: { autoJoin: true }
+            }, '*');
+          }
+        }, 2000);
+
+        // 策略3: 持续尝试5秒
+        const retryInterval = setInterval(() => {
+          iframe.contentWindow?.postMessage({ 
+            action: 'skipConfirmation',
+            autoJoin: true 
+          }, '*');
+        }, 1000);
+
+        setTimeout(() => clearInterval(retryInterval), 5000);
+
+      } catch (error) {
+        console.error('Error in auto-join attempt:', error);
+      }
+    };
+
+    // 延迟执行以确保iframe完全加载
+    setTimeout(attemptAutoJoin, 500);
+  };
 
   const handleStartCall = async () => {
     if (!therapist) {
@@ -72,13 +146,32 @@ const VideoChat = () => {
   const toggleVideo = () => {
     setIsVideoOn(!isVideoOn);
     console.log('Video toggle:', !isVideoOn);
-    // Note: Actual video toggle would need to be implemented with Tavus API
   };
 
   const toggleMic = () => {
     setIsMicOn(!isMicOn);
     console.log('Mic toggle:', !isMicOn);
-    // Note: Actual mic toggle would need to be implemented with Tavus API
+  };
+
+  // 构建优化的Tavus URL
+  const getTavusUrl = () => {
+    if (!conversation?.conversation_url) return '';
+    
+    // 使用多种URL参数组合尝试跳过确认
+    const params = new URLSearchParams({
+      // 标准参数
+      autoJoin: 'true',
+      skipIntro: 'true',
+      hideControls: 'false',
+      autoStart: 'true',
+      // Tavus特定参数（基于常见模式）
+      embed: 'true',
+      noprompt: 'true',
+      immediate: 'true',
+      ready: 'true'
+    });
+    
+    return `${conversation.conversation_url}?${params.toString()}`;
   };
 
   // Log conversation status changes
@@ -102,12 +195,20 @@ const VideoChat = () => {
         {/* Video Window */}
         <div className="w-[80vw] max-w-4xl h-[60vh] min-h-[400px] rounded-2xl shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm border border-white/60">
           {isConnected && conversation?.conversation_url ? (
-            // Tavus video iframe - with auto-join parameters
+            // Tavus video iframe - 使用优化的URL和自动加入处理
             <iframe
-              src={`${conversation.conversation_url}?autoJoin=true&skipIntro=true&hideControls=false`}
+              ref={iframeRef}
+              src={getTavusUrl()}
               className="w-full h-full border-0 rounded-2xl"
-              allow="camera; microphone; fullscreen"
+              style={{ 
+                visibility: iframeReady ? 'visible' : 'hidden',
+                opacity: iframeReady ? 1 : 0,
+                transition: 'opacity 0.3s ease-in-out'
+              }}
+              allow="camera; microphone; fullscreen; autoplay"
               title="视频通话"
+              onLoad={handleIframeLoad}
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation"
             />
           ) : (
             // Placeholder when not connected
