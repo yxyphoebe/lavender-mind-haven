@@ -29,7 +29,7 @@ const ChatInterface = () => {
       <div className="h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
           <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
-          <p className="text-slate-500 text-sm">正在连接...</p>
+          <p className="text-slate-500 text-sm">Connecting...</p>
         </div>
       </div>
     );
@@ -42,12 +42,12 @@ const ChatInterface = () => {
           <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full mx-auto mb-6 flex items-center justify-center">
             <User className="w-8 h-8 text-slate-600" />
           </div>
-          <p className="text-lg text-slate-600 mb-6 font-light">请选择一位心理顾问开始对话</p>
+          <p className="text-lg text-slate-600 mb-6 font-light">Please select a therapist to start the conversation</p>
           <Button 
             onClick={() => navigate('/persona-selection')} 
             className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0 rounded-full px-8 py-3 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
           >
-            选择顾问
+            Select Therapist
           </Button>
         </div>
       </div>

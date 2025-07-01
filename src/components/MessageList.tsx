@@ -65,7 +65,7 @@ const MessageList = ({ messages, therapist, isTyping }: MessageListProps) => {
               <div className={`flex-1 min-w-0 space-y-2 ${message.sender === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
                 <div className={`flex items-center space-x-2 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                   <span className="text-sm font-medium text-slate-700">
-                    {message.sender === 'ai' ? therapist.name : '你'}
+                    {message.sender === 'ai' ? therapist.name : 'You'}
                   </span>
                   <span className="text-xs text-slate-400">
                     {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -123,7 +123,7 @@ const MessageList = ({ messages, therapist, isTyping }: MessageListProps) => {
               <div className="flex-1 space-y-2">
                 <div className="flex items-center space-x-2">
                   <span className="text-sm font-medium text-slate-700">{therapist.name}</span>
-                  <span className="text-xs text-slate-400">正在输入...</span>
+                  <span className="text-xs text-slate-400">typing...</span>
                 </div>
                 <div className="bg-white/60 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-sm border border-white/30">
                   <div className="flex items-center space-x-1">

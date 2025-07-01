@@ -108,7 +108,7 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
                       {mediaFile.type === 'image' ? (
                         <img
                           src={mediaFile.preview}
-                          alt="预览"
+                          alt="Preview"
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -138,7 +138,7 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
                   disabled={isTyping}
                   className="bg-gradient-to-r from-blue-400/80 to-purple-400/80 hover:from-blue-500/80 hover:to-purple-500/80 text-white rounded-full px-6 py-2 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 backdrop-blur-sm"
                 >
-                  发送 {selectedMediaFiles.length} 个文件
+                  Send {selectedMediaFiles.length} file{selectedMediaFiles.length !== 1 ? 's' : ''}
                 </Button>
               </div>
             </div>
@@ -154,7 +154,7 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="输入消息..."
+              placeholder="Type a message..."
               className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-slate-400 px-0 py-2 resize-none min-h-[2.5rem] max-h-none overflow-y-auto"
               disabled={isTyping}
               style={{ height: 'auto' }}
