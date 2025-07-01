@@ -15,7 +15,8 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/hooks/useTherapists';
-import { useTavusVideo } from '@/hooks/useTavusVideo';
+import { useAudioProcessor } from '@/hooks/useAudioProcessor';
+import WebRTCVideo from './WebRTCVideo';
 
 const VideoChat = () => {
   const navigate = useNavigate();
@@ -25,19 +26,10 @@ const VideoChat = () => {
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
   const [showControls, setShowControls] = useState(false);
-  const [iframeReady, setIframeReady] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  // Use the Tavus hook for video functionality
-  const {
-    isConnecting,
-    isConnected,
-    conversation,
-    error,
-    createConversation,
-    endConversation
-  } = useTavusVideo();
+  const [isCallActive, setIsCallActive] = useState(false);
+  const [currentTranscription, setCurrentTranscription] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
+  const streamRef = useRef<MediaStream | null>(null);
 
   // Get selected persona from localStorage for fallback display
   const selectedPersona = localStorage.getItem('selectedPersona') || 'nuva';
@@ -51,77 +43,18 @@ const VideoChat = () => {
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
   const IconComponent = currentPersona.icon;
 
-  // 自动跳过确认弹窗的处理函数
-  const handleIframeLoad = () => {
-    console.log('Iframe loaded, attempting to auto-join...');
-    setIframeReady(true);
-    
-    // 多重策略自动跳过确认弹窗
-    const attemptAutoJoin = () => {
-      try {
-        const iframe = iframeRef.current;
-        if (!iframe) return;
-
-        // 策略1: 尝试通过postMessage发送自动加入指令
-        iframe.contentWindow?.postMessage({ 
-          action: 'autoJoin',
-          skipIntro: true,
-          autoStart: true 
-        }, '*');
-
-        // 策略2: 等待2秒后再次尝试
-        setTimeout(() => {
-          try {
-            // 尝试访问iframe内容（如果同域）
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-            if (iframeDoc) {
-              // 查找并点击加入按钮
-              const selectors = [
-                '[data-testid="join-button"]',
-                'button[class*="join"]',
-                'button:contains("ready")',
-                'button:contains("join")',
-                '.join-button',
-                '[aria-label*="join"]'
-              ];
-              
-              for (const selector of selectors) {
-                const button = iframeDoc.querySelector(selector);
-                if (button && button instanceof HTMLElement) {
-                  button.click();
-                  console.log('Auto-clicked join button:', selector);
-                  break;
-                }
-              }
-            }
-          } catch (e) {
-            console.log('Cross-origin restriction, using postMessage fallback');
-            // 继续使用postMessage作为备用方案
-            iframe.contentWindow?.postMessage({ 
-              type: 'TAVUS_AUTO_JOIN',
-              payload: { autoJoin: true }
-            }, '*');
-          }
-        }, 2000);
-
-        // 策略3: 持续尝试5秒
-        const retryInterval = setInterval(() => {
-          iframe.contentWindow?.postMessage({ 
-            action: 'skipConfirmation',
-            autoJoin: true 
-          }, '*');
-        }, 1000);
-
-        setTimeout(() => clearInterval(retryInterval), 5000);
-
-      } catch (error) {
-        console.error('Error in auto-join attempt:', error);
-      }
-    };
-
-    // 延迟执行以确保iframe完全加载
-    setTimeout(attemptAutoJoin, 500);
-  };
+  // 音频处理钩子
+  const { isProcessing, isConnected, startAudioProcessing } = useAudioProcessor({
+    onTranscription: (text) => {
+      setCurrentTranscription(text);
+      console.log('User said:', text);
+    },
+    onAIResponse: (response) => {
+      setAiResponse(response);
+      console.log('AI responded:', response);
+      // 这里可以添加文字转语音功能
+    }
+  });
 
   const handleStartCall = async () => {
     if (!therapist) {
@@ -130,16 +63,37 @@ const VideoChat = () => {
     }
 
     try {
-      console.log('Starting call with therapist:', therapist.name);
-      await createConversation(therapist.name);
+      console.log('Starting WebRTC call with therapist:', therapist.name);
+      setIsCallActive(true);
+      
+      // 获取媒体流并开始音频处理
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      });
+      
+      streamRef.current = stream;
+      
+      // 开始音频处理
+      if (isMicOn) {
+        startAudioProcessing(stream);
+      }
+      
     } catch (error) {
       console.error('Error starting video call:', error);
+      setIsCallActive(false);
     }
   };
 
-  const handleEndCall = async () => {
+  const handleEndCall = () => {
     console.log('User requested to end call');
-    await endConversation();
+    
+    // 停止所有媒体轨道
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+    }
+    
+    setIsCallActive(false);
     navigate('/user-center');
   };
 
@@ -153,36 +107,10 @@ const VideoChat = () => {
     console.log('Mic toggle:', !isMicOn);
   };
 
-  // 构建优化的Tavus URL
-  const getTavusUrl = () => {
-    if (!conversation?.conversation_url) return '';
-    
-    // 使用多种URL参数组合尝试跳过确认
-    const params = new URLSearchParams({
-      // 标准参数
-      autoJoin: 'true',
-      skipIntro: 'true',
-      hideControls: 'false',
-      autoStart: 'true',
-      // Tavus特定参数（基于常见模式）
-      embed: 'true',
-      noprompt: 'true',
-      immediate: 'true',
-      ready: 'true'
-    });
-    
-    return `${conversation.conversation_url}?${params.toString()}`;
+  const handleAudioData = (audioData: Float32Array) => {
+    // 这里可以实现实时音频可视化
+    // 比如显示音量波形等
   };
-
-  // Log conversation status changes
-  useEffect(() => {
-    console.log('Conversation status:', {
-      isConnecting,
-      isConnected,
-      conversationId: conversation?.conversation_id,
-      error
-    });
-  }, [isConnecting, isConnected, conversation, error]);
 
   return (
     <div className="h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 flex flex-col items-center justify-center relative overflow-hidden">
@@ -194,86 +122,52 @@ const VideoChat = () => {
       >
         {/* Video Window */}
         <div className="w-[80vw] max-w-4xl h-[60vh] min-h-[400px] rounded-2xl shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm border border-white/60">
-          {isConnected && conversation?.conversation_url ? (
-            // Tavus video iframe - 使用优化的URL和自动加入处理
-            <iframe
-              ref={iframeRef}
-              src={getTavusUrl()}
-              className="w-full h-full border-0 rounded-2xl"
-              style={{ 
-                visibility: iframeReady ? 'visible' : 'hidden',
-                opacity: iframeReady ? 1 : 0,
-                transition: 'opacity 0.3s ease-in-out'
-              }}
-              allow="camera; microphone; fullscreen; autoplay"
-              title="视频通话"
-              onLoad={handleIframeLoad}
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation"
+          {isCallActive ? (
+            // 自建WebRTC视频组件
+            <WebRTCVideo
+              isVideoOn={isVideoOn}
+              isMicOn={isMicOn}
+              onVideoToggle={toggleVideo}
+              onMicToggle={toggleMic}
+              onAudioData={handleAudioData}
             />
           ) : (
             // Placeholder when not connected
             <div className="w-full h-full bg-gradient-to-br from-slate-50 to-white flex items-center justify-center">
               <div className="text-center">
-                {isConnecting ? (
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 mb-6">
-                      <Loader2 className="w-full h-full animate-spin text-violet-400" />
-                    </div>
-                    <h3 className="text-xl font-medium text-slate-700 mb-2">正在连接...</h3>
-                    <p className="text-slate-500">即将开始对话</p>
-                  </div>
-                ) : error ? (
-                  <div className="flex flex-col items-center">
-                    <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mb-6">
-                      <PhoneOff className="w-10 h-10 text-rose-500" />
-                    </div>
-                    <h3 className="text-xl font-medium text-slate-700 mb-2">连接遇到问题</h3>
-                    <p className="text-slate-500 mb-6">请重新尝试连接</p>
-                    <Button
-                      onClick={handleStartCall}
-                      disabled={!therapist}
-                      className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105"
-                    >
-                      重新连接
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <Avatar className="w-24 h-24 mb-6 shadow-md">
-                      <AvatarImage 
-                        src={therapist?.image_url || ''} 
-                        alt={`${therapist?.name || currentPersona.name} avatar`}
-                      />
-                      <AvatarFallback className={`bg-gradient-to-br text-white text-2xl ${
-                        currentPersona.color === 'blue' 
-                          ? 'from-blue-400 to-blue-500' 
-                          : currentPersona.color === 'violet' 
-                            ? 'from-violet-400 to-violet-500'
-                            : 'from-indigo-400 to-indigo-500'
-                      }`}>
-                        {therapist?.name?.charAt(0) || <IconComponent className="w-12 h-12" />}
-                      </AvatarFallback>
-                    </Avatar>
-                    <h3 className="text-xl font-medium text-slate-700 mb-2">
-                      {therapist?.name || `Dr. ${currentPersona.name}`}
-                    </h3>
-                    <p className="text-slate-500 mb-8">准备开始对话</p>
-                    <Button
-                      onClick={handleStartCall}
-                      disabled={!therapist}
-                      className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-4 rounded-xl text-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg"
-                    >
-                      开始对话
-                    </Button>
-                  </div>
-                )}
+                <Avatar className="w-24 h-24 mb-6 shadow-md mx-auto">
+                  <AvatarImage 
+                    src={therapist?.image_url || ''} 
+                    alt={`${therapist?.name || currentPersona.name} avatar`}
+                  />
+                  <AvatarFallback className={`bg-gradient-to-br text-white text-2xl ${
+                    currentPersona.color === 'blue' 
+                      ? 'from-blue-400 to-blue-500' 
+                      : currentPersona.color === 'violet' 
+                        ? 'from-violet-400 to-violet-500'
+                        : 'from-indigo-400 to-indigo-500'
+                  }`}>
+                    {therapist?.name?.charAt(0) || <IconComponent className="w-12 h-12" />}
+                  </AvatarFallback>
+                </Avatar>
+                <h3 className="text-xl font-medium text-slate-700 mb-2">
+                  {therapist?.name || `Dr. ${currentPersona.name}`}
+                </h3>
+                <p className="text-slate-500 mb-8">准备开始对话</p>
+                <Button
+                  onClick={handleStartCall}
+                  disabled={!therapist}
+                  className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-4 rounded-xl text-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg"
+                >
+                  开始对话
+                </Button>
               </div>
             </div>
           )}
         </div>
 
-        {/* Controls - Only show when connected */}
-        {isConnected && (
+        {/* Controls - Only show when call is active */}
+        {isCallActive && (
           <div className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 transition-all duration-300 ${
             showControls ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
           }`}>
@@ -315,6 +209,34 @@ const VideoChat = () => {
         )}
       </div>
 
+      {/* AI Processing Indicator */}
+      {isProcessing && (
+        <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg border border-white/60">
+          <div className="flex items-center space-x-2">
+            <Loader2 className="w-4 h-4 animate-spin text-violet-500" />
+            <span className="text-sm text-slate-600">AI处理中...</span>
+          </div>
+        </div>
+      )}
+
+      {/* Transcription Display */}
+      {currentTranscription && (
+        <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 max-w-md">
+          <div className="bg-white/90 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg border border-white/60">
+            <p className="text-sm text-slate-600">你说: {currentTranscription}</p>
+          </div>
+        </div>
+      )}
+
+      {/* AI Response Display */}
+      {aiResponse && (
+        <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 max-w-md">
+          <div className="bg-violet-50 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg border border-violet-200">
+            <p className="text-sm text-violet-700">AI回应: {aiResponse}</p>
+          </div>
+        </div>
+      )}
+
       {/* Mindful Prompt */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
         <p className="text-slate-600/80 text-sm font-medium tracking-wide">
@@ -323,7 +245,7 @@ const VideoChat = () => {
       </div>
 
       {/* Back Button - Only visible when not in call */}
-      {!isConnected && (
+      {!isCallActive && (
         <button
           onClick={() => navigate('/user-center')}
           className="absolute top-6 left-6 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white/90 transition-all duration-300 flex items-center justify-center shadow-md border border-white/60"
