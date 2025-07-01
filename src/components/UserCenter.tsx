@@ -77,9 +77,9 @@ const UserCenter = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-lg text-gray-600 mb-4">Please select a soul companion first</p>
+          <p className="text-lg text-gray-600 mb-4">Please select a therapist first</p>
           <Button onClick={() => navigate('/persona-selection')}>
-            Choose Companion
+            Choose Therapist
           </Button>
         </div>
       </div>
@@ -101,7 +101,7 @@ const UserCenter = () => {
           </Button>
         </div>
 
-        {/* Zen Greeting with AI Therapist Avatar */}
+        {/* Greeting with AI Therapist Avatar */}
         <div className="text-center mb-8 pt-4">
           <div className="flex items-center justify-center mb-4">
             <Avatar className="w-32 h-32 zen-shadow animate-fade-in">
@@ -120,7 +120,7 @@ const UserCenter = () => {
             {getGreeting()}, {user.name}
           </h1>
           <p className="text-slate-600 text-lg mb-4">
-            I'm {therapist.name}, delighted to accompany your soul journey
+            I'm {therapist.name}, ready to support your journey
           </p>
           
           {/* Streak indicator */}
