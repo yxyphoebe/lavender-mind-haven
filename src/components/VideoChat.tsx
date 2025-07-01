@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -62,7 +63,9 @@ const VideoChat = () => {
         setConnectionTime(prev => prev + 1);
       }, 1000);
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [isConnected]);
 
   const formatTime = (seconds: number) => {
@@ -73,10 +76,12 @@ const VideoChat = () => {
 
   const handleStartCall = async () => {
     if (!therapist) {
+      console.error('No therapist selected');
       return;
     }
 
     try {
+      console.log('Starting call with therapist:', therapist.name);
       await createConversation(therapist.name);
     } catch (error) {
       console.error('Error starting video call:', error);
@@ -84,19 +89,32 @@ const VideoChat = () => {
   };
 
   const handleEndCall = async () => {
+    console.log('User requested to end call');
     await endConversation();
     navigate('/user-center');
   };
 
   const toggleVideo = () => {
     setIsVideoOn(!isVideoOn);
+    console.log('Video toggle:', !isVideoOn);
     // Note: Actual video toggle would need to be implemented with Tavus API
   };
 
   const toggleMic = () => {
     setIsMicOn(!isMicOn);
+    console.log('Mic toggle:', !isMicOn);
     // Note: Actual mic toggle would need to be implemented with Tavus API
   };
+
+  // Log conversation status changes
+  useEffect(() => {
+    console.log('Conversation status:', {
+      isConnecting,
+      isConnected,
+      conversationId: conversation?.conversation_id,
+      error
+    });
+  }, [isConnecting, isConnected, conversation, error]);
 
   return (
     <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col relative overflow-hidden">
@@ -135,10 +153,10 @@ const VideoChat = () => {
               </h2>
               <p className="text-sm text-white/80">
                 {isConnecting 
-                  ? 'Connecting...' 
+                  ? '正在连接...' 
                   : isConnected 
-                    ? `Connected • ${formatTime(connectionTime)}` 
-                    : 'Ready to connect'
+                    ? `已连接 • ${formatTime(connectionTime)}` 
+                    : '准备连接'
                 }
               </p>
             </div>
@@ -182,8 +200,23 @@ const VideoChat = () => {
               {isConnecting ? (
                 <div className="flex flex-col items-center">
                   <Loader2 className="w-16 h-16 animate-spin mb-4" />
-                  <h3 className="text-2xl font-bold mb-2">Connecting...</h3>
-                  <p className="text-white/80">Setting up your video session</p>
+                  <h3 className="text-2xl font-bold mb-2">正在连接...</h3>
+                  <p className="text-white/80">正在设置您的视频会话</p>
+                </div>
+              ) : error ? (
+                <div className="flex flex-col items-center">
+                  <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mb-4">
+                    <PhoneOff className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">连接失败</h3>
+                  <p className="text-white/80 mb-4">{error}</p>
+                  <Button
+                    onClick={handleStartCall}
+                    disabled={!therapist}
+                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-xl"
+                  >
+                    重试连接
+                  </Button>
                 </div>
               ) : (
                 <>
@@ -205,7 +238,7 @@ const VideoChat = () => {
                   <h3 className="text-2xl font-bold mb-2">
                     {therapist?.name || `Dr. ${currentPersona.name}`}
                   </h3>
-                  <p className="text-white/80">Ready for video session</p>
+                  <p className="text-white/80">准备开始视频会话</p>
                 </>
               )}
             </div>
@@ -217,7 +250,7 @@ const VideoChat = () => {
       {showChat && isConnected && (
         <div className="absolute right-4 top-20 bottom-24 w-80 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-4 flex flex-col">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-slate-800">Session Chat</h3>
+            <h3 className="font-semibold text-slate-800">会话聊天</h3>
             <Button
               variant="ghost"
               size="icon"
@@ -229,17 +262,17 @@ const VideoChat = () => {
           </div>
           <div className="flex-1 bg-slate-50 rounded-lg p-3 mb-3">
             <p className="text-sm text-slate-600 text-center">
-              Chat messages will appear here during your video session
+              视频会话期间的聊天消息将在此显示
             </p>
           </div>
           <div className="flex space-x-2">
             <input
               type="text"
-              placeholder="Type a message..."
+              placeholder="输入消息..."
               className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
             />
             <Button size="sm" className="bg-violet-500 hover:bg-violet-600">
-              Send
+              发送
             </Button>
           </div>
         </div>
@@ -255,7 +288,7 @@ const VideoChat = () => {
               className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold transition-all duration-300 hover:scale-105"
             >
               <Video className="w-6 h-6 mr-2" />
-              Start Video Call
+              开始视频通话
             </Button>
           ) : isConnecting ? (
             <Button
@@ -263,7 +296,7 @@ const VideoChat = () => {
               className="bg-gray-500 text-white px-8 py-4 rounded-2xl text-lg font-semibold"
             >
               <Loader2 className="w-6 h-6 mr-2 animate-spin" />
-              Connecting...
+              正在连接...
             </Button>
           ) : (
             <>

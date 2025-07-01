@@ -31,10 +31,12 @@ export const useTavusVideo = () => {
       });
 
       if (error) {
+        console.error('Supabase function error:', error);
         throw error;
       }
 
       if (!data.success) {
+        console.error('API error:', data.error);
         throw new Error(data.error || 'Failed to create conversation');
       }
 
@@ -44,22 +46,24 @@ export const useTavusVideo = () => {
         status: data.status
       };
 
+      console.log('Conversation created successfully:', conversationData);
       setConversation(conversationData);
       setIsConnected(true);
       
       toast({
-        title: "Connected",
-        description: `Video call started with ${therapistName}`
+        title: "连接成功",
+        description: `视频通话已与 ${therapistName} 建立`
       });
 
       return conversationData;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.error('Error creating conversation:', errorMessage);
       setError(errorMessage);
       
       toast({
-        title: "Connection Failed",
-        description: "Unable to start video call. Please try again.",
+        title: "连接失败",
+        description: "无法开始视频通话，请重试",
         variant: "destructive"
       });
       
@@ -70,7 +74,10 @@ export const useTavusVideo = () => {
   }, [toast]);
 
   const endConversation = useCallback(async () => {
-    if (!conversation) return;
+    if (!conversation) {
+      console.log('No conversation to end');
+      return;
+    }
 
     try {
       console.log('Ending Tavus conversation:', conversation.conversation_id);
@@ -84,8 +91,12 @@ export const useTavusVideo = () => {
 
       if (error) {
         console.error('Error ending conversation:', error);
-      } else {
+      } else if (data?.success) {
         console.log('Conversation ended successfully');
+        toast({
+          title: "通话已结束",
+          description: "视频通话已成功结束"
+        });
       }
     } catch (err) {
       console.error('Error ending video call:', err);
@@ -95,7 +106,7 @@ export const useTavusVideo = () => {
       setIsConnected(false);
       setError(null);
     }
-  }, [conversation]);
+  }, [conversation, toast]);
 
   return {
     isConnecting,
