@@ -38,7 +38,7 @@ serve(async (req) => {
             participant_absent_timeout: 30,
             enable_recording: false,
             enable_transcription: false,
-            language: 'en'
+            language: 'english'
           }
         }),
       });
