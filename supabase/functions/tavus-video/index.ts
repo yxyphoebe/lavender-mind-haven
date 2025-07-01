@@ -30,9 +30,8 @@ serve(async (req) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          replica_id: 'default', // Using default replica as specified
-          persona_id: 'default', // Using default persona as specified
-          callback_url: null,
+          replica_id: 'default',
+          persona_id: 'default',
           properties: {
             max_call_duration: 3600,
             participant_left_timeout: 10,
