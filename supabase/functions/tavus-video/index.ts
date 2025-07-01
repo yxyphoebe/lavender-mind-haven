@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -48,7 +47,10 @@ serve(async (req) => {
             participant_absent_timeout: 30,
             enable_recording: false,
             enable_transcription: false,
-            language: 'english'
+            language: 'english',
+            auto_start: true,
+            skip_greeting: false,
+            participant_name: therapistName || 'User'
           }
         }),
       });
