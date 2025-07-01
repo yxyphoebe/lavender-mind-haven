@@ -49,11 +49,6 @@ serve(async (req) => {
             enable_recording: false,
             enable_transcription: false,
             language: 'english'
-          },
-          conversation_config: {
-            auto_start: true,
-            skip_intro: true,
-            immediate_join: true
           }
         }),
       });
