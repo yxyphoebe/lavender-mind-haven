@@ -15,9 +15,19 @@ serve(async (req) => {
   try {
     const { action, conversationId, therapistName } = await req.json();
     const tavusApiKey = Deno.env.get('TAVUS_API_KEY');
+    const tavusReplicaId = Deno.env.get('TAVUS_REPLICA_ID');
+    const tavusPersonaId = Deno.env.get('TAVUS_PERSONA_ID');
 
     if (!tavusApiKey) {
       throw new Error('TAVUS_API_KEY not configured');
+    }
+
+    if (!tavusReplicaId) {
+      throw new Error('TAVUS_REPLICA_ID not configured');
+    }
+
+    if (!tavusPersonaId) {
+      throw new Error('TAVUS_PERSONA_ID not configured');
     }
 
     if (action === 'create') {
@@ -30,8 +40,8 @@ serve(async (req) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          replica_id: 'default',
-          persona_id: 'default',
+          replica_id: tavusReplicaId,
+          persona_id: tavusPersonaId,
           properties: {
             max_call_duration: 3600,
             participant_left_timeout: 10,
