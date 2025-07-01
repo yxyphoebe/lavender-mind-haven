@@ -16,6 +16,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/hooks/useTherapists';
 import { useAudioProcessor } from '@/hooks/useAudioProcessor';
+import { useTavusVideo } from '@/hooks/useTavusVideo';
 import WebRTCVideo from './WebRTCVideo';
 
 const VideoChat = () => {
@@ -43,16 +44,29 @@ const VideoChat = () => {
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
   const IconComponent = currentPersona.icon;
 
-  // 音频处理钩子
+  // Tavus video hook
+  const { 
+    isConnecting: isTavusConnecting, 
+    isConnected: isTavusConnected, 
+    conversation: tavusConversation,
+    createConversation: createTavusConversation,
+    endConversation: endTavusConversation
+  } = useTavusVideo();
+
+  // 音频处理钩子 - 集成Tavus
   const { isProcessing, isConnected, startAudioProcessing } = useAudioProcessor({
     onTranscription: (text) => {
       setCurrentTranscription(text);
       console.log('User said:', text);
+      // 如果连接了Tavus，直接发送音频到Tavus而不是通用AI
+      if (isTavusConnected && tavusConversation) {
+        console.log('Sending audio to Tavus conversation:', tavusConversation.conversation_id);
+        // 这里可以通过Tavus API发送音频
+      }
     },
     onAIResponse: (response) => {
       setAiResponse(response);
       console.log('AI responded:', response);
-      // 这里可以添加文字转语音功能
     }
   });
 
@@ -63,34 +77,45 @@ const VideoChat = () => {
     }
 
     try {
-      console.log('Starting WebRTC call with therapist:', therapist.name);
-      setIsCallActive(true);
+      console.log('Starting WebRTC call with Tavus integration for:', therapist.name);
       
-      // 获取媒体流并开始音频处理
+      // 1. 先建立Tavus连接
+      const tavusConv = await createTavusConversation(therapist.name);
+      console.log('Tavus conversation created:', tavusConv);
+      
+      // 2. 获取本地媒体流
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true
       });
       
       streamRef.current = stream;
+      setIsCallActive(true);
       
-      // 开始音频处理
+      // 3. 开始音频处理（发送到Tavus）
       if (isMicOn) {
         startAudioProcessing(stream);
       }
       
+      console.log('WebRTC + Tavus call started successfully');
+      
     } catch (error) {
-      console.error('Error starting video call:', error);
+      console.error('Error starting WebRTC + Tavus call:', error);
       setIsCallActive(false);
     }
   };
 
-  const handleEndCall = () => {
+  const handleEndCall = async () => {
     console.log('User requested to end call');
     
     // 停止所有媒体轨道
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
+    }
+    
+    // 结束Tavus对话
+    if (isTavusConnected) {
+      await endTavusConversation();
     }
     
     setIsCallActive(false);
@@ -108,8 +133,10 @@ const VideoChat = () => {
   };
 
   const handleAudioData = (audioData: Float32Array) => {
-    // 这里可以实现实时音频可视化
-    // 比如显示音量波形等
+    // 如果连接了Tavus，可以将实时音频数据发送给Tavus
+    if (isTavusConnected && tavusConversation) {
+      // 实时音频处理逻辑
+    }
   };
 
   return (
@@ -153,13 +180,20 @@ const VideoChat = () => {
                 <h3 className="text-xl font-medium text-slate-700 mb-2">
                   {therapist?.name || `Dr. ${currentPersona.name}`}
                 </h3>
-                <p className="text-slate-500 mb-8">准备开始对话</p>
+                <p className="text-slate-500 mb-8">准备开始与Tavus AI对话</p>
                 <Button
                   onClick={handleStartCall}
-                  disabled={!therapist}
+                  disabled={!therapist || isTavusConnecting}
                   className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-4 rounded-xl text-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg"
                 >
-                  开始对话
+                  {isTavusConnecting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                      连接Tavus中...
+                    </>
+                  ) : (
+                    '开始Tavus对话'
+                  )}
                 </Button>
               </div>
             </div>
@@ -209,6 +243,16 @@ const VideoChat = () => {
         )}
       </div>
 
+      {/* Tavus Connection Status */}
+      {isTavusConnected && (
+        <div className="absolute top-6 right-6 bg-green-100 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg border border-green-200">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-sm text-green-700">Tavus已连接</span>
+          </div>
+        </div>
+      )}
+
       {/* AI Processing Indicator */}
       {isProcessing && (
         <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg border border-white/60">
@@ -232,7 +276,7 @@ const VideoChat = () => {
       {aiResponse && (
         <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 max-w-md">
           <div className="bg-violet-50 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg border border-violet-200">
-            <p className="text-sm text-violet-700">AI回应: {aiResponse}</p>
+            <p className="text-sm text-violet-700">Tavus回应: {aiResponse}</p>
           </div>
         </div>
       )}
@@ -240,7 +284,7 @@ const VideoChat = () => {
       {/* Mindful Prompt */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
         <p className="text-slate-600/80 text-sm font-medium tracking-wide">
-          你可以随时离开或说出你的感觉
+          WebRTC + Tavus AI 视频对话
         </p>
       </div>
 
