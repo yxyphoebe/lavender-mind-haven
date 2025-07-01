@@ -13,6 +13,7 @@ export const useTavusVideo = () => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [conversation, setConversation] = useState<TavusConversation | null>(null);
+  const [tavusVideoUrl, setTavusVideoUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -48,6 +49,7 @@ export const useTavusVideo = () => {
 
       console.log('Conversation created successfully:', conversationData);
       setConversation(conversationData);
+      setTavusVideoUrl(conversationData.conversation_url);
       setIsConnected(true);
       
       toast({
@@ -104,6 +106,7 @@ export const useTavusVideo = () => {
       // Clean up state regardless of API call success
       setConversation(null);
       setIsConnected(false);
+      setTavusVideoUrl(null);
       setError(null);
     }
   }, [conversation, toast]);
@@ -112,6 +115,7 @@ export const useTavusVideo = () => {
     isConnecting,
     isConnected,
     conversation,
+    tavusVideoUrl,
     error,
     createConversation,
     endConversation
