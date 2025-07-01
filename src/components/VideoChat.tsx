@@ -50,27 +50,17 @@ const VideoChat = () => {
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
   const IconComponent = currentPersona.icon;
 
-  // Automatically start the call when therapist is available
-  useEffect(() => {
-    if (therapist && !isConnecting && !isConnected && !conversation) {
-      console.log('Auto-starting call with therapist:', therapist.name);
-      createConversation(therapist.name).catch(error => {
-        console.error('Auto-start failed:', error);
-      });
-    }
-  }, [therapist, isConnecting, isConnected, conversation, createConversation]);
-
-  const handleRetryConnection = async () => {
+  const handleStartCall = async () => {
     if (!therapist) {
       console.error('No therapist selected');
       return;
     }
 
     try {
-      console.log('Retrying connection with therapist:', therapist.name);
+      console.log('Starting call with therapist:', therapist.name);
       await createConversation(therapist.name);
     } catch (error) {
-      console.error('Error retrying video call:', error);
+      console.error('Error starting video call:', error);
     }
   };
 
@@ -141,7 +131,7 @@ const VideoChat = () => {
                     <h3 className="text-xl font-medium text-slate-700 mb-2">连接遇到问题</h3>
                     <p className="text-slate-500 mb-6">请重新尝试连接</p>
                     <Button
-                      onClick={handleRetryConnection}
+                      onClick={handleStartCall}
                       disabled={!therapist}
                       className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105"
                     >
@@ -149,7 +139,6 @@ const VideoChat = () => {
                     </Button>
                   </div>
                 ) : (
-                  // This should rarely be seen since auto-start is enabled
                   <div className="flex flex-col items-center">
                     <Avatar className="w-24 h-24 mb-6 shadow-md">
                       <AvatarImage 
@@ -169,9 +158,14 @@ const VideoChat = () => {
                     <h3 className="text-xl font-medium text-slate-700 mb-2">
                       {therapist?.name || `Dr. ${currentPersona.name}`}
                     </h3>
-                    <div className="w-6 h-6 mt-4">
-                      <Loader2 className="w-full h-full animate-spin text-violet-400" />
-                    </div>
+                    <p className="text-slate-500 mb-8">准备开始</p>
+                    <Button
+                      onClick={handleStartCall}
+                      disabled={!therapist}
+                      className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-4 rounded-xl text-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg"
+                    >
+                      开始视频通话
+                    </Button>
                   </div>
                 )}
               </div>
