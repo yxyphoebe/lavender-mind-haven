@@ -19,26 +19,30 @@ import {
   Loader2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
 import { useTherapist } from '@/hooks/useTherapists';
+import { useTavusVideo } from '@/hooks/useTavusVideo';
 
 const VideoChat = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const selectedTherapistId = localStorage.getItem('selectedTherapistId') || '';
   const { data: therapist } = useTherapist(selectedTherapistId);
   
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
-  const [isConnected, setIsConnected] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [connectionTime, setConnectionTime] = useState(0);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [conversationId, setConversationId] = useState<string | null>(null);
-  const [conversationUrl, setConversationUrl] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Use the Tavus hook for video functionality
+  const {
+    isConnecting,
+    isConnected,
+    conversation,
+    error,
+    createConversation,
+    endConversation
+  } = useTavusVideo();
 
   // Get selected persona from localStorage for fallback display
   const selectedPersona = localStorage.getItem('selectedPersona') || 'nuva';
@@ -70,86 +74,18 @@ const VideoChat = () => {
 
   const handleStartCall = async () => {
     if (!therapist) {
-      toast({
-        title: "Error",
-        description: "Please select a therapist first",
-        variant: "destructive"
-      });
       return;
     }
 
-    setIsConnecting(true);
-    
     try {
-      console.log('Starting Tavus conversation for therapist:', therapist.name);
-      
-      const { data, error } = await supabase.functions.invoke('tavus-video', {
-        body: {
-          action: 'create',
-          therapistName: therapist.name
-        }
-      });
-
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw error;
-      }
-
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to create conversation');
-      }
-
-      console.log('Tavus conversation created:', data);
-      
-      setConversationId(data.conversation_id);
-      setConversationUrl(data.conversation_url);
-      setIsConnected(true);
-      
-      toast({
-        title: "Connected",
-        description: `Video call started with ${therapist.name}`
-      });
-      
+      await createConversation(therapist.name);
     } catch (error) {
       console.error('Error starting video call:', error);
-      toast({
-        title: "Connection Failed",
-        description: "Unable to start video call. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsConnecting(false);
     }
   };
 
   const handleEndCall = async () => {
-    if (conversationId) {
-      try {
-        console.log('Ending Tavus conversation:', conversationId);
-        
-        const { data, error } = await supabase.functions.invoke('tavus-video', {
-          body: {
-            action: 'end',
-            conversationId: conversationId
-          }
-        });
-
-        if (error) {
-          console.error('Error ending conversation:', error);
-        } else {
-          console.log('Conversation ended successfully:', data);
-        }
-      } catch (error) {
-        console.error('Error ending video call:', error);
-      }
-    }
-
-    // Clean up local state
-    setIsConnected(false);
-    setConnectionTime(0);
-    setConversationId(null);
-    setConversationUrl(null);
-    
+    await endConversation();
     navigate('/user-center');
   };
 
@@ -231,11 +167,11 @@ const VideoChat = () => {
 
       {/* Video Area */}
       <div className="flex-1 relative">
-        {isConnected && conversationUrl ? (
+        {isConnected && conversation?.conversation_url ? (
           // Tavus video iframe
           <iframe
             ref={iframeRef}
-            src={conversationUrl}
+            src={conversation.conversation_url}
             className="w-full h-full border-0"
             allow="camera; microphone; fullscreen"
             title="Tavus Video Call"
