@@ -1,7 +1,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Video, 
   VideoOff, 
@@ -16,8 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/hooks/useTherapists';
 import { useAudioProcessor } from '@/hooks/useAudioProcessor';
-import { useTavusVideo } from '@/hooks/useTavusVideo';
-import DualVideoDisplay from './DualVideoDisplay';
+import PureWebRTCVideo from './PureWebRTCVideo';
 
 const VideoChat = () => {
   const navigate = useNavigate();
@@ -28,8 +26,10 @@ const VideoChat = () => {
   const [isMicOn, setIsMicOn] = useState(true);
   const [showControls, setShowControls] = useState(false);
   const [isCallActive, setIsCallActive] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
   const [currentTranscription, setCurrentTranscription] = useState('');
   const [aiResponse, setAiResponse] = useState('');
+  const [isAISpeaking, setIsAISpeaking] = useState(false);
   const streamRef = useRef<MediaStream | null>(null);
 
   // Get selected persona from localStorage for fallback display
@@ -44,30 +44,19 @@ const VideoChat = () => {
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
   const IconComponent = currentPersona.icon;
 
-  // Tavus video hook
-  const { 
-    isConnecting: isTavusConnecting, 
-    isConnected: isTavusConnected, 
-    conversation: tavusConversation,
-    tavusVideoUrl,
-    createConversation: createTavusConversation,
-    endConversation: endTavusConversation
-  } = useTavusVideo();
-
-  // 音频处理钩子 - 集成Tavus
-  const { isProcessing, isConnected, startAudioProcessing } = useAudioProcessor({
+  // 音频处理钩子 - 纯音频交互
+  const { isProcessing, startAudioProcessing } = useAudioProcessor({
     onTranscription: (text) => {
       setCurrentTranscription(text);
       console.log('User said:', text);
-      // 如果连接了Tavus，直接发送音频到Tavus而不是通用AI
-      if (isTavusConnected && tavusConversation) {
-        console.log('Sending audio to Tavus conversation:', tavusConversation.conversation_id);
-        // 这里可以通过Tavus API发送音频
-      }
+      setIsAISpeaking(false);
     },
     onAIResponse: (response) => {
       setAiResponse(response);
+      setIsAISpeaking(true);
       console.log('AI responded:', response);
+      // 模拟AI说话持续时间
+      setTimeout(() => setIsAISpeaking(false), 3000);
     }
   });
 
@@ -78,9 +67,10 @@ const VideoChat = () => {
     }
 
     try {
-      console.log('Starting dual video call with Tavus integration for:', therapist.name);
+      setIsConnecting(true);
+      console.log('Starting pure WebRTC video call with:', therapist.name);
       
-      // 1. 先获取本地媒体流
+      // 获取本地媒体流
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           width: { ideal: 1280 },
@@ -97,32 +87,28 @@ const VideoChat = () => {
       });
       
       streamRef.current = stream;
-      
-      // 2. 建立Tavus连接
-      const tavusConv = await createTavusConversation(therapist.name);
-      console.log('Tavus conversation created:', tavusConv);
-      
       setIsCallActive(true);
       
-      // 3. 开始音频处理（发送到Tavus）
+      // 开始音频处理
       if (isMicOn) {
         startAudioProcessing(stream);
       }
       
-      console.log('Dual video call started successfully');
+      console.log('Pure WebRTC call started successfully');
       
     } catch (error) {
-      console.error('Error starting dual video call:', error);
+      console.error('Error starting video call:', error);
       setIsCallActive(false);
-      // 清理已获取的流
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
+    } finally {
+      setIsConnecting(false);
     }
   };
 
-  const handleEndCall = async () => {
-    console.log('User requested to end call');
+  const handleEndCall = () => {
+    console.log('Ending video call');
     
     // 停止所有媒体轨道
     if (streamRef.current) {
@@ -130,12 +116,10 @@ const VideoChat = () => {
       streamRef.current = null;
     }
     
-    // 结束Tavus对话
-    if (isTavusConnected) {
-      await endTavusConversation();
-    }
-    
     setIsCallActive(false);
+    setIsAISpeaking(false);
+    setCurrentTranscription('');
+    setAiResponse('');
     navigate('/user-center');
   };
 
@@ -149,68 +133,60 @@ const VideoChat = () => {
     console.log('Mic toggle:', !isMicOn);
   };
 
-  const handleAudioData = (audioData: Float32Array) => {
-    // 如果连接了Tavus，可以将实时音频数据发送给Tavus
-    if (isTavusConnected && tavusConversation) {
-      // 实时音频处理逻辑
-    }
-  };
-
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 flex flex-col items-center justify-center relative overflow-hidden">
-      {/* Main Video Container */}
+    <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center relative overflow-hidden">
+      {/* 主视频容器 */}
       <div 
         className="relative group transition-all duration-300 ease-out"
         onMouseEnter={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
       >
-        {/* Video Window */}
-        <div className="w-[80vw] max-w-5xl h-[60vh] min-h-[400px] rounded-2xl shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm border border-white/60">
+        {/* 视频窗口 */}
+        <div className="w-[85vw] max-w-6xl h-[70vh] min-h-[500px] rounded-3xl shadow-2xl overflow-hidden border border-white/10">
           {isCallActive ? (
-            // 双视频显示组件
-            <DualVideoDisplay
-              localStream={streamRef.current}
-              tavusVideoUrl={tavusVideoUrl}
+            <PureWebRTCVideo
               isVideoOn={isVideoOn}
               isMicOn={isMicOn}
-              isConnected={isTavusConnected}
-              onAudioData={handleAudioData}
+              therapist={therapist}
+              isAISpeaking={isAISpeaking}
             />
           ) : (
-            // Placeholder when not connected
-            <div className="w-full h-full bg-gradient-to-br from-slate-50 to-white flex items-center justify-center">
+            // 未连接时的占位符
+            <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
               <div className="text-center">
-                <Avatar className="w-24 h-24 mb-6 shadow-md mx-auto">
-                  <AvatarImage 
-                    src={therapist?.image_url || ''} 
-                    alt={`${therapist?.name || currentPersona.name} avatar`}
-                  />
-                  <AvatarFallback className={`bg-gradient-to-br text-white text-2xl ${
-                    currentPersona.color === 'blue' 
-                      ? 'from-blue-400 to-blue-500' 
-                      : currentPersona.color === 'violet' 
-                        ? 'from-violet-400 to-violet-500'
-                        : 'from-indigo-400 to-indigo-500'
-                  }`}>
-                    {therapist?.name?.charAt(0) || <IconComponent className="w-12 h-12" />}
-                  </AvatarFallback>
-                </Avatar>
-                <h3 className="text-xl font-medium text-slate-700 mb-2">
+                <div className={`w-32 h-32 mb-8 mx-auto rounded-full bg-gradient-to-br shadow-2xl flex items-center justify-center ${
+                  currentPersona.color === 'blue' 
+                    ? 'from-blue-500 to-blue-600' 
+                    : currentPersona.color === 'violet' 
+                      ? 'from-violet-500 to-violet-600'
+                      : 'from-indigo-500 to-indigo-600'
+                }`}>
+                  {therapist?.image_url ? (
+                    <img 
+                      src={therapist.image_url} 
+                      alt={therapist.name}
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <IconComponent className="w-16 h-16 text-white" />
+                  )}
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-3">
                   {therapist?.name || `Dr. ${currentPersona.name}`}
                 </h3>
-                <p className="text-slate-500 mb-8">准备开始双向视频对话</p>
+                <p className="text-slate-300 text-lg mb-12">专业心理健康助手</p>
                 <Button
                   onClick={handleStartCall}
-                  disabled={!therapist || isTavusConnecting}
-                  className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-4 rounded-xl text-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg"
+                  disabled={!therapist || isConnecting}
+                  className="bg-violet-600 hover:bg-violet-700 text-white px-12 py-6 rounded-2xl text-xl font-semibold transition-all duration-300 hover:scale-105 shadow-2xl border border-violet-500/50"
                 >
-                  {isTavusConnecting ? (
+                  {isConnecting ? (
                     <>
-                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                      连接中...
+                      <Loader2 className="w-6 h-6 animate-spin mr-3" />
+                      正在连接...
                     </>
                   ) : (
-                    '开始双向视频对话'
+                    '开始视频通话'
                   )}
                 </Button>
               </div>
@@ -218,101 +194,93 @@ const VideoChat = () => {
           )}
         </div>
 
-        {/* Controls - Only show when call is active */}
+        {/* 控制面板 - 仅在通话中显示 */}
         {isCallActive && (
-          <div className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 transition-all duration-300 ${
+          <div className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-all duration-300 ${
             showControls ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
           }`}>
-            <div className="flex items-center space-x-4 bg-white/90 backdrop-blur-md rounded-2xl px-6 py-4 shadow-xl border border-white/60">
+            <div className="flex items-center space-x-6 bg-black/40 backdrop-blur-xl rounded-3xl px-8 py-5 shadow-2xl border border-white/10">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleMic}
-                className={`w-12 h-12 rounded-full transition-all duration-300 ${
+                className={`w-16 h-16 rounded-2xl transition-all duration-300 ${
                   isMicOn 
-                    ? 'bg-slate-100 hover:bg-slate-200 text-slate-700' 
+                    ? 'bg-white/10 hover:bg-white/20 text-white' 
                     : 'bg-rose-500 hover:bg-rose-600 text-white'
                 }`}
               >
-                {isMicOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
+                {isMicOn ? <Mic className="w-7 h-7" /> : <MicOff className="w-7 h-7" />}
               </Button>
 
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleVideo}
-                className={`w-12 h-12 rounded-full transition-all duration-300 ${
+                className={`w-16 h-16 rounded-2xl transition-all duration-300 ${
                   isVideoOn 
-                    ? 'bg-slate-100 hover:bg-slate-200 text-slate-700' 
+                    ? 'bg-white/10 hover:bg-white/20 text-white' 
                     : 'bg-rose-500 hover:bg-rose-600 text-white'
                 }`}
               >
-                {isVideoOn ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
+                {isVideoOn ? <Video className="w-7 h-7" /> : <VideoOff className="w-7 h-7" />}
               </Button>
 
               <Button
                 onClick={handleEndCall}
-                className="bg-rose-500 hover:bg-rose-600 text-white w-12 h-12 rounded-full transition-all duration-300 hover:scale-105 shadow-md"
+                className="bg-rose-500 hover:bg-rose-600 text-white w-16 h-16 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg"
               >
-                <PhoneOff className="w-5 h-5" />
+                <PhoneOff className="w-7 h-7" />
               </Button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Tavus Connection Status */}
-      {isTavusConnected && (
-        <div className="absolute top-6 right-6 bg-green-100 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg border border-green-200">
-          <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm text-green-700">Tavus已连接</span>
-          </div>
-        </div>
-      )}
-
-      {/* AI Processing Indicator */}
+      {/* AI处理指示器 */}
       {isProcessing && (
-        <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg border border-white/60">
-          <div className="flex items-center space-x-2">
-            <Loader2 className="w-4 h-4 animate-spin text-violet-500" />
-            <span className="text-sm text-slate-600">AI处理中...</span>
+        <div className="absolute top-8 right-8 bg-black/50 backdrop-blur-md rounded-2xl px-6 py-3 shadow-lg border border-white/10">
+          <div className="flex items-center space-x-3">
+            <Loader2 className="w-5 h-5 animate-spin text-violet-400" />
+            <span className="text-white font-medium">AI处理中...</span>
           </div>
         </div>
       )}
 
-      {/* Transcription Display */}
+      {/* 转录显示 */}
       {currentTranscription && (
-        <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 max-w-md">
-          <div className="bg-white/90 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg border border-white/60">
-            <p className="text-sm text-slate-600">你说: {currentTranscription}</p>
+        <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 max-w-2xl">
+          <div className="bg-black/50 backdrop-blur-md rounded-2xl px-6 py-4 shadow-lg border border-white/10">
+            <p className="text-slate-300 text-sm font-medium mb-1">你说:</p>
+            <p className="text-white">{currentTranscription}</p>
           </div>
         </div>
       )}
 
-      {/* AI Response Display */}
+      {/* AI回应显示 */}
       {aiResponse && (
-        <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 max-w-md">
-          <div className="bg-violet-50 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg border border-violet-200">
-            <p className="text-sm text-violet-700">Tavus回应: {aiResponse}</p>
+        <div className="absolute bottom-52 left-1/2 transform -translate-x-1/2 max-w-2xl">
+          <div className="bg-violet-500/20 backdrop-blur-md rounded-2xl px-6 py-4 shadow-lg border border-violet-400/30">
+            <p className="text-violet-300 text-sm font-medium mb-1">AI回应:</p>
+            <p className="text-white">{aiResponse}</p>
           </div>
         </div>
       )}
 
-      {/* Mindful Prompt */}
+      {/* 底部提示 */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-        <p className="text-slate-600/80 text-sm font-medium tracking-wide">
-          双向视频 + Tavus AI 对话
+        <p className="text-slate-400 text-sm font-medium tracking-wide">
+          纯WebRTC视频通话 + AI语音交互
         </p>
       </div>
 
-      {/* Back Button - Only visible when not in call */}
+      {/* 返回按钮 - 仅在未通话时显示 */}
       {!isCallActive && (
         <button
           onClick={() => navigate('/user-center')}
-          className="absolute top-6 left-6 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white/90 transition-all duration-300 flex items-center justify-center shadow-md border border-white/60"
+          className="absolute top-8 left-8 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all duration-300 flex items-center justify-center shadow-lg border border-white/10"
         >
-          <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>

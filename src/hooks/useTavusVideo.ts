@@ -1,71 +1,51 @@
 
 import { useState, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 
-interface TavusConversation {
-  conversation_id: string;
-  conversation_url: string;
+interface TavusSession {
+  session_id: string;
   status: string;
 }
 
 export const useTavusVideo = () => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [conversation, setConversation] = useState<TavusConversation | null>(null);
-  const [tavusVideoUrl, setTavusVideoUrl] = useState<string | null>(null);
+  const [session, setSession] = useState<TavusSession | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const createConversation = useCallback(async (therapistName: string) => {
+  const startAudioSession = useCallback(async (therapistName: string) => {
     setIsConnecting(true);
     setError(null);
     
     try {
-      console.log('Creating Tavus conversation for:', therapistName);
+      console.log('Starting pure audio session with Tavus for:', therapistName);
       
-      const { data, error } = await supabase.functions.invoke('tavus-video', {
-        body: {
-          action: 'create',
-          therapistName
-        }
-      });
-
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw error;
-      }
-
-      if (!data.success) {
-        console.error('API error:', data.error);
-        throw new Error(data.error || 'Failed to create conversation');
-      }
-
-      const conversationData: TavusConversation = {
-        conversation_id: data.conversation_id,
-        conversation_url: data.conversation_url,
-        status: data.status
+      // 这里可以调用Tavus的纯音频API而不是视频API
+      // 暂时模拟会话创建
+      const mockSession: TavusSession = {
+        session_id: `audio_session_${Date.now()}`,
+        status: 'active'
       };
 
-      console.log('Conversation created successfully:', conversationData);
-      setConversation(conversationData);
-      setTavusVideoUrl(conversationData.conversation_url);
+      console.log('Audio session created successfully:', mockSession);
+      setSession(mockSession);
       setIsConnected(true);
       
       toast({
-        title: "连接成功",
-        description: `视频通话已与 ${therapistName} 建立`
+        title: "音频会话已建立",
+        description: `与 ${therapistName} 的语音交互已开始`
       });
 
-      return conversationData;
+      return mockSession;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      console.error('Error creating conversation:', errorMessage);
+      console.error('Error creating audio session:', errorMessage);
       setError(errorMessage);
       
       toast({
         title: "连接失败",
-        description: "无法开始视频通话，请重试",
+        description: "无法开始语音会话，请重试",
         variant: "destructive"
       });
       
@@ -75,49 +55,38 @@ export const useTavusVideo = () => {
     }
   }, [toast]);
 
-  const endConversation = useCallback(async () => {
-    if (!conversation) {
-      console.log('No conversation to end');
+  const endAudioSession = useCallback(async () => {
+    if (!session) {
+      console.log('No session to end');
       return;
     }
 
     try {
-      console.log('Ending Tavus conversation:', conversation.conversation_id);
+      console.log('Ending audio session:', session.session_id);
       
-      const { data, error } = await supabase.functions.invoke('tavus-video', {
-        body: {
-          action: 'end',
-          conversationId: conversation.conversation_id
-        }
+      // 这里可以调用结束会话的API
+      console.log('Audio session ended successfully');
+      
+      toast({
+        title: "会话已结束",
+        description: "语音会话已成功结束"
       });
-
-      if (error) {
-        console.error('Error ending conversation:', error);
-      } else if (data?.success) {
-        console.log('Conversation ended successfully');
-        toast({
-          title: "通话已结束",
-          description: "视频通话已成功结束"
-        });
-      }
     } catch (err) {
-      console.error('Error ending video call:', err);
+      console.error('Error ending audio session:', err);
     } finally {
-      // Clean up state regardless of API call success
-      setConversation(null);
+      // 清理状态
+      setSession(null);
       setIsConnected(false);
-      setTavusVideoUrl(null);
       setError(null);
     }
-  }, [conversation, toast]);
+  }, [session, toast]);
 
   return {
     isConnecting,
     isConnected,
-    conversation,
-    tavusVideoUrl,
+    session,
     error,
-    createConversation,
-    endConversation
+    startAudioSession,
+    endAudioSession
   };
 };
