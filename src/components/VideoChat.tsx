@@ -15,6 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/hooks/useTherapists';
 import { useAudioProcessor } from '@/hooks/useAudioProcessor';
+import { useTavusVideo } from '@/hooks/useTavusVideo';
 import PureWebRTCVideo from './PureWebRTCVideo';
 
 const VideoChat = () => {
@@ -26,11 +27,20 @@ const VideoChat = () => {
   const [isMicOn, setIsMicOn] = useState(true);
   const [showControls, setShowControls] = useState(false);
   const [isCallActive, setIsCallActive] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(false);
   const [currentTranscription, setCurrentTranscription] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [isAISpeaking, setIsAISpeaking] = useState(false);
   const streamRef = useRef<MediaStream | null>(null);
+
+  // Tavus视频交互钩子
+  const { 
+    isConnecting: isTavusConnecting, 
+    isConnected: isTavusConnected, 
+    session: tavusSession,
+    error: tavusError,
+    startAudioSession: startTavusSession, 
+    endAudioSession: endTavusSession 
+  } = useTavusVideo();
 
   // Get selected persona from localStorage for fallback display
   const selectedPersona = localStorage.getItem('selectedPersona') || 'nuva';
@@ -44,7 +54,7 @@ const VideoChat = () => {
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
   const IconComponent = currentPersona.icon;
 
-  // 音频处理钩子 - 纯音频交互
+  // 音频处理钩子 - 与AI交互
   const { isProcessing, startAudioProcessing } = useAudioProcessor({
     onTranscription: (text) => {
       setCurrentTranscription(text);
@@ -67,8 +77,7 @@ const VideoChat = () => {
     }
 
     try {
-      setIsConnecting(true);
-      console.log('Starting pure WebRTC video call with:', therapist.name);
+      console.log('Starting video call with Tavus integration');
       
       // 获取本地媒体流
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -89,12 +98,15 @@ const VideoChat = () => {
       streamRef.current = stream;
       setIsCallActive(true);
       
+      // 启动Tavus AI会话
+      await startTavusSession(therapist.name);
+      
       // 开始音频处理
       if (isMicOn) {
         startAudioProcessing(stream);
       }
       
-      console.log('Pure WebRTC call started successfully');
+      console.log('Video call with Tavus started successfully');
       
     } catch (error) {
       console.error('Error starting video call:', error);
@@ -102,13 +114,16 @@ const VideoChat = () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
-    } finally {
-      setIsConnecting(false);
     }
   };
 
-  const handleEndCall = () => {
-    console.log('Ending video call');
+  const handleEndCall = async () => {
+    console.log('Ending video call and Tavus session');
+    
+    // 结束Tavus会话
+    if (isTavusConnected) {
+      await endTavusSession();
+    }
     
     // 停止所有媒体轨道
     if (streamRef.current) {
@@ -132,6 +147,10 @@ const VideoChat = () => {
     setIsMicOn(!isMicOn);
     console.log('Mic toggle:', !isMicOn);
   };
+
+  // 显示Tavus连接状态
+  const isConnecting = isTavusConnecting;
+  const connectionStatus = isTavusConnected ? '已连接到AI' : tavusError ? '连接失败' : '未连接';
 
   return (
     <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center relative overflow-hidden">
@@ -174,7 +193,7 @@ const VideoChat = () => {
                 <h3 className="text-3xl font-bold text-white mb-3">
                   {therapist?.name || `Dr. ${currentPersona.name}`}
                 </h3>
-                <p className="text-slate-300 text-lg mb-12">专业心理健康助手</p>
+                <p className="text-slate-300 text-lg mb-12">专业AI心理健康助手</p>
                 <Button
                   onClick={handleStartCall}
                   disabled={!therapist || isConnecting}
@@ -183,10 +202,10 @@ const VideoChat = () => {
                   {isConnecting ? (
                     <>
                       <Loader2 className="w-6 h-6 animate-spin mr-3" />
-                      正在连接...
+                      正在连接Tavus AI...
                     </>
                   ) : (
-                    '开始视频通话'
+                    '开始AI视频通话'
                   )}
                 </Button>
               </div>
@@ -237,9 +256,21 @@ const VideoChat = () => {
         )}
       </div>
 
+      {/* Tavus连接状态指示器 */}
+      {isCallActive && (
+        <div className="absolute top-8 right-8 bg-black/50 backdrop-blur-md rounded-2xl px-6 py-3 shadow-lg border border-white/10">
+          <div className="flex items-center space-x-3">
+            <div className={`w-3 h-3 rounded-full ${
+              isTavusConnected ? 'bg-green-400' : tavusError ? 'bg-red-400' : 'bg-yellow-400'
+            }`} />
+            <span className="text-white font-medium">{connectionStatus}</span>
+          </div>
+        </div>
+      )}
+
       {/* AI处理指示器 */}
       {isProcessing && (
-        <div className="absolute top-8 right-8 bg-black/50 backdrop-blur-md rounded-2xl px-6 py-3 shadow-lg border border-white/10">
+        <div className="absolute top-20 right-8 bg-black/50 backdrop-blur-md rounded-2xl px-6 py-3 shadow-lg border border-white/10">
           <div className="flex items-center space-x-3">
             <Loader2 className="w-5 h-5 animate-spin text-violet-400" />
             <span className="text-white font-medium">AI处理中...</span>
@@ -261,7 +292,7 @@ const VideoChat = () => {
       {aiResponse && (
         <div className="absolute bottom-52 left-1/2 transform -translate-x-1/2 max-w-2xl">
           <div className="bg-violet-500/20 backdrop-blur-md rounded-2xl px-6 py-4 shadow-lg border border-violet-400/30">
-            <p className="text-violet-300 text-sm font-medium mb-1">AI回应:</p>
+            <p className="text-violet-300 text-sm font-medium mb-1">Tavus AI回应:</p>
             <p className="text-white">{aiResponse}</p>
           </div>
         </div>
@@ -270,7 +301,7 @@ const VideoChat = () => {
       {/* 底部提示 */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
         <p className="text-slate-400 text-sm font-medium tracking-wide">
-          纯WebRTC视频通话 + AI语音交互
+          WebRTC视频 + Tavus AI语音交互
         </p>
       </div>
 

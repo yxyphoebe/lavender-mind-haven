@@ -1,9 +1,11 @@
 
 import { useState, useCallback } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface TavusSession {
-  session_id: string;
+  conversation_id: string;
+  conversation_url: string;
   status: string;
 }
 
@@ -19,33 +21,48 @@ export const useTavusVideo = () => {
     setError(null);
     
     try {
-      console.log('Starting pure audio session with Tavus for:', therapistName);
+      console.log('Starting Tavus audio session for:', therapistName);
       
-      // 这里可以调用Tavus的纯音频API而不是视频API
-      // 暂时模拟会话创建
-      const mockSession: TavusSession = {
-        session_id: `audio_session_${Date.now()}`,
-        status: 'active'
+      // 调用Supabase Edge Function创建Tavus会话
+      const { data, error } = await supabase.functions.invoke('tavus-video', {
+        body: {
+          action: 'create',
+          therapistName: therapistName
+        }
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to create Tavus session');
+      }
+
+      const tavusSession: TavusSession = {
+        conversation_id: data.conversation_id,
+        conversation_url: data.conversation_url,
+        status: data.status
       };
 
-      console.log('Audio session created successfully:', mockSession);
-      setSession(mockSession);
+      console.log('Tavus session created successfully:', tavusSession);
+      setSession(tavusSession);
       setIsConnected(true);
       
       toast({
-        title: "音频会话已建立",
-        description: `与 ${therapistName} 的语音交互已开始`
+        title: "AI语音会话已建立",
+        description: `与 ${therapistName} 的智能对话已开始`
       });
 
-      return mockSession;
+      return tavusSession;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      console.error('Error creating audio session:', errorMessage);
+      console.error('Error creating Tavus session:', errorMessage);
       setError(errorMessage);
       
       toast({
         title: "连接失败",
-        description: "无法开始语音会话，请重试",
+        description: "无法建立AI语音会话，请重试",
         variant: "destructive"
       });
       
@@ -57,22 +74,33 @@ export const useTavusVideo = () => {
 
   const endAudioSession = useCallback(async () => {
     if (!session) {
-      console.log('No session to end');
+      console.log('No Tavus session to end');
       return;
     }
 
     try {
-      console.log('Ending audio session:', session.session_id);
+      console.log('Ending Tavus session:', session.conversation_id);
       
-      // 这里可以调用结束会话的API
-      console.log('Audio session ended successfully');
+      // 调用Supabase Edge Function结束Tavus会话
+      const { data, error } = await supabase.functions.invoke('tavus-video', {
+        body: {
+          action: 'end',
+          conversationId: session.conversation_id
+        }
+      });
+
+      if (error) {
+        console.error('Error ending Tavus session:', error);
+      } else if (data.success) {
+        console.log('Tavus session ended successfully');
+      }
       
       toast({
-        title: "会话已结束",
-        description: "语音会话已成功结束"
+        title: "AI会话已结束",
+        description: "智能语音对话已成功结束"
       });
     } catch (err) {
-      console.error('Error ending audio session:', err);
+      console.error('Error ending Tavus session:', err);
     } finally {
       // 清理状态
       setSession(null);
