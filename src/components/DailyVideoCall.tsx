@@ -1,6 +1,6 @@
 
 import React, { useEffect, useCallback, useState } from 'react';
-import { DailyProvider, useDaily, useParticipants, useLocalParticipant } from '@daily-co/daily-react';
+import { DailyProvider, useDaily, useParticipant, useLocalParticipant } from '@daily-co/daily-react';
 import Daily from '@daily-co/daily-js';
 import { Button } from '@/components/ui/button';
 import { PhoneOff, Mic, MicOff, Video, VideoOff } from 'lucide-react';
@@ -12,10 +12,35 @@ interface DailyVideoCallProps {
 
 const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
   const daily = useDaily();
-  const participants = useParticipants();
   const localParticipant = useLocalParticipant();
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [isVideoMuted, setIsVideoMuted] = useState(false);
+  const [remoteParticipant, setRemoteParticipant] = useState<any>(null);
+
+  // Get remote participant manually since useParticipants doesn't exist
+  useEffect(() => {
+    if (!daily) return;
+
+    const updateParticipants = () => {
+      const participants = daily.participants();
+      const remote = Object.values(participants).find((p: any) => !p.local);
+      setRemoteParticipant(remote);
+    };
+
+    // Listen for participant events
+    daily.on('participant-joined', updateParticipants);
+    daily.on('participant-left', updateParticipants);
+    daily.on('participant-updated', updateParticipants);
+
+    // Initial update
+    updateParticipants();
+
+    return () => {
+      daily.off('participant-joined', updateParticipants);
+      daily.off('participant-left', updateParticipants);
+      daily.off('participant-updated', updateParticipants);
+    };
+  }, [daily]);
 
   const toggleAudio = useCallback(() => {
     if (daily) {
@@ -44,9 +69,8 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
     }
   }, [daily]);
 
-  const remoteParticipants = participants.filter(p => !p.local);
   const localVideo = localParticipant?.videoTrack;
-  const remoteVideo = remoteParticipants[0]?.videoTrack;
+  const remoteVideo = remoteParticipant?.videoTrack;
 
   return (
     <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col items-center justify-center p-6">
@@ -148,7 +172,7 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
       {/* Connection Status */}
       <div className="mt-6 text-center">
         <p className="text-slate-400 text-sm">
-          {participants.length > 1 ? 'Connected' : 'Waiting for connection...'}
+          {remoteParticipant ? 'Connected' : 'Waiting for connection...'}
         </p>
       </div>
     </div>
@@ -156,7 +180,7 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
 };
 
 const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave }) => {
-  const [callObject, setCallObject] = useState<Daily.DailyCall | null>(null);
+  const [callObject, setCallObject] = useState<any>(null);
 
   useEffect(() => {
     const daily = Daily.createCallObject();
