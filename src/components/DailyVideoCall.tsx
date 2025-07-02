@@ -1,6 +1,6 @@
 
 import React, { useEffect, useCallback, useState } from 'react';
-import { DailyProvider, useDaily, useParticipant, useLocalParticipant } from '@daily-co/daily-react';
+import { DailyProvider, useDaily, useLocalParticipant } from '@daily-co/daily-react';
 import Daily from '@daily-co/daily-js';
 import { Button } from '@/components/ui/button';
 import { PhoneOff, Mic, MicOff, Video, VideoOff } from 'lucide-react';
@@ -44,15 +44,17 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
 
   const toggleAudio = useCallback(() => {
     if (daily) {
-      daily.setLocalAudio(!isAudioMuted);
-      setIsAudioMuted(!isAudioMuted);
+      const newMuteState = !isAudioMuted;
+      daily.setLocalAudio(!newMuteState);
+      setIsAudioMuted(newMuteState);
     }
   }, [daily, isAudioMuted]);
 
   const toggleVideo = useCallback(() => {
     if (daily) {
-      daily.setLocalVideo(!isVideoMuted);
-      setIsVideoMuted(!isVideoMuted);
+      const newMuteState = !isVideoMuted;
+      daily.setLocalVideo(!newMuteState);
+      setIsVideoMuted(newMuteState);
     }
   }, [daily, isVideoMuted]);
 
@@ -63,14 +65,20 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
     onLeave();
   }, [daily, onLeave]);
 
+  // Initialize audio/video after joining
   useEffect(() => {
     if (daily) {
-      daily.startCamera();
+      // Set initial audio and video state
+      daily.setLocalAudio(true);
+      daily.setLocalVideo(true);
+      setIsAudioMuted(false);
+      setIsVideoMuted(false);
     }
   }, [daily]);
 
   const localVideo = localParticipant?.videoTrack;
   const remoteVideo = remoteParticipant?.videoTrack;
+  const remoteAudio = remoteParticipant?.audioTrack;
 
   return (
     <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col items-center justify-center p-6">
@@ -100,6 +108,19 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
               className="w-full h-full object-cover"
             />
           </div>
+        )}
+
+        {/* Remote Audio (Hidden audio element for AI voice) */}
+        {remoteAudio && (
+          <audio
+            ref={(ref) => {
+              if (ref && remoteAudio) {
+                ref.srcObject = new MediaStream([remoteAudio]);
+              }
+            }}
+            autoPlay
+            playsInline
+          />
         )}
 
         {/* Local Video (User) */}
@@ -186,7 +207,11 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave }) => 
     const daily = Daily.createCallObject();
     setCallObject(daily);
 
-    daily.join({ url: roomUrl });
+    daily.join({ url: roomUrl }).then(() => {
+      console.log('Successfully joined Daily room');
+    }).catch((error) => {
+      console.error('Failed to join Daily room:', error);
+    });
 
     return () => {
       daily.destroy();
