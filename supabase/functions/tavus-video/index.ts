@@ -43,12 +43,32 @@ serve(async (req) => {
           replica_id: tavusReplicaId,
           persona_id: tavusPersonaId,
           properties: {
+            // Optimized for low latency
             max_call_duration: 3600,
-            participant_left_timeout: 10,
-            participant_absent_timeout: 30,
+            participant_left_timeout: 5, // Reduced from 10
+            participant_absent_timeout: 15, // Reduced from 30
             enable_recording: false,
             enable_transcription: false,
-            language: 'english'
+            language: 'english',
+            // Low latency audio settings
+            audio_settings: {
+              bitrate: 'high', // Higher bitrate for better quality/speed tradeoff
+              sample_rate: 48000, // Optimal sample rate
+              channels: 1, // Mono for lower latency
+              codec: 'opus' // Opus codec for low latency
+            },
+            // Video optimization
+            video_settings: {
+              resolution: '720p', // Balance between quality and latency
+              framerate: 30,
+              bitrate: 'adaptive' // Adaptive bitrate for network conditions
+            },
+            // Network optimization
+            connection_settings: {
+              ice_transport_policy: 'all',
+              bundle_policy: 'max-bundle',
+              rtcp_mux_policy: 'require'
+            }
           }
         }),
       });

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { DailyProvider, useDaily, useLocalParticipant } from '@daily-co/daily-react';
 import Daily from '@daily-co/daily-js';
 import { Button } from '@/components/ui/button';
@@ -65,20 +65,80 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
     onLeave();
   }, [daily, onLeave]);
 
-  // Initialize audio/video after joining
+  // Initialize audio/video after joining with optimized settings
   useEffect(() => {
     if (daily) {
-      // Set initial audio and video state
+      // Set initial audio and video state with low latency settings
       daily.setLocalAudio(true);
       daily.setLocalVideo(true);
       setIsAudioMuted(false);
       setIsVideoMuted(false);
+      
+      // Configure for low latency
+      daily.updateInputSettings({
+        audio: {
+          processor: {
+            type: 'none' // Disable audio processing for lower latency
+          }
+        }
+      }).catch(err => console.log('Audio settings update failed:', err));
     }
   }, [daily]);
 
+  // Memoize video elements to prevent unnecessary re-renders
   const localVideo = localParticipant?.videoTrack;
   const remoteVideo = remoteParticipant?.videoTrack;
   const remoteAudio = remoteParticipant?.audioTrack;
+
+  const localVideoElement = useMemo(() => {
+    if (!localVideo) return null;
+    return (
+      <div className="absolute bottom-6 right-6 w-48 h-36 bg-slate-900 rounded-2xl overflow-hidden shadow-xl border-2 border-white/30">
+        <video
+          ref={(ref) => {
+            if (ref && localVideo) {
+              ref.srcObject = new MediaStream([localVideo]);
+            }
+          }}
+          autoPlay
+          playsInline
+          muted
+          className="w-full h-full object-cover scale-x-[-1]"
+        />
+      </div>
+    );
+  }, [localVideo]);
+
+  const remoteVideoElement = useMemo(() => {
+    if (!remoteVideo) return null;
+    return (
+      <video
+        ref={(ref) => {
+          if (ref && remoteVideo) {
+            ref.srcObject = new MediaStream([remoteVideo]);
+          }
+        }}
+        autoPlay
+        playsInline
+        className="w-full h-full object-cover"
+      />
+    );
+  }, [remoteVideo]);
+
+  const remoteAudioElement = useMemo(() => {
+    if (!remoteAudio) return null;
+    return (
+      <audio
+        ref={(ref) => {
+          if (ref && remoteAudio) {
+            ref.srcObject = new MediaStream([remoteAudio]);
+          }
+        }}
+        autoPlay
+        playsInline
+      />
+    );
+  }, [remoteAudio]);
 
   return (
     <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col items-center justify-center p-6">
@@ -97,48 +157,15 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
         {/* Remote Video (Tavus AI) */}
         {remoteVideo && (
           <div className="absolute inset-0">
-            <video
-              ref={(ref) => {
-                if (ref && remoteVideo) {
-                  ref.srcObject = new MediaStream([remoteVideo]);
-                }
-              }}
-              autoPlay
-              playsInline
-              className="w-full h-full object-cover"
-            />
+            {remoteVideoElement}
           </div>
         )}
 
         {/* Remote Audio (Hidden audio element for AI voice) */}
-        {remoteAudio && (
-          <audio
-            ref={(ref) => {
-              if (ref && remoteAudio) {
-                ref.srcObject = new MediaStream([remoteAudio]);
-              }
-            }}
-            autoPlay
-            playsInline
-          />
-        )}
+        {remoteAudioElement}
 
         {/* Local Video (User) */}
-        {localVideo && (
-          <div className="absolute bottom-6 right-6 w-48 h-36 bg-slate-900 rounded-2xl overflow-hidden shadow-xl border-2 border-white/30">
-            <video
-              ref={(ref) => {
-                if (ref && localVideo) {
-                  ref.srcObject = new MediaStream([localVideo]);
-                }
-              }}
-              autoPlay
-              playsInline
-              muted
-              className="w-full h-full object-cover scale-x-[-1]"
-            />
-          </div>
-        )}
+        {localVideoElement}
 
         {/* Placeholder when no video */}
         {!remoteVideo && (
@@ -204,11 +231,38 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave }) => 
   const [callObject, setCallObject] = useState<any>(null);
 
   useEffect(() => {
-    const daily = Daily.createCallObject();
+    // Create Daily call object with optimized settings for low latency
+    const daily = Daily.createCallObject({
+      // Low latency audio configuration
+      audioSource: false, // Start without audio, enable after join
+      videoSource: false, // Start without video, enable after join
+      
+      // Network optimization
+      subscribeToTracksAutomatically: true,
+      
+      // Audio settings for reduced latency
+      dailyConfig: {
+        experimentalChromeVideoMuteLightOff: true,
+      }
+    });
+    
     setCallObject(daily);
 
-    daily.join({ url: roomUrl }).then(() => {
+    // Join with optimized parameters
+    daily.join({ 
+      url: roomUrl,
+      // Additional join options for low latency
+      userName: 'User',
+      userData: { isOptimizedForLatency: true }
+    }).then(() => {
       console.log('Successfully joined Daily room');
+      
+      // Enable audio/video immediately after successful join
+      setTimeout(() => {
+        daily.setLocalAudio(true);
+        daily.setLocalVideo(true);
+      }, 100); // Small delay to ensure connection is stable
+      
     }).catch((error) => {
       console.error('Failed to join Daily room:', error);
     });

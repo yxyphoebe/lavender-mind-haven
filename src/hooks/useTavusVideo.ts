@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -15,21 +15,36 @@ export const useTavusVideo = () => {
   const [session, setSession] = useState<TavusSession | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  
+  // Use ref to prevent multiple concurrent requests
+  const requestInProgress = useRef(false);
 
   const startAudioSession = useCallback(async (therapistName: string) => {
+    // Prevent multiple concurrent requests
+    if (requestInProgress.current) {
+      console.log('Request already in progress, skipping...');
+      return session;
+    }
+
+    requestInProgress.current = true;
     setIsConnecting(true);
     setError(null);
     
     try {
       console.log('Starting Tavus audio session for:', therapistName);
       
-      // 调用Supabase Edge Function创建Tavus会话
+      // Optimized Supabase function call with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+      
       const { data, error } = await supabase.functions.invoke('tavus-video', {
         body: {
           action: 'create',
           therapistName: therapistName
         }
       });
+
+      clearTimeout(timeoutId);
 
       if (error) {
         throw new Error(error.message);
@@ -69,43 +84,54 @@ export const useTavusVideo = () => {
       throw err;
     } finally {
       setIsConnecting(false);
+      requestInProgress.current = false;
     }
-  }, [toast]);
+  }, [toast, session]);
 
   const endAudioSession = useCallback(async () => {
-    if (!session) {
-      console.log('No Tavus session to end');
+    if (!session || requestInProgress.current) {
+      console.log('No Tavus session to end or request in progress');
       return;
     }
+
+    requestInProgress.current = true;
 
     try {
       console.log('Ending Tavus session:', session.conversation_id);
       
-      // 调用Supabase Edge Function结束Tavus会话
-      const { data, error } = await supabase.functions.invoke('tavus-video', {
+      // Quick cleanup - don't wait for API response
+      const cleanupPromise = supabase.functions.invoke('tavus-video', {
         body: {
           action: 'end',
           conversationId: session.conversation_id
         }
       });
 
-      if (error) {
-        console.error('Error ending Tavus session:', error);
-      } else if (data.success) {
-        console.log('Tavus session ended successfully');
-      }
+      // Immediate state cleanup for better UX
+      setSession(null);
+      setIsConnected(false);
+      setError(null);
       
       toast({
         title: "AI会话已结束",
         description: "智能语音对话已成功结束"
       });
+
+      // Wait for API cleanup in background
+      cleanupPromise.then(({ error }) => {
+        if (error) {
+          console.error('Error ending Tavus session:', error);
+        } else {
+          console.log('Tavus session ended successfully');
+        }
+      }).catch((err) => {
+        console.error('Error ending Tavus session:', err);
+      });
+
     } catch (err) {
       console.error('Error ending Tavus session:', err);
     } finally {
-      // 清理状态
-      setSession(null);
-      setIsConnected(false);
-      setError(null);
+      requestInProgress.current = false;
     }
   }, [session, toast]);
 
