@@ -53,14 +53,24 @@ serve(async (req) => {
       throw new Error('No audio data provided');
     }
 
+    if (!openAIApiKey) {
+      console.error('OpenAI API key not configured');
+      throw new Error('OpenAI API key not configured');
+    }
+
     // Process audio in chunks
     const binaryAudio = processBase64Chunks(audio);
     
-    // Prepare form data
+    console.log('Processing audio binary data, size:', binaryAudio.length);
+
+    // Prepare form data - try multiple audio formats
     const formData = new FormData();
-    const blob = new Blob([binaryAudio], { type: 'audio/webm' });
+    
+    // Try webm first (most common for web recordings)
+    let blob = new Blob([binaryAudio], { type: 'audio/webm' });
     formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-1');
+    formData.append('language', 'zh'); // 指定中文，提高识别准确度
 
     console.log('Calling OpenAI Whisper API...');
 
@@ -74,22 +84,60 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
-      console.error('OpenAI API error:', response.status, response.statusText);
-      throw new Error(`OpenAI API error: ${await response.text()}`);
+      const errorText = await response.text();
+      console.error('OpenAI API error:', response.status, response.statusText, errorText);
+      
+      // If webm failed, try with generic audio type
+      if (response.status === 400) {
+        console.log('Retrying with generic audio format...');
+        
+        const retryFormData = new FormData();
+        const genericBlob = new Blob([binaryAudio], { type: 'audio/mpeg' });
+        retryFormData.append('file', genericBlob, 'audio.mp3');
+        retryFormData.append('model', 'whisper-1');
+        retryFormData.append('language', 'zh');
+
+        const retryResponse = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${openAIApiKey}`,
+          },
+          body: retryFormData,
+        });
+
+        if (!retryResponse.ok) {
+          const retryErrorText = await retryResponse.text();
+          console.error('Retry also failed:', retryResponse.status, retryErrorText);
+          throw new Error(`OpenAI API error: ${retryResponse.status} - ${retryErrorText}`);
+        }
+
+        const retryResult = await retryResponse.json();
+        console.log('Retry transcription successful:', retryResult);
+
+        return new Response(
+          JSON.stringify({ text: retryResult.text || '' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
     }
 
     const result = await response.json();
     console.log('Transcription result:', result);
 
     return new Response(
-      JSON.stringify({ text: result.text }),
+      JSON.stringify({ text: result.text || '' }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
     console.error('Error in voice-to-text function:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        details: 'Voice transcription failed. Please check audio format and API configuration.'
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
