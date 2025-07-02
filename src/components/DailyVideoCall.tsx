@@ -68,11 +68,13 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
   // Initialize audio/video after joining with optimized settings
   useEffect(() => {
     if (daily) {
-      // Set initial audio and video state with low latency settings
-      daily.setLocalAudio(true);
-      daily.setLocalVideo(true);
-      setIsAudioMuted(false);
-      setIsVideoMuted(false);
+      // Defer A/V enable by 200ms to allow connection to stabilize
+      setTimeout(() => {
+        daily.setLocalAudio(true);
+        daily.setLocalVideo(true);
+        setIsAudioMuted(false);
+        setIsVideoMuted(false);
+      }, 200);
       
       // Configure for low latency
       daily.updateInputSettings({
@@ -233,16 +235,26 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave }) => 
   useEffect(() => {
     // Create Daily call object with optimized settings for low latency
     const daily = Daily.createCallObject({
-      // Low latency audio configuration
-      audioSource: false, // Start without audio, enable after join
-      videoSource: false, // Start without video, enable after join
+      // Start without audio/video to enable them after join for better connection
+      audioSource: false,
+      videoSource: false,
       
-      // Network optimization
+      // Network and connection optimization
       subscribeToTracksAutomatically: true,
       
-      // Audio settings for reduced latency
+      // Additional configuration for performance
       dailyConfig: {
-        experimentalChromeVideoMuteLightOff: true,
+        // Remove the unsupported property - only use valid Daily.co config
+        userMediaAudioConstraints: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        },
+        userMediaVideoConstraints: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          frameRate: { ideal: 30 }
+        }
       }
     });
     
@@ -251,18 +263,10 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave }) => 
     // Join with optimized parameters
     daily.join({ 
       url: roomUrl,
-      // Additional join options for low latency
       userName: 'User',
       userData: { isOptimizedForLatency: true }
     }).then(() => {
       console.log('Successfully joined Daily room');
-      
-      // Enable audio/video immediately after successful join
-      setTimeout(() => {
-        daily.setLocalAudio(true);
-        daily.setLocalVideo(true);
-      }, 100); // Small delay to ensure connection is stable
-      
     }).catch((error) => {
       console.error('Failed to join Daily room:', error);
     });
