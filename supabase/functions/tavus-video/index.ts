@@ -84,23 +84,7 @@ serve(async (req) => {
           participant_absent_timeout: 15,
           enable_recording: false,
           enable_transcription: false,
-          language: 'english',
-          audio_settings: {
-            bitrate: 'high',
-            sample_rate: 48000,
-            channels: 1,
-            codec: 'opus'
-          },
-          video_settings: {
-            resolution: '720p',
-            framerate: 30,
-            bitrate: 'adaptive'
-          },
-          connection_settings: {
-            ice_transport_policy: 'all',
-            bundle_policy: 'max-bundle',
-            rtcp_mux_policy: 'require'
-          }
+          language: 'english'
         }
       };
 
