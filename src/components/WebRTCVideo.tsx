@@ -24,7 +24,7 @@ const WebRTCVideo: React.FC<WebRTCVideoProps> = ({
   const analyserRef = useRef<AnalyserNode | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // 初始化媒体流
+  // Initialize media stream
   const initializeMedia = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -48,7 +48,7 @@ const WebRTCVideo: React.FC<WebRTCVideoProps> = ({
         videoRef.current.srcObject = stream;
       }
 
-      // 设置音频分析
+      // Setup audio analysis
       if (onAudioData) {
         setupAudioAnalysis(stream);
       }
@@ -60,7 +60,7 @@ const WebRTCVideo: React.FC<WebRTCVideoProps> = ({
     }
   };
 
-  // 设置音频分析
+  // Setup audio analysis
   const setupAudioAnalysis = (stream: MediaStream) => {
     try {
       const audioContext = new AudioContext();
@@ -73,7 +73,7 @@ const WebRTCVideo: React.FC<WebRTCVideoProps> = ({
       audioContextRef.current = audioContext;
       analyserRef.current = analyser;
 
-      // 开始音频数据处理
+      // Start audio data processing
       const processAudio = () => {
         if (analyserRef.current && onAudioData) {
           const dataArray = new Float32Array(analyserRef.current.frequencyBinCount);
@@ -89,7 +89,7 @@ const WebRTCVideo: React.FC<WebRTCVideoProps> = ({
     }
   };
 
-  // 切换视频状态
+  // Toggle video state
   useEffect(() => {
     if (streamRef.current) {
       const videoTrack = streamRef.current.getVideoTracks()[0];
@@ -99,7 +99,7 @@ const WebRTCVideo: React.FC<WebRTCVideoProps> = ({
     }
   }, [isVideoOn]);
 
-  // 切换音频状态
+  // Toggle audio state
   useEffect(() => {
     if (streamRef.current) {
       const audioTrack = streamRef.current.getAudioTracks()[0];
@@ -109,12 +109,12 @@ const WebRTCVideo: React.FC<WebRTCVideoProps> = ({
     }
   }, [isMicOn]);
 
-  // 组件挂载时初始化
+  // Initialize on component mount
   useEffect(() => {
     initializeMedia();
 
     return () => {
-      // 清理资源
+      // Clean up resources
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
@@ -126,7 +126,7 @@ const WebRTCVideo: React.FC<WebRTCVideoProps> = ({
 
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-slate-50 to-white rounded-2xl overflow-hidden">
-      {/* 视频显示区域 */}
+      {/* Video display area */}
       <video
         ref={videoRef}
         autoPlay
@@ -135,35 +135,35 @@ const WebRTCVideo: React.FC<WebRTCVideoProps> = ({
         className={`w-full h-full object-cover transition-opacity duration-300 ${
           isVideoOn ? 'opacity-100' : 'opacity-0'
         }`}
-        style={{ transform: 'scaleX(-1)' }} // 镜像效果
+        style={{ transform: 'scaleX(-1)' }} // Mirror effect
       />
 
-      {/* 视频关闭时的占位符 */}
+      {/* Placeholder when video is off */}
       {!isVideoOn && (
         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
           <div className="text-center">
             <div className="w-20 h-20 bg-slate-300 rounded-full flex items-center justify-center mb-4 mx-auto">
               <VideoOff className="w-10 h-10 text-slate-600" />
             </div>
-            <p className="text-slate-600 font-medium">摄像头已关闭</p>
+            <p className="text-slate-600 font-medium">Camera is off</p>
           </div>
         </div>
       )}
 
-      {/* 音频状态指示器 */}
+      {/* Audio status indicator */}
       {!isMicOn && (
         <div className="absolute top-4 left-4 bg-rose-500 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
           <MicOff className="w-3 h-3" />
-          <span>静音</span>
+          <span>Muted</span>
         </div>
       )}
 
-      {/* 初始化状态 */}
+      {/* Initialization status */}
       {!isInitialized && (
         <div className="absolute inset-0 flex items-center justify-center bg-white/90 backdrop-blur-sm">
           <div className="text-center">
             <div className="w-8 h-8 border-2 border-violet-400 border-t-transparent rounded-full animate-spin mb-4 mx-auto" />
-            <p className="text-slate-600">正在初始化摄像头...</p>
+            <p className="text-slate-600">Initializing camera...</p>
           </div>
         </div>
       )}

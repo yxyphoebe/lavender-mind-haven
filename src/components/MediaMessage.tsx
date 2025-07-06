@@ -19,7 +19,7 @@ const MediaMessage = ({ url, type, className = '' }: MediaMessageProps) => {
           <div className={`relative cursor-pointer rounded-2xl overflow-hidden group ${className}`}>
             <img
               src={url}
-              alt="分享的图片"
+              alt="Shared image"
               className="max-w-xs max-h-60 object-cover rounded-2xl shadow-md transition-all duration-300 group-hover:shadow-lg group-hover:scale-[1.02]"
               onLoad={() => setIsLoading(false)}
             />
@@ -34,7 +34,7 @@ const MediaMessage = ({ url, type, className = '' }: MediaMessageProps) => {
         <DialogContent className="max-w-4xl bg-white/95 backdrop-blur-xl border-white/50">
           <img
             src={url}
-            alt="分享的图片"
+            alt="Shared image"
             className="w-full h-auto max-h-[80vh] object-contain rounded-xl"
           />
         </DialogContent>
@@ -51,7 +51,7 @@ const MediaMessage = ({ url, type, className = '' }: MediaMessageProps) => {
           className="max-w-xs max-h-60 rounded-2xl shadow-md transition-all duration-300 group-hover:shadow-lg"
           onLoadStart={() => setIsLoading(false)}
         >
-          您的浏览器不支持视频播放
+          Your browser does not support video playback
         </video>
         {isLoading && (
           <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200 animate-pulse rounded-2xl flex items-center justify-center">

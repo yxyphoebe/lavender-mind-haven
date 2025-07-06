@@ -16,12 +16,12 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
   const processIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
-  // 开始录音处理
+  // Start audio processing
   const startAudioProcessing = useCallback(async (stream: MediaStream) => {
     try {
       console.log('Starting audio processing...');
       
-      // 检查浏览器支持的音频格式
+      // Check browser supported audio formats
       const supportedTypes = [
         'audio/webm;codecs=opus',
         'audio/webm',
@@ -64,13 +64,13 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
       mediaRecorder.onerror = (event) => {
         console.error('MediaRecorder error:', event);
         toast({
-          title: "录音错误",
-          description: "音频录制过程中出现错误",
+          title: "Recording Error",
+          description: "Error occurred during audio recording",
           variant: "destructive"
         });
       };
 
-      // 每3秒处理一次音频，给用户更多时间说话
+      // Process every 3 seconds to give users more time to speak
       const processInterval = setInterval(() => {
         if (mediaRecorder.state === 'recording' && audioChunksRef.current.length > 0) {
           console.log('Stopping recorder for processing...');
@@ -79,7 +79,7 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
       }, 3000);
 
       processIntervalRef.current = processInterval;
-      mediaRecorder.start(1000); // 每秒收集一次数据
+      mediaRecorder.start(1000); // Collect data every second
       setIsConnected(true);
       
       console.log('Audio processing started successfully');
@@ -97,19 +97,19 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
     } catch (error) {
       console.error('Error starting audio processing:', error);
       toast({
-        title: "音频处理启动失败",
-        description: error instanceof Error ? error.message : "无法启动音频处理",
+        title: "Audio Processing Failed to Start",
+        description: error instanceof Error ? error.message : "Unable to start audio processing",
         variant: "destructive"
       });
       throw error;
     }
   }, [toast]);
 
-  // 处理音频数据
+  // Process audio data
   const processAudioChunks = async () => {
     if (audioChunksRef.current.length === 0) {
       console.log('No audio chunks to process');
-      // 重新开始录音
+      // Restart recording
       if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'inactive') {
         setTimeout(() => {
           if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'inactive') {
@@ -134,14 +134,14 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
         chunks: audioChunksRef.current.length
       });
 
-      // 清空当前音频块，准备下一轮
+      // Clear current audio chunks, prepare for next round
       audioChunksRef.current = [];
 
-      // 如果音频太小，跳过处理
+      // If audio is too small, skip processing
       if (audioBlob.size < 1000) {
         console.log('Audio blob too small, skipping...');
         setIsProcessing(false);
-        // 重新开始录音
+        // Restart recording
         if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'inactive') {
           setTimeout(() => {
             if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'inactive') {
@@ -152,7 +152,7 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
         return;
       }
 
-      // 转换为base64
+      // Convert to base64
       const reader = new FileReader();
       reader.onloadend = async () => {
         try {
@@ -160,7 +160,7 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
           
           console.log('Sending audio to voice-to-text service...');
           
-          // 发送到语音转文字服务
+          // Send to voice-to-text service
           const { data, error } = await supabase.functions.invoke('voice-to-text', {
             body: { audio: base64Audio }
           });
@@ -174,7 +174,7 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
             console.log('Transcription successful:', data.text);
             options.onTranscription?.(data.text.trim());
             
-            // 发送到AI聊天服务获取回应
+            // Send to AI chat service to get response
             await sendToAI(data.text.trim());
           } else {
             console.log('No text transcribed or empty result');
@@ -182,13 +182,13 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
         } catch (error) {
           console.error('Error processing transcription:', error);
           toast({
-            title: "语音识别失败",
-            description: "无法识别语音内容，请重试",
+            title: "Speech Recognition Failed",
+            description: "Unable to recognize speech content, please try again",
             variant: "destructive"
           });
         } finally {
           setIsProcessing(false);
-          // 重新开始录音
+          // Restart recording
           if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'inactive') {
             setTimeout(() => {
               if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'inactive') {
@@ -212,7 +212,7 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
     }
   };
 
-  // 发送到AI并获取回应
+  // Send to AI and get response
   const sendToAI = async (text: string) => {
     try {
       console.log('Sending to AI chat service:', text);
@@ -236,8 +236,8 @@ export const useAudioProcessor = (options: AudioProcessorOptions = {}) => {
     } catch (error) {
       console.error('Error getting AI response:', error);
       toast({
-        title: "AI回应失败",
-        description: "无法获取AI回应，请重试",
+        title: "AI Response Failed",
+        description: "Unable to get AI response, please try again",
         variant: "destructive"
       });
     }

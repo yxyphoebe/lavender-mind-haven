@@ -25,7 +25,7 @@ const PureWebRTCVideo: React.FC<PureWebRTCVideoProps> = ({
   const streamRef = useRef<MediaStream | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // 获取localStorage中的persona信息作为fallback
+  // Get persona info from localStorage as fallback
   const selectedPersona = localStorage.getItem('selectedPersona') || 'nuva';
   const personas = {
     nuva: { name: 'Nuva', icon: Heart, color: 'violet' },
@@ -35,7 +35,7 @@ const PureWebRTCVideo: React.FC<PureWebRTCVideoProps> = ({
   const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
   const IconComponent = currentPersona.icon;
 
-  // 初始化摄像头
+  // Initialize camera
   useEffect(() => {
     const initializeCamera = async () => {
       try {
@@ -75,7 +75,7 @@ const PureWebRTCVideo: React.FC<PureWebRTCVideoProps> = ({
     };
   }, []);
 
-  // 控制视频和音频轨道
+  // Control video and audio tracks
   useEffect(() => {
     if (streamRef.current) {
       const videoTrack = streamRef.current.getVideoTracks()[0];
@@ -88,7 +88,7 @@ const PureWebRTCVideo: React.FC<PureWebRTCVideoProps> = ({
 
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl overflow-hidden">
-      {/* 主视频区域 */}
+      {/* Main video area */}
       <div className="absolute inset-0">
         <video
           ref={videoRef}
@@ -101,30 +101,30 @@ const PureWebRTCVideo: React.FC<PureWebRTCVideoProps> = ({
           style={{ transform: 'scaleX(-1)' }}
         />
 
-        {/* 视频关闭时的占位符 */}
+        {/* Placeholder when video is off */}
         {!isVideoOn && (
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
             <div className="text-center">
               <div className="w-32 h-32 bg-slate-700 rounded-full flex items-center justify-center mb-6 mx-auto">
                 <VideoOff className="w-16 h-16 text-slate-400" />
               </div>
-              <p className="text-slate-300 text-lg font-medium">摄像头已关闭</p>
+              <p className="text-slate-300 text-lg font-medium">Camera is off</p>
             </div>
           </div>
         )}
 
-        {/* 初始化loading */}
+        {/* Initialization loading */}
         {!isInitialized && (
           <div className="absolute inset-0 flex items-center justify-center bg-slate-900/90 backdrop-blur-sm">
             <div className="text-center">
               <div className="w-8 h-8 border-2 border-violet-400 border-t-transparent rounded-full animate-spin mb-4 mx-auto" />
-              <p className="text-slate-300">正在初始化摄像头...</p>
+              <p className="text-slate-300">Initializing camera...</p>
             </div>
           </div>
         )}
       </div>
 
-      {/* AI治疗师头像 - 右上角 */}
+      {/* AI therapist avatar - top right corner */}
       <div className="absolute top-6 right-6 z-10">
         <div className={`relative transition-all duration-300 ${
           isAISpeaking ? 'scale-110' : 'scale-100'
@@ -149,7 +149,7 @@ const PureWebRTCVideo: React.FC<PureWebRTCVideoProps> = ({
             </AvatarFallback>
           </Avatar>
 
-          {/* 说话时的音频可视化环 */}
+          {/* Audio visualization ring when speaking */}
           {isAISpeaking && (
             <div className="absolute inset-0 -z-10">
               <div className="w-full h-full rounded-full border-2 border-violet-400 animate-ping opacity-75"></div>
@@ -157,7 +157,7 @@ const PureWebRTCVideo: React.FC<PureWebRTCVideoProps> = ({
           )}
         </div>
 
-        {/* AI名称标签 */}
+        {/* AI name tag */}
         <div className={`mt-2 text-center transition-all duration-300 ${
           isAISpeaking ? 'opacity-100' : 'opacity-70'
         }`}>
@@ -169,24 +169,24 @@ const PureWebRTCVideo: React.FC<PureWebRTCVideoProps> = ({
         </div>
       </div>
 
-      {/* 用户状态指示器 - 左上角 */}
+      {/* User status indicators - top left corner */}
       <div className="absolute top-6 left-6 z-10 space-y-2">
         {!isMicOn && (
           <div className="bg-rose-500 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 shadow-lg">
             <MicOff className="w-4 h-4" />
-            <span>麦克风已静音</span>
+            <span>Microphone muted</span>
           </div>
         )}
         
         {!isVideoOn && (
           <div className="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 shadow-lg">
             <VideoOff className="w-4 h-4" />
-            <span>摄像头已关闭</span>
+            <span>Camera is off</span>
           </div>
         )}
       </div>
 
-      {/* 底部音频可视化条 */}
+      {/* Bottom audio visualization bar */}
       {isAISpeaking && (
         <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10">
           <div className="bg-black/50 backdrop-blur-md rounded-full px-6 py-3 flex items-center space-x-2">
@@ -200,7 +200,7 @@ const PureWebRTCVideo: React.FC<PureWebRTCVideoProps> = ({
                 />
               ))}
             </div>
-            <span className="text-white text-sm font-medium ml-3">AI正在说话...</span>
+            <span className="text-white text-sm font-medium ml-3">AI is speaking...</span>
           </div>
         </div>
       )}

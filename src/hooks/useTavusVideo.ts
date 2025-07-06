@@ -69,8 +69,8 @@ export const useTavusVideo = () => {
       setIsConnected(true);
       
       toast({
-        title: "AI语音会话已建立",
-        description: `与 ${therapistName} 的智能对话已开始`
+        title: "AI Voice Session Established",
+        description: `Intelligent conversation with ${therapistName} has started`
       });
 
       return tavusSession;
@@ -80,8 +80,8 @@ export const useTavusVideo = () => {
       setError(errorMessage);
       
       toast({
-        title: "连接失败",
-        description: `无法建立AI语音会话: ${errorMessage}`,
+        title: "Connection Failed",
+        description: `Unable to establish AI voice session: ${errorMessage}`,
         variant: "destructive"
       });
       
@@ -117,8 +117,8 @@ export const useTavusVideo = () => {
       setError(null);
       
       toast({
-        title: "AI会话已结束",
-        description: "智能语音对话已成功结束"
+        title: "AI Session Ended",
+        description: "Intelligent voice conversation ended successfully"
       });
 
       // Wait for API cleanup in background

@@ -42,8 +42,8 @@ const VideoChat = () => {
   const handleStartCall = async () => {
     if (!therapist) {
       toast({
-        title: "未选择治疗师",
-        description: "请先选择一位治疗师",
+        title: "No Therapist Selected",
+        description: "Please select a therapist first",
         variant: "destructive"
       });
       return;
@@ -60,8 +60,8 @@ const VideoChat = () => {
         setIsInCall(true);
         
         toast({
-          title: "会话已开始",
-          description: `与 ${therapist.name} 的智能对话已建立`
+          title: "Session Started",
+          description: `Intelligent conversation with ${therapist.name} established`
         });
       } else {
         throw new Error('No conversation URL received from Tavus');
@@ -70,8 +70,8 @@ const VideoChat = () => {
     } catch (error) {
       console.error('Error starting video call:', error);
       toast({
-        title: "连接失败",
-        description: "无法建立视频会话，请重试",
+        title: "Connection Failed",
+        description: "Unable to establish video session, please try again",
         variant: "destructive"
       });
     }
@@ -89,8 +89,8 @@ const VideoChat = () => {
     setRoomUrl(null);
     
     toast({
-      title: "会话已结束",
-      description: "智能对话已成功结束"
+      title: "Session Ended",
+      description: "Intelligent conversation ended successfully"
     });
     
     navigate('/user-center');
@@ -134,7 +134,7 @@ const VideoChat = () => {
         </h1>
         
         <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-          准备开始一场宁静的心灵对话
+          Ready to begin a peaceful mindful conversation
         </p>
 
         {/* Error display */}
@@ -142,7 +142,7 @@ const VideoChat = () => {
           <div className="mb-6 p-4 bg-red-900/50 border border-red-700/50 rounded-2xl flex items-center space-x-3">
             <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
             <div className="text-left">
-              <p className="text-red-300 text-sm font-medium">连接失败</p>
+              <p className="text-red-300 text-sm font-medium">Connection Failed</p>
               <p className="text-red-400 text-xs mt-1">{error}</p>
             </div>
           </div>
@@ -157,16 +157,16 @@ const VideoChat = () => {
           {isConnecting ? (
             <>
               <Loader2 className="w-6 h-6 animate-spin mr-3" />
-              正在连接...
+              Connecting...
             </>
           ) : (
-            '开始视频对话'
+            'Start Video Call'
           )}
         </Button>
 
         {/* Tech info */}
         <p className="text-slate-500 text-sm mt-8">
-          基于 Daily SDK + Tavus AI 的智能视频对话
+          Intelligent video conversation powered by Daily SDK + Tavus AI
         </p>
       </div>
 

@@ -57,8 +57,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
     } catch (error) {
       console.error('Error starting recording:', error);
       toast({
-        title: "录音失败",
-        description: "无法访问麦克风，请检查权限设置",
+        title: "Recording Failed",
+        description: "Unable to access microphone, please check permissions",
         variant: "destructive",
       });
     }
@@ -119,16 +119,16 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
             onTranscriptionComplete(data.text.trim());
           } else {
             toast({
-              title: "未识别到语音",
-              description: "请重新录音或检查麦克风",
+              title: "No Speech Detected",
+              description: "Please record again or check microphone",
               variant: "destructive",
             });
           }
         } catch (error) {
           console.error('Error processing transcription:', error);
           toast({
-            title: "语音转换失败",
-            description: "请重试或手动输入文字",
+            title: "Speech Conversion Failed",
+            description: "Please try again or type manually",
             variant: "destructive",
           });
         } finally {
@@ -141,8 +141,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete, 
       console.error('Error in processRecording:', error);
       setIsProcessing(false);
       toast({
-        title: "处理录音失败",
-        description: "请重试录音",
+        title: "Recording Processing Failed",
+        description: "Please try recording again",
         variant: "destructive",
       });
     }
