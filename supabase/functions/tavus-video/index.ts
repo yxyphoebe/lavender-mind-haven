@@ -20,19 +20,26 @@ serve(async (req) => {
     const tavusReplicaId = Deno.env.get('TAVUS_REPLICA_ID');
     const tavusPersonaId = Deno.env.get('TAVUS_PERSONA_ID');
 
+    console.log('=== TAVUS EDGE FUNCTION DEBUG ===');
+    console.log('Action:', action);
+    console.log('Therapist Name:', therapistName);
+    console.log('Conversation ID:', conversationId);
     console.log('Environment check:', {
       hasApiKey: !!tavusApiKey,
       hasReplicaId: !!tavusReplicaId,
       hasPersonaId: !!tavusPersonaId,
-      action,
-      therapistName
+      apiKeyLength: tavusApiKey ? tavusApiKey.length : 0,
+      replicaIdLength: tavusReplicaId ? tavusReplicaId.length : 0,
+      personaIdLength: tavusPersonaId ? tavusPersonaId.length : 0
     });
 
     if (!tavusApiKey) {
-      console.error('TAVUS_API_KEY is missing');
+      const errorMsg = 'TAVUS_API_KEY is missing from environment variables';
+      console.error(errorMsg);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'TAVUS_API_KEY not configured. Please set up your Tavus API key in the Edge Function secrets.' 
+        error: errorMsg,
+        debug: 'Check Supabase Edge Function secrets configuration'
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -40,10 +47,12 @@ serve(async (req) => {
     }
 
     if (!tavusReplicaId) {
-      console.error('TAVUS_REPLICA_ID is missing');
+      const errorMsg = 'TAVUS_REPLICA_ID is missing from environment variables';
+      console.error(errorMsg);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'TAVUS_REPLICA_ID not configured. Please set up your Tavus Replica ID in the Edge Function secrets.' 
+        error: errorMsg,
+        debug: 'Check Supabase Edge Function secrets configuration'
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -51,10 +60,12 @@ serve(async (req) => {
     }
 
     if (!tavusPersonaId) {
-      console.error('TAVUS_PERSONA_ID is missing');
+      const errorMsg = 'TAVUS_PERSONA_ID is missing from environment variables';
+      console.error(errorMsg);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'TAVUS_PERSONA_ID not configured. Please set up your Tavus Persona ID in the Edge Function secrets.' 
+        error: errorMsg,
+        debug: 'Check Supabase Edge Function secrets configuration'
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -62,33 +73,29 @@ serve(async (req) => {
     }
 
     if (action === 'create') {
-      console.log('Creating Tavus conversation for therapist:', therapistName);
+      console.log('=== CREATING TAVUS CONVERSATION ===');
       
       const requestBody = {
         replica_id: tavusReplicaId,
         persona_id: tavusPersonaId,
         properties: {
-          // Optimized for low latency
           max_call_duration: 3600,
-          participant_left_timeout: 5, // Reduced from 10
-          participant_absent_timeout: 15, // Reduced from 30
+          participant_left_timeout: 5,
+          participant_absent_timeout: 15,
           enable_recording: false,
           enable_transcription: false,
           language: 'english',
-          // Low latency audio settings
           audio_settings: {
-            bitrate: 'high', // Higher bitrate for better quality/speed tradeoff
-            sample_rate: 48000, // Optimal sample rate
-            channels: 1, // Mono for lower latency
-            codec: 'opus' // Opus codec for low latency
+            bitrate: 'high',
+            sample_rate: 48000,
+            channels: 1,
+            codec: 'opus'
           },
-          // Video optimization
           video_settings: {
-            resolution: '720p', // Balance between quality and latency
+            resolution: '720p',
             framerate: 30,
-            bitrate: 'adaptive' // Adaptive bitrate for network conditions
+            bitrate: 'adaptive'
           },
-          // Network optimization
           connection_settings: {
             ice_transport_policy: 'all',
             bundle_policy: 'max-bundle',
@@ -97,7 +104,9 @@ serve(async (req) => {
         }
       };
 
-      console.log('Sending request to Tavus API with body:', JSON.stringify(requestBody, null, 2));
+      console.log('Request body:', JSON.stringify(requestBody, null, 2));
+      console.log('API Key (first 10 chars):', tavusApiKey.substring(0, 10) + '...');
+      console.log('Making request to Tavus API...');
       
       const response = await fetch('https://tavusapi.com/v2/conversations', {
         method: 'POST',
@@ -108,36 +117,50 @@ serve(async (req) => {
         body: JSON.stringify(requestBody),
       });
 
-      console.log('Tavus API response status:', response.status);
-      console.log('Tavus API response headers:', Object.fromEntries(response.headers.entries()));
+      console.log('=== TAVUS API RESPONSE ===');
+      console.log('Status:', response.status);
+      console.log('Status Text:', response.statusText);
+      console.log('Headers:', Object.fromEntries(response.headers.entries()));
+
+      const responseText = await response.text();
+      console.log('Raw response body:', responseText);
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Tavus API error response:', {
-          status: response.status,
-          statusText: response.statusText,
-          body: errorText
-        });
+        console.error('=== TAVUS API ERROR ===');
+        console.error('Status:', response.status);
+        console.error('Response:', responseText);
         
-        let errorMessage = `Failed to create conversation: ${response.status}`;
+        let errorMessage = `Tavus API error (${response.status}): ${response.statusText}`;
+        let errorDetails = null;
         
-        // Try to parse error details if possible
         try {
-          const errorData = JSON.parse(errorText);
+          const errorData = JSON.parse(responseText);
+          console.error('Parsed error data:', errorData);
           if (errorData.message) {
             errorMessage += ` - ${errorData.message}`;
           }
+          if (errorData.error) {
+            errorMessage += ` - ${errorData.error}`;
+          }
+          errorDetails = errorData;
         } catch (e) {
-          errorMessage += ` - ${errorText}`;
+          console.error('Failed to parse error response as JSON:', e);
+          if (responseText) {
+            errorMessage += ` - ${responseText}`;
+          }
         }
         
         return new Response(JSON.stringify({ 
           success: false, 
           error: errorMessage,
-          details: {
+          debug: {
             status: response.status,
             statusText: response.statusText,
-            body: errorText
+            rawResponse: responseText,
+            parsedError: errorDetails,
+            apiKeyPresent: !!tavusApiKey,
+            replicaIdPresent: !!tavusReplicaId,
+            personaIdPresent: !!tavusPersonaId
           }
         }), {
           status: response.status,
@@ -145,8 +168,22 @@ serve(async (req) => {
         });
       }
 
-      const data = await response.json();
-      console.log('Tavus conversation created successfully:', data);
+      let data;
+      try {
+        data = JSON.parse(responseText);
+        console.log('=== SUCCESS ===');
+        console.log('Parsed response data:', data);
+      } catch (e) {
+        console.error('Failed to parse success response as JSON:', e);
+        return new Response(JSON.stringify({ 
+          success: false, 
+          error: 'Invalid JSON response from Tavus API',
+          debug: { rawResponse: responseText }
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
       
       return new Response(JSON.stringify({
         success: true,
@@ -158,7 +195,8 @@ serve(async (req) => {
       });
 
     } else if (action === 'end') {
-      console.log('Ending Tavus conversation:', conversationId);
+      console.log('=== ENDING TAVUS CONVERSATION ===');
+      console.log('Conversation ID:', conversationId);
       
       if (!conversationId) {
         return new Response(JSON.stringify({ 
@@ -210,13 +248,18 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Error in tavus-video function:', error);
+    console.error('=== EDGE FUNCTION ERROR ===');
+    console.error('Error message:', error.message);
     console.error('Error stack:', error.stack);
+    console.error('Full error object:', error);
     
     return new Response(JSON.stringify({ 
       success: false, 
       error: `Internal server error: ${error.message}`,
-      stack: error.stack
+      debug: {
+        stack: error.stack,
+        name: error.name
+      }
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
