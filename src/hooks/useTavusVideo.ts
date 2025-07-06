@@ -33,25 +33,29 @@ export const useTavusVideo = () => {
     try {
       console.log('Starting Tavus audio session for:', therapistName);
       
-      // Optimized Supabase function call with timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
-      
-      const { data, error } = await supabase.functions.invoke('tavus-video', {
+      // Call Supabase function with better error handling
+      const { data, error: functionError } = await supabase.functions.invoke('tavus-video', {
         body: {
           action: 'create',
           therapistName: therapistName
         }
       });
 
-      clearTimeout(timeoutId);
+      console.log('Supabase function response:', { data, error: functionError });
 
-      if (error) {
-        throw new Error(error.message);
+      if (functionError) {
+        console.error('Supabase function error:', functionError);
+        throw new Error(`Function call failed: ${functionError.message}`);
+      }
+
+      if (!data) {
+        throw new Error('No data returned from function');
       }
 
       if (!data.success) {
-        throw new Error(data.error || 'Failed to create Tavus session');
+        const errorMsg = data.error || 'Unknown error from Tavus API';
+        console.error('Tavus API error:', data);
+        throw new Error(errorMsg);
       }
 
       const tavusSession: TavusSession = {
@@ -72,12 +76,12 @@ export const useTavusVideo = () => {
       return tavusSession;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      console.error('Error creating Tavus session:', errorMessage);
+      console.error('Error creating Tavus session:', errorMessage, err);
       setError(errorMessage);
       
       toast({
         title: "连接失败",
-        description: "无法建立AI语音会话，请重试",
+        description: `无法建立AI语音会话: ${errorMessage}`,
         variant: "destructive"
       });
       

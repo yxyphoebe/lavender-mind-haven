@@ -5,7 +5,7 @@ import { useTherapist } from '@/hooks/useTherapists';
 import { useTavusVideo } from '@/hooks/useTavusVideo';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import { Loader2, Heart, Zap, Star } from 'lucide-react';
+import { Loader2, Heart, Zap, Star, AlertCircle } from 'lucide-react';
 import DailyVideoCall from './DailyVideoCall';
 
 const VideoChat = () => {
@@ -137,10 +137,14 @@ const VideoChat = () => {
           准备开始一场宁静的心灵对话
         </p>
 
-        {/* Connection status */}
+        {/* Error display */}
         {error && (
-          <div className="mb-6 p-4 bg-red-900/50 border border-red-700/50 rounded-2xl">
-            <p className="text-red-300 text-sm">{error}</p>
+          <div className="mb-6 p-4 bg-red-900/50 border border-red-700/50 rounded-2xl flex items-center space-x-3">
+            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+            <div className="text-left">
+              <p className="text-red-300 text-sm font-medium">连接失败</p>
+              <p className="text-red-400 text-xs mt-1">{error}</p>
+            </div>
           </div>
         )}
 
