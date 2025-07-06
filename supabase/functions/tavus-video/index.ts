@@ -14,24 +14,90 @@ serve(async (req) => {
 
   try {
     const { action, conversationId, therapistName } = await req.json();
+    
+    // Check environment variables
     const tavusApiKey = Deno.env.get('TAVUS_API_KEY');
     const tavusReplicaId = Deno.env.get('TAVUS_REPLICA_ID');
     const tavusPersonaId = Deno.env.get('TAVUS_PERSONA_ID');
 
+    console.log('Environment check:', {
+      hasApiKey: !!tavusApiKey,
+      hasReplicaId: !!tavusReplicaId,
+      hasPersonaId: !!tavusPersonaId,
+      action,
+      therapistName
+    });
+
     if (!tavusApiKey) {
-      throw new Error('TAVUS_API_KEY not configured');
+      console.error('TAVUS_API_KEY is missing');
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'TAVUS_API_KEY not configured. Please set up your Tavus API key in the Edge Function secrets.' 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     if (!tavusReplicaId) {
-      throw new Error('TAVUS_REPLICA_ID not configured');
+      console.error('TAVUS_REPLICA_ID is missing');
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'TAVUS_REPLICA_ID not configured. Please set up your Tavus Replica ID in the Edge Function secrets.' 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     if (!tavusPersonaId) {
-      throw new Error('TAVUS_PERSONA_ID not configured');
+      console.error('TAVUS_PERSONA_ID is missing');
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'TAVUS_PERSONA_ID not configured. Please set up your Tavus Persona ID in the Edge Function secrets.' 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     if (action === 'create') {
       console.log('Creating Tavus conversation for therapist:', therapistName);
+      
+      const requestBody = {
+        replica_id: tavusReplicaId,
+        persona_id: tavusPersonaId,
+        properties: {
+          // Optimized for low latency
+          max_call_duration: 3600,
+          participant_left_timeout: 5, // Reduced from 10
+          participant_absent_timeout: 15, // Reduced from 30
+          enable_recording: false,
+          enable_transcription: false,
+          language: 'english',
+          // Low latency audio settings
+          audio_settings: {
+            bitrate: 'high', // Higher bitrate for better quality/speed tradeoff
+            sample_rate: 48000, // Optimal sample rate
+            channels: 1, // Mono for lower latency
+            codec: 'opus' // Opus codec for low latency
+          },
+          // Video optimization
+          video_settings: {
+            resolution: '720p', // Balance between quality and latency
+            framerate: 30,
+            bitrate: 'adaptive' // Adaptive bitrate for network conditions
+          },
+          // Network optimization
+          connection_settings: {
+            ice_transport_policy: 'all',
+            bundle_policy: 'max-bundle',
+            rtcp_mux_policy: 'require'
+          }
+        }
+      };
+
+      console.log('Sending request to Tavus API with body:', JSON.stringify(requestBody, null, 2));
       
       const response = await fetch('https://tavusapi.com/v2/conversations', {
         method: 'POST',
@@ -39,48 +105,48 @@ serve(async (req) => {
           'x-api-key': tavusApiKey,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          replica_id: tavusReplicaId,
-          persona_id: tavusPersonaId,
-          properties: {
-            // Optimized for low latency
-            max_call_duration: 3600,
-            participant_left_timeout: 5, // Reduced from 10
-            participant_absent_timeout: 15, // Reduced from 30
-            enable_recording: false,
-            enable_transcription: false,
-            language: 'english',
-            // Low latency audio settings
-            audio_settings: {
-              bitrate: 'high', // Higher bitrate for better quality/speed tradeoff
-              sample_rate: 48000, // Optimal sample rate
-              channels: 1, // Mono for lower latency
-              codec: 'opus' // Opus codec for low latency
-            },
-            // Video optimization
-            video_settings: {
-              resolution: '720p', // Balance between quality and latency
-              framerate: 30,
-              bitrate: 'adaptive' // Adaptive bitrate for network conditions
-            },
-            // Network optimization
-            connection_settings: {
-              ice_transport_policy: 'all',
-              bundle_policy: 'max-bundle',
-              rtcp_mux_policy: 'require'
-            }
-          }
-        }),
+        body: JSON.stringify(requestBody),
       });
+
+      console.log('Tavus API response status:', response.status);
+      console.log('Tavus API response headers:', Object.fromEntries(response.headers.entries()));
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Tavus API error:', response.status, errorText);
-        throw new Error(`Failed to create conversation: ${response.status}`);
+        console.error('Tavus API error response:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText
+        });
+        
+        let errorMessage = `Failed to create conversation: ${response.status}`;
+        
+        // Try to parse error details if possible
+        try {
+          const errorData = JSON.parse(errorText);
+          if (errorData.message) {
+            errorMessage += ` - ${errorData.message}`;
+          }
+        } catch (e) {
+          errorMessage += ` - ${errorText}`;
+        }
+        
+        return new Response(JSON.stringify({ 
+          success: false, 
+          error: errorMessage,
+          details: {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText
+          }
+        }), {
+          status: response.status,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
       }
 
       const data = await response.json();
-      console.log('Tavus conversation created:', data.conversation_id);
+      console.log('Tavus conversation created successfully:', data);
       
       return new Response(JSON.stringify({
         success: true,
@@ -94,6 +160,16 @@ serve(async (req) => {
     } else if (action === 'end') {
       console.log('Ending Tavus conversation:', conversationId);
       
+      if (!conversationId) {
+        return new Response(JSON.stringify({ 
+          success: false, 
+          error: 'Conversation ID is required to end a conversation' 
+        }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
       const response = await fetch(`https://tavusapi.com/v2/conversations/${conversationId}`, {
         method: 'DELETE',
         headers: {
@@ -101,13 +177,21 @@ serve(async (req) => {
         },
       });
 
+      console.log('End conversation response status:', response.status);
+
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Failed to end conversation:', response.status, errorText);
-        throw new Error(`Failed to end conversation: ${response.status}`);
+        console.error('Failed to end conversation:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText
+        });
+        
+        // Don't throw error for end conversation - it's not critical
+        console.log('Continuing despite end conversation error');
       }
 
-      console.log('Tavus conversation ended successfully');
+      console.log('Tavus conversation ended successfully (or was already ended)');
       
       return new Response(JSON.stringify({
         success: true,
@@ -117,13 +201,22 @@ serve(async (req) => {
       });
     }
 
-    throw new Error('Invalid action specified');
+    return new Response(JSON.stringify({ 
+      success: false, 
+      error: 'Invalid action specified. Use "create" or "end".' 
+    }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
 
   } catch (error) {
     console.error('Error in tavus-video function:', error);
+    console.error('Error stack:', error.stack);
+    
     return new Response(JSON.stringify({ 
       success: false, 
-      error: error.message 
+      error: `Internal server error: ${error.message}`,
+      stack: error.stack
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
