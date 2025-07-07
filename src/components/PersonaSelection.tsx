@@ -83,7 +83,7 @@ const PersonaSelection = () => {
               <Heart className="w-6 h-6 text-white" />
             </div>
           </div>
-          <h1 className="font-display text-xl font-bold gradient-text mb-1">
+          <h1 className="font-display text-xl font-bold text-neutral-800 mb-1">
             Meet Your Perfect Matches
           </h1>
           <p className="text-slate-600 font-light text-sm leading-relaxed">

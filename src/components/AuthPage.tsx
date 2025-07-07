@@ -37,7 +37,7 @@ const AuthPage = () => {
               <Flower2 className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="font-display text-3xl font-bold gradient-text mb-2">
+          <h1 className="font-display text-3xl font-bold text-neutral-800 mb-2">
             Welcome to Mindful AI
           </h1>
           <p className="text-slate-600 font-light">

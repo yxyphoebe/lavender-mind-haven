@@ -69,7 +69,7 @@ const Profile = () => {
             <ArrowLeft className="w-5 h-5 text-blue-600" />
           </Button>
           
-          <h1 className="font-display text-3xl font-bold gradient-text">
+          <h1 className="font-display text-3xl font-bold text-neutral-800">
             Profile
           </h1>
           

@@ -217,7 +217,7 @@
 
 @layer components {
   .gradient-text {
-    @apply bg-gradient-to-r from-gradient-600 via-ocean-500 to-ocean-400 bg-clip-text text-transparent;
+    @apply text-neutral-800 font-display font-semibold;
   }
 
   .glass-effect {

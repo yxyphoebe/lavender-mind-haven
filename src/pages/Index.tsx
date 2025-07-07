@@ -29,7 +29,7 @@ const Index = () => {
         <div className="text-center px-6 relative">
           {/* Main text animation */}
           <div className={`transition-all duration-1000 ${animationPhase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <h1 className="font-display text-4xl md:text-6xl font-bold gradient-text mb-4 leading-tight">
+            <h1 className="font-display text-4xl md:text-6xl font-bold text-neutral-800 mb-4 leading-tight">
               Mindful AI
             </h1>
             <p className={`text-lg md:text-xl text-slate-600 font-light transition-all duration-1000 delay-300 ${animationPhase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
@@ -80,7 +80,7 @@ const Index = () => {
       {/* Hero Section */}
       <div className="container mx-auto px-6 py-12 text-center animate-fade-in">
         <div className="max-w-4xl mx-auto">
-          <h1 className="font-display text-5xl md:text-7xl font-bold gradient-text mb-6 leading-tight">
+          <h1 className="font-display text-5xl md:text-7xl font-bold text-neutral-800 mb-6 leading-tight">
             Mindful AI
           </h1>
           <p className="text-xl md:text-2xl text-slate-600 mb-8 font-light leading-relaxed">

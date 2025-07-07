@@ -96,7 +96,7 @@ const GrowthTimeline = () => {
               <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
             </Button>
             <div>
-              <h1 className="font-display text-lg sm:text-2xl font-bold gradient-text">Growth Timeline</h1>
+              <h1 className="font-display text-lg sm:text-2xl font-bold text-neutral-800">Growth Timeline</h1>
               <p className="text-xs sm:text-sm text-slate-600">Your journey of healing and growth</p>
             </div>
           </div>
@@ -173,7 +173,7 @@ const GrowthTimeline = () => {
             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-violet-400 to-blue-400 rounded-3xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
               <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
-            <h3 className="font-display text-xl sm:text-2xl font-bold gradient-text mb-2 sm:mb-3">
+            <h3 className="font-display text-xl sm:text-2xl font-bold text-neutral-800 mb-2 sm:mb-3">
               You're Making Beautiful Progress
             </h3>
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto">
