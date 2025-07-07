@@ -3,7 +3,7 @@ import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { DailyProvider, useDaily, useLocalParticipant } from '@daily-co/daily-react';
 import Daily from '@daily-co/daily-js';
 import { Button } from '@/components/ui/button';
-import { PhoneOff, Mic, MicOff, Video, VideoOff } from 'lucide-react';
+import { PhoneOff } from 'lucide-react';
 
 interface DailyVideoCallProps {
   roomUrl: string;
@@ -13,8 +13,6 @@ interface DailyVideoCallProps {
 const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
   const daily = useDaily();
   const localParticipant = useLocalParticipant();
-  const [isAudioMuted, setIsAudioMuted] = useState(false);
-  const [isVideoMuted, setIsVideoMuted] = useState(false);
   const [remoteParticipant, setRemoteParticipant] = useState<any>(null);
 
   // Get remote participant manually since useParticipants doesn't exist
@@ -42,22 +40,6 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
     };
   }, [daily]);
 
-  const toggleAudio = useCallback(() => {
-    if (daily) {
-      const newMuteState = !isAudioMuted;
-      daily.setLocalAudio(!newMuteState);
-      setIsAudioMuted(newMuteState);
-    }
-  }, [daily, isAudioMuted]);
-
-  const toggleVideo = useCallback(() => {
-    if (daily) {
-      const newMuteState = !isVideoMuted;
-      daily.setLocalVideo(!newMuteState);
-      setIsVideoMuted(newMuteState);
-    }
-  }, [daily, isVideoMuted]);
-
   const handleLeave = useCallback(() => {
     if (daily) {
       daily.leave();
@@ -72,8 +54,6 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
       setTimeout(() => {
         daily.setLocalAudio(true);
         daily.setLocalVideo(true);
-        setIsAudioMuted(false);
-        setIsVideoMuted(false);
       }, 200);
       
       // Configure for low latency
@@ -183,39 +163,13 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
       </div>
 
       {/* Controls */}
-      <div className="mt-8 flex items-center space-x-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleAudio}
-          className={`w-14 h-14 rounded-full transition-all duration-300 ${
-            isAudioMuted 
-              ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg' 
-              : 'bg-white/80 hover:bg-white text-slate-700 shadow-md'
-          }`}
-        >
-          {isAudioMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-        </Button>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleVideo}
-          className={`w-14 h-14 rounded-full transition-all duration-300 ${
-            isVideoMuted 
-              ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg' 
-              : 'bg-white/80 hover:bg-white text-slate-700 shadow-md'
-          }`}
-        >
-          {isVideoMuted ? <VideoOff className="w-6 h-6" /> : <Video className="w-6 h-6" />}
-        </Button>
-
+      <div className="mt-8 flex items-center justify-center">
         <Button
           onClick={handleLeave}
-          className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 shadow-lg"
+          className="bg-gradient-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600 text-white px-10 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl border border-rose-400/50"
         >
-          <PhoneOff className="w-5 h-5 mr-2" />
-          Leave Session
+          <PhoneOff className="w-6 h-6 mr-3" />
+          End Call
         </Button>
       </div>
 
