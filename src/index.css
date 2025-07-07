@@ -6,44 +6,44 @@
 
 @layer base {
   :root {
-    --background: 248 250 255;
-    --foreground: 44 42 51;
+    --background: 253 252 255;
+    --foreground: 107 99 120;
 
     --card: 255 255 255;
-    --card-foreground: 44 42 51;
+    --card-foreground: 107 99 120;
 
     --popover: 255 255 255;
-    --popover-foreground: 44 42 51;
+    --popover-foreground: 107 99 120;
 
-    --primary: 139 92 246;
-    --primary-foreground: 255 255 255;
+    --primary: 221 212 255;
+    --primary-foreground: 75 65 90;
 
-    --secondary: 243 240 255;
-    --secondary-foreground: 124 58 237;
+    --secondary: 249 247 255;
+    --secondary-foreground: 107 99 120;
 
-    --muted: 248 246 252;
-    --muted-foreground: 120 113 108;
+    --muted: 253 252 255;
+    --muted-foreground: 148 140 165;
 
-    --accent: 243 240 255;
-    --accent-foreground: 124 58 237;
+    --accent: 249 247 255;
+    --accent-foreground: 107 99 120;
 
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
 
-    --border: 233 229 255;
-    --input: 233 229 255;
-    --ring: 139 92 246;
+    --border: 243 240 255;
+    --input: 243 240 255;
+    --ring: 221 212 255;
 
     --radius: 1rem;
 
     --sidebar-background: 255 255 255;
-    --sidebar-foreground: 44 42 51;
-    --sidebar-primary: 139 92 246;
-    --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 243 240 255;
-    --sidebar-accent-foreground: 124 58 237;
-    --sidebar-border: 233 229 255;
-    --sidebar-ring: 139 92 246;
+    --sidebar-foreground: 107 99 120;
+    --sidebar-primary: 221 212 255;
+    --sidebar-primary-foreground: 75 65 90;
+    --sidebar-accent: 249 247 255;
+    --sidebar-accent-foreground: 107 99 120;
+    --sidebar-border: 243 240 255;
+    --sidebar-ring: 221 212 255;
   }
 
   .dark {
@@ -92,7 +92,7 @@
 
   body {
     @apply bg-background text-foreground font-sans;
-    background: linear-gradient(135deg, #f8f7ff 0%, #f0edff 15%, #e4deff 35%, #dbeafe 65%, #bfdbfe 85%, #eff6ff 100%);
+    background: linear-gradient(135deg, #fdfcff 0%, #f9f7ff 15%, #f3f0ff 35%, #f7fcff 65%, #eff8ff 85%, #fdfeff 100%);
     min-height: 100vh;
     /* Mobile-specific improvements */
     -webkit-font-smoothing: antialiased;
@@ -127,12 +127,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgb(167, 139, 250);
+    background: rgb(221, 212, 255);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgb(139, 92, 246);
+    background: rgb(209, 196, 255);
   }
 
   /* Mobile touch improvements */
@@ -225,11 +225,11 @@
   }
 
   .zen-shadow {
-    box-shadow: 0 10px 40px rgba(139, 92, 246, 0.15), 0 4px 12px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 10px 40px rgba(221, 212, 255, 0.15), 0 4px 12px rgba(207, 196, 255, 0.1);
   }
 
   .bloom-shadow {
-    box-shadow: 0 0 30px rgba(167, 139, 250, 0.3), 0 0 60px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 30px rgba(221, 212, 255, 0.3), 0 0 60px rgba(207, 196, 255, 0.15);
   }
 
   /* Mobile-optimized components */
