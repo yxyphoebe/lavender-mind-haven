@@ -83,11 +83,6 @@ const VideoChat = () => {
     setIsInCall(false);
     setRoomUrl(null);
     
-    toast({
-      title: "Session Ended",
-      description: "Intelligent conversation ended successfully"
-    });
-    
     navigate('/user-center');
   };
 
