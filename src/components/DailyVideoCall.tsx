@@ -1,9 +1,9 @@
 
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react';
 import { DailyProvider, useDaily, useLocalParticipant } from '@daily-co/daily-react';
 import Daily from '@daily-co/daily-js';
 import { Button } from '@/components/ui/button';
-import { PhoneOff } from 'lucide-react';
+import { PhoneOff, Eye, EyeOff, Move } from 'lucide-react';
 
 interface DailyVideoCallProps {
   roomUrl: string;
@@ -14,6 +14,13 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
   const daily = useDaily();
   const localParticipant = useLocalParticipant();
   const [remoteParticipant, setRemoteParticipant] = useState<any>(null);
+  
+  // Local video controls
+  const [showLocalVideo, setShowLocalVideo] = useState(true);
+  const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef<HTMLDivElement>(null);
+  const dragOffset = useRef({ x: 0, y: 0 });
 
   // Get remote participant manually since useParticipants doesn't exist
   useEffect(() => {
@@ -39,6 +46,52 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
       daily.off('participant-updated', updateParticipants);
     };
   }, [daily]);
+
+  // Drag handlers
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (!dragRef.current) return;
+    setIsDragging(true);
+    const rect = dragRef.current.getBoundingClientRect();
+    dragOffset.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  }, []);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging || !dragRef.current) return;
+    const container = dragRef.current.parentElement;
+    if (!container) return;
+    
+    const containerRect = container.getBoundingClientRect();
+    const videoRect = dragRef.current.getBoundingClientRect();
+    
+    const newX = Math.max(0, Math.min(
+      containerRect.width - videoRect.width,
+      e.clientX - containerRect.left - dragOffset.current.x
+    ));
+    const newY = Math.max(0, Math.min(
+      containerRect.height - videoRect.height,
+      e.clientY - containerRect.top - dragOffset.current.y
+    ));
+    
+    setDragPosition({ x: newX, y: newY });
+  }, [isDragging]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp]);
 
   const handleLeave = useCallback(() => {
     if (daily) {
@@ -73,9 +126,26 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
   const remoteAudio = remoteParticipant?.audioTrack;
 
   const localVideoElement = useMemo(() => {
-    if (!localVideo) return null;
+    if (!localVideo || !showLocalVideo) return null;
     return (
-      <div className="absolute bottom-6 right-6 w-48 h-36 bg-slate-900 rounded-2xl overflow-hidden shadow-xl border-2 border-white/30">
+      <div 
+        ref={dragRef}
+        className={`absolute w-48 h-36 bg-slate-900 rounded-2xl overflow-hidden shadow-xl border-2 border-white/30 cursor-move select-none transition-all duration-200 ${
+          isDragging ? 'scale-105 shadow-2xl' : ''
+        }`}
+        style={{
+          left: `${dragPosition.x}px`,
+          top: `${dragPosition.y}px`,
+          right: dragPosition.x === 0 ? '24px' : 'auto',
+          bottom: dragPosition.x === 0 && dragPosition.y === 0 ? '24px' : 'auto'
+        }}
+        onMouseDown={handleMouseDown}
+      >
+        <div className="absolute top-2 left-2 z-10 opacity-60 hover:opacity-100 transition-opacity">
+          <div className="bg-black/50 rounded-full p-1">
+            <Move className="w-4 h-4 text-white" />
+          </div>
+        </div>
         <video
           ref={(ref) => {
             if (ref && localVideo) {
@@ -89,7 +159,7 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
         />
       </div>
     );
-  }, [localVideo]);
+  }, [localVideo, showLocalVideo, dragPosition, isDragging, handleMouseDown]);
 
   const remoteVideoElement = useMemo(() => {
     if (!remoteVideo) return null;
@@ -163,7 +233,25 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
       </div>
 
       {/* Controls */}
-      <div className="mt-8 flex items-center justify-center">
+      <div className="mt-8 flex items-center justify-center space-x-4">
+        <Button
+          onClick={() => setShowLocalVideo(!showLocalVideo)}
+          variant="outline"
+          className="bg-white/80 hover:bg-white text-slate-700 px-6 py-3 rounded-2xl font-medium transition-all duration-300 hover:scale-105 shadow-lg border border-slate-200"
+        >
+          {showLocalVideo ? (
+            <>
+              <EyeOff className="w-5 h-5 mr-2" />
+              Hide Self
+            </>
+          ) : (
+            <>
+              <Eye className="w-5 h-5 mr-2" />
+              Show Self
+            </>
+          )}
+        </Button>
+        
         <Button
           onClick={handleLeave}
           className="bg-gradient-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600 text-white px-10 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl border border-rose-400/50"
