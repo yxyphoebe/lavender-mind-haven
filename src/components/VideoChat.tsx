@@ -58,11 +58,6 @@ const VideoChat = () => {
       if (tavusSession && tavusSession.conversation_url) {
         setRoomUrl(tavusSession.conversation_url);
         setIsInCall(true);
-        
-        toast({
-          title: "Session Started",
-          description: `Intelligent conversation with ${therapist.name} established`
-        });
       } else {
         throw new Error('No conversation URL received from Tavus');
       }
