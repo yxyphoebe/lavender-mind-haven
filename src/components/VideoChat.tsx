@@ -152,7 +152,7 @@ const VideoChat = () => {
         <Button
           onClick={handleStartCall}
           disabled={!therapist || isConnecting}
-          className="bg-gradient-to-r from-sage-400 to-lavender-400 hover:from-sage-500 hover:to-lavender-500 text-white px-12 py-6 rounded-2xl text-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg border border-sage-300 disabled:opacity-50"
+          className="bg-gradient-to-r from-purple-300 to-purple-400 hover:from-purple-400 hover:to-purple-500 text-white px-12 py-6 rounded-2xl text-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg border border-purple-200 disabled:opacity-50"
         >
           {isConnecting ? (
             <>
