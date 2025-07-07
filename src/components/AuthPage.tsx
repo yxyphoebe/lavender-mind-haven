@@ -37,10 +37,10 @@ const AuthPage = () => {
               <Flower2 className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="font-display text-3xl font-bold text-neutral-800 mb-2">
+          <h1 className="font-display text-3xl font-bold text-foreground mb-2">
             Welcome to Mindful AI
           </h1>
-          <p className="text-slate-600 font-light">
+          <p className="text-muted-foreground font-light">
             Your journey to wellness begins here
           </p>
         </div>
@@ -59,11 +59,11 @@ const AuthPage = () => {
               </TabsList>
 
               <TabsContent value="login" className="mt-6">
-                <CardTitle className="text-center text-slate-800 mb-6">Welcome back</CardTitle>
+                <CardTitle className="text-center text-foreground mb-6">Welcome back</CardTitle>
                 <CardContent className="space-y-4 p-0">
                   <div className="space-y-4">
                     <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input 
                         type="email" 
                         placeholder="Email address"
@@ -79,7 +79,7 @@ const AuthPage = () => {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
+                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -97,11 +97,11 @@ const AuthPage = () => {
               </TabsContent>
 
               <TabsContent value="signup" className="mt-6">
-                <CardTitle className="text-center text-slate-800 mb-6">Create account</CardTitle>
+                <CardTitle className="text-center text-foreground mb-6">Create account</CardTitle>
                 <CardContent className="space-y-4 p-0">
                   <div className="space-y-4">
                     <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input 
                         type="email" 
                         placeholder="Email address"
@@ -117,7 +117,7 @@ const AuthPage = () => {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
+                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -146,7 +146,7 @@ const AuthPage = () => {
 
         {/* Social Auth */}
         <div className="mt-6 space-y-3">
-          <div className="flex items-center justify-center space-x-4 text-sm text-slate-500">
+          <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
             <div className="h-px bg-blue-200 flex-1"></div>
             <span>or continue with</span>
             <div className="h-px bg-blue-200 flex-1"></div>
@@ -189,7 +189,7 @@ const AuthPage = () => {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-sm text-slate-500 mt-6 leading-relaxed">
+        <p className="text-center text-sm text-muted-foreground mt-6 leading-relaxed">
           By continuing, you agree to our{' '}
           <a href="#" className="text-blue-600 hover:underline">Terms of Service</a>
           {' '}and{' '}
