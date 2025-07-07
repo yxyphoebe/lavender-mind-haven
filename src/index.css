@@ -92,7 +92,7 @@
 
   body {
     @apply bg-background text-foreground font-sans;
-    background: linear-gradient(135deg, #f8faff 0%, #f0f2ff 25%, #e8ebff 50%, #dfe3ff 75%, #b8d4ff 100%);
+    background: linear-gradient(135deg, #f8f7ff 0%, #f0edff 15%, #e4deff 35%, #dbeafe 65%, #bfdbfe 85%, #eff6ff 100%);
     min-height: 100vh;
     /* Mobile-specific improvements */
     -webkit-font-smoothing: antialiased;
@@ -217,7 +217,7 @@
 
 @layer components {
   .gradient-text {
-    @apply bg-gradient-to-r from-purple-600 via-blue-500 to-sky-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-gradient-600 via-ocean-500 to-ocean-400 bg-clip-text text-transparent;
   }
 
   .glass-effect {

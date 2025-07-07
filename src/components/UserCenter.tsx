@@ -35,10 +35,10 @@ const UserCenter = () => {
   };
 
   const moodOptions = [
-    { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-rose-100 to-rose-200 text-rose-700' },
-    { id: 'bright', label: 'Bright', icon: '✨', color: 'from-purple-100 to-purple-200 text-purple-700' },
-    { id: 'calm', label: 'Calm', icon: '🌊', color: 'from-blue-100 to-blue-200 text-blue-700' },
-    { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-slate-100 to-slate-200 text-slate-700' }
+    { id: 'peaceful', label: 'Peaceful', icon: '🌸', color: 'from-gradient-100 to-gradient-200 text-gradient-700' },
+    { id: 'bright', label: 'Bright', icon: '✨', color: 'from-gradient-100 to-ocean-200 text-gradient-700' },
+    { id: 'calm', label: 'Calm', icon: '🌊', color: 'from-ocean-100 to-ocean-200 text-ocean-700' },
+    { id: 'heavy', label: 'Heavy', icon: '☁️', color: 'from-neutral-100 to-neutral-200 text-neutral-700' }
   ];
 
   const mainActions = [
@@ -46,28 +46,28 @@ const UserCenter = () => {
       icon: MessageCircle,
       title: 'Start Conversation',
       description: 'Connect through mindful dialogue',
-      color: 'from-violet-400 to-violet-500',
+      color: 'from-gradient-400 to-gradient-500',
       action: () => navigate('/chat')
     },
     {
       icon: Video,
       title: 'Video Companion',
       description: 'Experience deeper connection',
-      color: 'from-blue-400 to-blue-500',
+      color: 'from-ocean-400 to-ocean-500',
       action: () => navigate('/video-call')
     },
     {
       icon: TrendingUp,
       title: 'Growth Journey',
       description: 'Track your progress',
-      color: 'from-indigo-400 to-indigo-500',
+      color: 'from-gradient-400 to-ocean-500',
       action: () => navigate('/growth')
     }
   ];
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gradient-50 via-white to-ocean-50 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
@@ -75,9 +75,9 @@ const UserCenter = () => {
 
   if (!therapist) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gradient-50 via-white to-ocean-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-lg text-gray-600 mb-4">Please select a therapist first</p>
+          <p className="text-lg text-neutral-600 mb-4">Please select a therapist first</p>
           <Button onClick={() => navigate('/persona-selection')}>
             Choose Therapist
           </Button>
@@ -87,7 +87,7 @@ const UserCenter = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gradient-50 via-white to-ocean-50">
       <div className="container mx-auto px-4 py-6 max-w-md relative">
         {/* Profile Button - Top Right */}
         <div className="absolute top-6 right-4 z-10">
@@ -97,7 +97,7 @@ const UserCenter = () => {
             onClick={() => navigate('/profile')}
             className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white shadow-lg"
           >
-            <User className="w-5 h-5 text-slate-600" />
+            <User className="w-5 h-5 text-neutral-600" />
           </Button>
         </div>
 
@@ -110,7 +110,7 @@ const UserCenter = () => {
                 alt={`${therapist.name} avatar`}
                 className="object-cover"
               />
-              <AvatarFallback className="bg-gradient-to-br from-rose-400 to-pink-500 text-white text-4xl">
+              <AvatarFallback className="bg-gradient-to-br from-gradient-400 to-ocean-500 text-white text-4xl">
                 {therapist.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
@@ -119,21 +119,21 @@ const UserCenter = () => {
           <h1 className="font-display text-3xl font-bold gradient-text mb-2">
             {getGreeting()}, {user.name}
           </h1>
-          <p className="text-slate-600 text-lg mb-4">
+          <p className="text-neutral-600 text-lg mb-4">
             I'm {therapist.name}, ready to support your journey
           </p>
           
           {/* Streak indicator */}
-          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 backdrop-blur-sm rounded-full px-4 py-2 zen-shadow border border-blue-100">
-            <Sparkles className="w-4 h-4 text-purple-500" />
-            <span className="text-sm text-slate-700 font-medium">{user.currentStreak} day streak</span>
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-gradient-50 to-ocean-50 backdrop-blur-sm rounded-full px-4 py-2 zen-shadow border border-gradient-100">
+            <Sparkles className="w-4 h-4 text-gradient-500" />
+            <span className="text-sm text-neutral-700 font-medium">{user.currentStreak} day streak</span>
           </div>
         </div>
 
         {/* Quick Mood Check */}
-        <Card className="mb-8 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
+        <Card className="mb-8 bg-gradient-to-br from-gradient-50 to-ocean-50 border border-gradient-100 zen-shadow">
           <CardContent className="p-6">
-            <h3 className="font-display text-lg font-semibold text-slate-800 mb-4 text-center">
+            <h3 className="font-display text-lg font-semibold text-neutral-800 mb-4 text-center">
               How are you feeling today?
             </h3>
             
@@ -145,7 +145,7 @@ const UserCenter = () => {
                   onClick={() => setSelectedMood(mood.id)}
                   className={`h-auto p-3 justify-start bg-gradient-to-r ${
                     selectedMood === mood.id 
-                      ? 'from-violet-500 to-blue-500 text-white' 
+                      ? 'from-gradient-500 to-ocean-500 text-white' 
                       : mood.color
                   } border-0 hover:scale-105 transition-all duration-300`}
                 >
@@ -162,7 +162,7 @@ const UserCenter = () => {
           {mainActions.map((action) => (
             <Card
               key={action.title}
-              className="cursor-pointer transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow"
+              className="cursor-pointer transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-gradient-50 to-ocean-50 border border-gradient-100 zen-shadow"
               onClick={action.action}
             >
               <CardContent className="p-6">
@@ -171,12 +171,12 @@ const UserCenter = () => {
                     <action.icon className="w-7 h-7 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-display text-lg font-semibold text-slate-800 mb-1">
+                    <h3 className="font-display text-lg font-semibold text-neutral-800 mb-1">
                       {action.title}
                     </h3>
-                    <p className="text-sm text-slate-600">{action.description}</p>
+                    <p className="text-sm text-neutral-600">{action.description}</p>
                   </div>
-                  <div className="text-slate-400">
+                  <div className="text-neutral-400">
                     <Sparkles className="w-5 h-5" />
                   </div>
                 </div>
