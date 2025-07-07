@@ -63,30 +63,30 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Soft pastel gradient color system
-				gradient: {
-					50: '#fdfcff',
-					100: '#f9f7ff',
-					200: '#f3f0ff',
-					300: '#ede8ff',
-					400: '#e6dfff',
-					500: '#ddd4ff',
-					600: '#d1c4ff',
-					700: '#c4b5ff',
-					800: '#b5a3ff',
-					900: '#a690ff',
+				// MINDFUL AI 精确色彩系统 - 基于参考图片
+				mindful: {
+					50: '#faf9ff',
+					100: '#f3f1ff', 
+					200: '#ede8ff',
+					300: '#ddd4ff',
+					400: '#c4b5ff', // #C4B5FF from reference
+					500: '#a78bfa', // #A78BFA - 主紫色
+					600: '#8c76ff', // #8C76FF from reference
+					700: '#7c3aed',
+					800: '#6b21a8',
+					900: '#581c87',
 				},
-				ocean: {
-					50: '#fdfeff',
-					100: '#f7fcff',
-					200: '#eff8ff',
-					300: '#e5f3ff',
-					400: '#d9edff',
-					500: '#cce6ff',
-					600: '#bfddff',
-					700: '#b0d3ff',
-					800: '#9fc7ff',
-					900: '#8db9ff',
+				enso: {
+					50: '#f0f9ff',
+					100: '#e0f2fe',
+					200: '#bae6fd', 
+					300: '#7dd3fc',
+					400: '#38bdf8',
+					500: '#60a5fa', // #60A5FA - 主蓝色
+					600: '#3b82f6',
+					700: '#2563eb',
+					800: '#1d4ed8',
+					900: '#1e3a8a',
 				},
 				neutral: {
 					50: '#f8fafc',

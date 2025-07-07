@@ -92,7 +92,7 @@
 
   body {
     @apply bg-background text-foreground font-sans;
-    background: linear-gradient(135deg, #fdfcff 0%, #f9f7ff 15%, #f3f0ff 35%, #f7fcff 65%, #eff8ff 85%, #fdfeff 100%);
+    background: linear-gradient(135deg, #faf9ff 0%, #f3f1ff 15%, #ede8ff 35%, #f0f9ff 65%, #e0f2fe 85%, #faf9ff 100%);
     min-height: 100vh;
     /* Mobile-specific improvements */
     -webkit-font-smoothing: antialiased;
@@ -216,8 +216,16 @@
 }
 
 @layer components {
-  .gradient-text {
-    @apply text-neutral-800 font-display font-semibold;
+  .mindful-gradient-text {
+    @apply bg-gradient-to-r from-mindful-500 to-enso-500 bg-clip-text text-transparent font-display font-bold;
+  }
+
+  .mindful-title {
+    @apply text-4xl md:text-6xl lg:text-7xl font-display font-bold tracking-wide;
+    background: linear-gradient(135deg, #A78BFA 0%, #60A5FA 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .glass-effect {

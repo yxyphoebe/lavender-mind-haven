@@ -9,14 +9,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-gradient-400 to-ocean-500 text-white hover:from-gradient-500 hover:to-ocean-600 shadow-lg hover:shadow-xl",
+        default: "bg-gradient-to-r from-mindful-500 to-enso-500 text-white hover:from-mindful-600 hover:to-enso-600 shadow-lg hover:shadow-xl",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-gradient-200 bg-gradient-50/50 text-neutral-700 hover:bg-gradient-100/80 hover:border-gradient-300",
+          "border-2 border-mindful-300 bg-white/80 text-mindful-700 hover:bg-mindful-50 hover:border-mindful-400",
         secondary:
-          "bg-gradient-to-r from-secondary to-gradient-100 text-secondary-foreground hover:from-gradient-100 hover:to-gradient-200",
-        ghost: "hover:bg-gradient-100/60 hover:text-neutral-700",
+          "bg-gradient-to-r from-mindful-100 to-enso-100 text-mindful-800 hover:from-mindful-200 hover:to-enso-200",
+        ghost: "hover:bg-mindful-100/60 hover:text-mindful-700",
         link: "text-neutral-700 underline-offset-4 hover:underline",
       },
       size: {
