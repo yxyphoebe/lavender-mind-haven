@@ -30,8 +30,8 @@ const MindfulLogo: React.FC<MindfulLogoProps> = ({ size = 'md', className = '' }
       >
         <defs>
           <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#A78BFA" />
-            <stop offset="100%" stopColor="#60A5FA" />
+            <stop offset="0%" stopColor="#C8C6FF" />
+            <stop offset="100%" stopColor="#A9D9FF" />
           </linearGradient>
         </defs>
         
