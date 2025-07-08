@@ -35,18 +35,18 @@ const MindfulLogo: React.FC<MindfulLogoProps> = ({ size = 'md', className = '' }
           </linearGradient>
         </defs>
         
-        {/* Enso Circle with gap at bottom right */}
+        {/* Complete Circle with small gap */}
         <path
-          d="M 60 20 A 40 40 0 1 1 85 85"
+          d="M 60 20 A 40 40 0 1 1 58 100 A 40 40 0 0 1 60 20"
           stroke="url(#logoGradient)"
           strokeWidth={strokeWidth[size]}
           fill="none"
           strokeLinecap="round"
         />
         
-        {/* M Letter */}
+        {/* M Letter - centered and properly proportioned */}
         <path
-          d="M 45 45 L 45 75 M 45 45 L 60 62 L 75 45 M 75 45 L 75 75"
+          d="M 45 50 L 45 80 M 45 50 L 60 65 L 75 50 M 75 50 L 75 80"
           stroke="url(#logoGradient)"
           strokeWidth={strokeWidth[size]}
           fill="none"
