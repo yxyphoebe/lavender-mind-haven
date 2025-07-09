@@ -93,19 +93,19 @@ const VideoChat = () => {
 
   // Pre-call interface
   return (
-    <div className="h-screen bg-gradient-to-br from-gradient-50 via-white to-ocean-50 flex flex-col items-center justify-center relative overflow-hidden">
+    <div className="h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex flex-col items-center justify-center relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gradient-100/30 to-ocean-100/20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-mindful-100/30 to-enso-100/20" />
       
       {/* Main content */}
       <div className="relative z-10 text-center max-w-2xl px-8">
         {/* Avatar */}
         <div className={`w-40 h-40 mb-8 mx-auto rounded-full bg-gradient-to-br shadow-lg flex items-center justify-center ${
           currentPersona.color === 'blue' 
-            ? 'from-ocean-200 to-ocean-300' 
+            ? 'from-mindful-200 to-enso-300' 
             : currentPersona.color === 'violet' 
-              ? 'from-gradient-200 to-gradient-300'
-              : 'from-gradient-300 to-ocean-200'
+              ? 'from-mindful-200 to-mindful-300'
+              : 'from-mindful-300 to-enso-200'
         }`}>
           {therapist?.image_url ? (
             <img 
@@ -114,16 +114,16 @@ const VideoChat = () => {
               className="w-full h-full rounded-full object-cover"
             />
           ) : (
-            <IconComponent className="w-20 h-20 text-gradient-600" />
+            <IconComponent className="w-20 h-20 text-mindful-600" />
           )}
         </div>
 
         {/* Title */}
-        <h1 className="text-4xl font-bold text-neutral-800 mb-4">
+        <h1 className="text-4xl font-bold text-mindful-800 mb-4">
           {therapist?.name || `Dr. ${currentPersona.name}`}
         </h1>
         
-        <p className="text-xl text-neutral-600 mb-8 leading-relaxed">
+        <p className="text-xl text-mindful-600 mb-8 leading-relaxed">
           Ready to begin a peaceful mindful conversation
         </p>
 
@@ -142,7 +142,7 @@ const VideoChat = () => {
         <Button
           onClick={handleStartCall}
           disabled={!therapist || isConnecting}
-          className="bg-gradient-to-r from-gradient-400 to-ocean-500 hover:from-gradient-500 hover:to-ocean-600 text-white px-12 py-6 rounded-2xl text-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg border border-gradient-200 disabled:opacity-50"
+          className="bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white px-12 py-6 rounded-2xl text-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg border border-mindful-200 disabled:opacity-50"
         >
           {isConnecting ? (
             <>
@@ -159,9 +159,9 @@ const VideoChat = () => {
       {/* Back button */}
       <button
         onClick={() => navigate('/user-center')}
-        className="absolute top-8 left-8 w-12 h-12 rounded-full bg-gradient-200/80 backdrop-blur-sm hover:bg-gradient-300/80 transition-all duration-300 flex items-center justify-center shadow-lg border border-gradient-300/50"
+        className="absolute top-8 left-8 w-12 h-12 rounded-full bg-mindful-200/80 backdrop-blur-sm hover:bg-mindful-300/80 transition-all duration-300 flex items-center justify-center shadow-lg border border-mindful-300/50"
       >
-        <svg className="w-6 h-6 text-gradient-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-6 h-6 text-mindful-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
