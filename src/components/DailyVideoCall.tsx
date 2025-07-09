@@ -130,7 +130,7 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
     return (
       <div 
         ref={dragRef}
-        className={`absolute w-48 h-36 bg-mindful-900/20 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl border-2 border-mindful-300/30 cursor-move select-none transition-all duration-200 glass-effect ${
+        className={`absolute w-48 h-36 bg-slate-900/20 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl border-2 border-blue-300/30 cursor-move select-none transition-all duration-200 glass-effect ${
           isDragging ? 'scale-105 shadow-2xl' : ''
         }`}
         style={{
@@ -193,19 +193,19 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
   }, [remoteAudio]);
 
   return (
-    <div className="h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex flex-col items-center justify-center p-6">
+    <div className="h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex flex-col items-center justify-center p-6">
       {/* Header Message */}
       <div className="mb-8 text-center">
-        <h2 className="text-2xl font-display font-semibold text-mindful-700 mb-2">
+        <h2 className="text-2xl font-display font-semibold text-slate-700 mb-2">
           Nuva is here with you
         </h2>
-        <p className="text-mindful-600 font-medium">
+        <p className="text-slate-600 font-medium">
           Take a deep breath and let's begin this mindful conversation
         </p>
       </div>
 
       {/* Video Container */}
-      <div className="relative w-full max-w-4xl h-[60vh] bg-mindful-50/30 backdrop-blur-sm rounded-3xl shadow-2xl border border-mindful-200/30 overflow-hidden glass-effect">
+      <div className="relative w-full max-w-4xl h-[60vh] bg-blue-50/30 backdrop-blur-sm rounded-3xl shadow-2xl border border-blue-200/30 overflow-hidden glass-effect">
         {/* Remote Video (Tavus AI) */}
         {remoteVideo && (
           <div className="absolute inset-0">
@@ -223,10 +223,10 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
         {!remoteVideo && (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <div className="w-32 h-32 bg-gradient-to-br from-mindful-400 to-enso-500 rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg">
+              <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg">
                 <span className="text-white text-4xl font-bold">N</span>
               </div>
-              <p className="text-mindful-600 font-medium">Connecting to Nuva...</p>
+              <p className="text-slate-600 font-medium">Connecting to Nuva...</p>
             </div>
           </div>
         )}
@@ -237,7 +237,7 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
         <Button
           onClick={() => setShowLocalVideo(!showLocalVideo)}
           variant="outline"
-          className="bg-mindful-50/80 hover:bg-mindful-100/80 text-mindful-700 px-6 py-3 rounded-2xl font-medium transition-all duration-300 hover:scale-105 shadow-lg border border-mindful-300/50 backdrop-blur-sm"
+          className="bg-blue-50/80 hover:bg-blue-100/80 text-slate-700 px-6 py-3 rounded-2xl font-medium transition-all duration-300 hover:scale-105 shadow-lg border border-blue-300/50 backdrop-blur-sm"
         >
           {showLocalVideo ? (
             <>
@@ -263,7 +263,7 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
 
       {/* Connection Status */}
       <div className="mt-6 text-center">
-        <p className="text-mindful-500 text-sm">
+        <p className="text-slate-500 text-sm">
           {remoteParticipant ? 'Connected' : 'Waiting for connection...'}
         </p>
       </div>
@@ -320,12 +320,12 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave }) => 
 
   if (!callObject) {
     return (
-      <div className="h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex items-center justify-center">
+      <div className="h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-mindful-400 to-enso-500 rounded-full flex items-center justify-center mb-4 mx-auto animate-pulse">
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mb-4 mx-auto animate-pulse">
             <span className="text-white text-xl font-bold">N</span>
           </div>
-          <p className="text-mindful-600 font-medium">Initializing video call...</p>
+          <p className="text-slate-600 font-medium">Initializing video call...</p>
         </div>
       </div>
     );
