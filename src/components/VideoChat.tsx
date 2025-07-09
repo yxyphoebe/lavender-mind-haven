@@ -123,7 +123,7 @@ const VideoChat = () => {
           {therapist?.name || `Dr. ${currentPersona.name}`}
         </h1>
         
-        <p className="text-xl text-purple-600 mb-8 leading-relaxed">
+        <p className="text-xl text-mindful-600 mb-8 leading-relaxed">
           Ready to begin a peaceful mindful conversation
         </p>
 
@@ -142,7 +142,7 @@ const VideoChat = () => {
         <Button
           onClick={handleStartCall}
           disabled={!therapist || isConnecting}
-          className="bg-purple-300 hover:bg-purple-400 text-white px-12 py-6 rounded-2xl text-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg border border-purple-200 disabled:opacity-50"
+          className="bg-mindful-300 hover:bg-mindful-400 text-white px-12 py-6 rounded-2xl text-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg border border-mindful-200 disabled:opacity-50"
         >
           {isConnecting ? (
             <>
