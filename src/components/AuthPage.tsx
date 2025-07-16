@@ -174,11 +174,24 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (passwordError && password) setPasswordError('');
-  }, [password, passwordError]);
+    // Re-validate confirm password when password changes
+    if (confirmPassword && password !== confirmPassword) {
+      setConfirmPasswordError('Passwords do not match');
+    } else if (confirmPasswordError && password === confirmPassword) {
+      setConfirmPasswordError('');
+    }
+  }, [password, passwordError, confirmPassword, confirmPasswordError]);
 
   useEffect(() => {
-    if (confirmPasswordError && confirmPassword) setConfirmPasswordError('');
-  }, [confirmPassword, confirmPasswordError]);
+    if (confirmPasswordError && confirmPassword) {
+      // Re-validate when confirm password changes
+      if (password && password !== confirmPassword) {
+        setConfirmPasswordError('Passwords do not match');
+      } else if (password === confirmPassword) {
+        setConfirmPasswordError('');
+      }
+    }
+  }, [confirmPassword, confirmPasswordError, password]);
 
   useEffect(() => {
     if (nameError && name) setNameError('');
