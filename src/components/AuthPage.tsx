@@ -46,20 +46,20 @@ const AuthPage = () => {
   // Form validation
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) return '请输入邮箱地址';
-    if (!emailRegex.test(email)) return '邮箱格式不正确';
+    if (!email) return 'Please enter your email address';
+    if (!emailRegex.test(email)) return 'Please enter a valid email address';
     return '';
   };
 
   const validatePassword = (password: string, isSignup = false) => {
-    if (!password) return '请输入密码';
-    if (isSignup && password.length < 6) return '密码至少需要6位字符';
+    if (!password) return 'Please enter your password';
+    if (isSignup && password.length < 6) return 'Password must be at least 6 characters';
     return '';
   };
 
   const validateConfirmPassword = (password: string, confirmPassword: string) => {
-    if (!confirmPassword) return '请确认密码';
-    if (password !== confirmPassword) return '两次输入的密码不一致';
+    if (!confirmPassword) return 'Please confirm your password';
+    if (password !== confirmPassword) return 'Passwords do not match';
     return '';
   };
 
@@ -136,7 +136,7 @@ const AuthPage = () => {
     const emailErr = validateEmail(resetEmail);
     if (emailErr) {
       toast({
-        title: "邮箱错误",
+        title: "Email Error",
         description: emailErr,
         variant: "destructive",
       });
@@ -148,6 +148,10 @@ const AuthPage = () => {
       if (!error) {
         setShowForgotPassword(false);
         setResetEmail('');
+        toast({
+          title: "Email Sent",
+          description: "Check your email for password reset instructions.",
+        });
       }
     } catch (error) {
       console.error('Reset password error:', error);
@@ -168,68 +172,68 @@ const AuthPage = () => {
   }, [confirmPassword, confirmPasswordError]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/20 flex items-center justify-center p-6 relative">
+    <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex items-center justify-center p-6 relative">
       <div className="w-full max-w-md animate-slide-up">
         {/* Dev Switch */}
-        <div className="absolute top-4 right-4 flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2 border border-border">
-          <Settings className="w-4 h-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">认证模式</span>
+        <div className="absolute top-4 right-4 flex items-center space-x-2 bg-gradient-to-r from-mindful-50 to-enso-50 backdrop-blur-sm rounded-lg px-3 py-2 border border-mindful-200 zen-shadow">
+          <Settings className="w-4 h-4 text-mindful-600" />
+          <span className="text-sm text-mindful-600">Auth Mode</span>
           <Switch 
             checked={authEnabled} 
             onCheckedChange={setAuthEnabled}
-            className="data-[state=checked]:bg-primary"
+            className="data-[state=checked]:bg-mindful-500"
           />
-          <span className="text-sm font-medium text-foreground">
-            {authEnabled ? '真实' : '测试'}
+          <span className="text-sm font-medium text-mindful-800">
+            {authEnabled ? 'Live' : 'Test'}
           </span>
         </div>
 
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center zen-shadow">
-              <Flower2 className="w-8 h-8 text-primary-foreground" />
+            <div className="w-16 h-16 bg-gradient-to-br from-mindful-400 to-mindful-500 rounded-2xl flex items-center justify-center zen-shadow">
+              <Flower2 className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="font-display text-3xl font-bold text-foreground mb-2">
+          <h1 className="font-display text-3xl font-bold mindful-gradient-text mb-2">
             Welcome to Mindful AI
           </h1>
-          <p className="text-muted-foreground font-light">
+          <p className="text-neutral-600 font-light">
             Your journey to wellness begins here
           </p>
           {!authEnabled && (
-            <div className="mt-2 inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm">
-              <span className="w-2 h-2 bg-yellow-400 rounded-full mr-2"></span>
-              测试模式 - 无需认证
+            <div className="mt-2 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-mindful-100 to-enso-100 text-mindful-700 text-sm border border-mindful-200">
+              <span className="w-2 h-2 bg-mindful-400 rounded-full mr-2"></span>
+              Test Mode - No Authentication Required
             </div>
           )}
         </div>
 
         {/* Auth Card */}
-        <Card className="bg-white/90 backdrop-blur-sm border border-border zen-shadow">
+        <Card className="bg-gradient-to-br from-mindful-50 to-enso-50 backdrop-blur-sm border border-mindful-200 zen-shadow">
           <CardHeader>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-muted rounded-xl">
-                <TabsTrigger value="login" className="rounded-lg data-[state=active]:bg-background data-[state=active]:text-primary">
-                  登录
+              <TabsList className="grid w-full grid-cols-2 bg-white/50 rounded-xl">
+                <TabsTrigger value="login" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-mindful-700">
+                  Sign In
                 </TabsTrigger>
-                <TabsTrigger value="signup" className="rounded-lg data-[state=active]:bg-background data-[state=active]:text-primary">
-                  注册
+                <TabsTrigger value="signup" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-mindful-700">
+                  Sign Up
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="login" className="mt-6">
-                <CardTitle className="text-center text-foreground mb-6">欢迎回来</CardTitle>
+                <CardTitle className="text-center text-neutral-800 mb-6">Welcome Back</CardTitle>
                 <CardContent className="space-y-4 p-0">
                   <div className="space-y-4">
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input 
                         type="email" 
-                        placeholder="邮箱地址"
+                        placeholder="Email Address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`pl-10 h-12 border-border rounded-xl focus:ring-primary bg-background ${emailError ? 'border-destructive' : ''}`}
+                        className={`pl-10 h-12 border-mindful-200 rounded-xl focus:ring-mindful-400 bg-white ${emailError ? 'border-destructive' : ''}`}
                         disabled={isSubmitting}
                       />
                       {emailError && (
@@ -242,10 +246,10 @@ const AuthPage = () => {
                     <div className="relative">
                       <Input 
                         type={showPassword ? "text" : "password"}
-                        placeholder="密码"
+                        placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className={`pr-10 h-12 border-border rounded-xl focus:ring-primary bg-background ${passwordError ? 'border-destructive' : ''}`}
+                        className={`pr-10 h-12 border-mindful-200 rounded-xl focus:ring-mindful-400 bg-white ${passwordError ? 'border-destructive' : ''}`}
                         disabled={isSubmitting}
                       />
                       <button
@@ -268,23 +272,23 @@ const AuthPage = () => {
                   <div className="text-right">
                     <Dialog open={showForgotPassword} onOpenChange={setShowForgotPassword}>
                       <DialogTrigger asChild>
-                        <button className="text-sm text-primary hover:underline">
-                          忘记密码？
+                        <button className="text-sm text-mindful-600 hover:underline">
+                          Forgot Password?
                         </button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>重置密码</DialogTitle>
+                          <DialogTitle>Reset Password</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4">
                           <Input
                             type="email"
-                            placeholder="请输入您的邮箱地址"
+                            placeholder="Enter your email address"
                             value={resetEmail}
                             onChange={(e) => setResetEmail(e.target.value)}
                           />
-                          <Button onClick={handleForgotPassword} className="w-full">
-                            发送重置邮件
+                          <Button onClick={handleForgotPassword} className="w-full bg-gradient-to-r from-mindful-400 to-mindful-500 hover:from-mindful-500 hover:to-mindful-600 text-white">
+                            Send Reset Email
                           </Button>
                         </div>
                       </DialogContent>
@@ -293,41 +297,41 @@ const AuthPage = () => {
 
                   <Button 
                     onClick={() => handleAuth('login')}
-                    className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-all duration-300 mobile-button"
+                    className="w-full h-12 bg-gradient-to-r from-mindful-400 to-mindful-500 hover:from-mindful-500 hover:to-mindful-600 text-white rounded-xl font-medium transition-all duration-300 mobile-button zen-shadow"
                     disabled={isSubmitting || authLoading}
                   >
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        登录中...
+                        Signing In...
                       </>
                     ) : (
-                      '登录'
+                      'Sign In'
                     )}
                   </Button>
                 </CardContent>
               </TabsContent>
 
               <TabsContent value="signup" className="mt-6">
-                <CardTitle className="text-center text-foreground mb-6">创建账户</CardTitle>
+                <CardTitle className="text-center text-neutral-800 mb-6">Create Account</CardTitle>
                 <CardContent className="space-y-4 p-0">
                   <div className="space-y-4">
                     <Input 
                       type="text" 
-                      placeholder="姓名（可选）"
+                      placeholder="Full Name (Optional)"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="h-12 border-border rounded-xl focus:ring-primary bg-background"
+                      className="h-12 border-mindful-200 rounded-xl focus:ring-mindful-400 bg-white"
                       disabled={isSubmitting}
                     />
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input 
                         type="email" 
-                        placeholder="邮箱地址"
+                        placeholder="Email Address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`pl-10 h-12 border-border rounded-xl focus:ring-primary bg-background ${emailError ? 'border-destructive' : ''}`}
+                        className={`pl-10 h-12 border-mindful-200 rounded-xl focus:ring-mindful-400 bg-white ${emailError ? 'border-destructive' : ''}`}
                         disabled={isSubmitting}
                       />
                       {emailError && (
@@ -340,10 +344,10 @@ const AuthPage = () => {
                     <div className="relative">
                       <Input 
                         type={showPassword ? "text" : "password"}
-                        placeholder="设置密码"
+                        placeholder="Create Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className={`pr-10 h-12 border-border rounded-xl focus:ring-primary bg-background ${passwordError ? 'border-destructive' : ''}`}
+                        className={`pr-10 h-12 border-mindful-200 rounded-xl focus:ring-mindful-400 bg-white ${passwordError ? 'border-destructive' : ''}`}
                         disabled={isSubmitting}
                       />
                       <button
@@ -367,10 +371,10 @@ const AuthPage = () => {
                     <div className="relative">
                       <Input 
                         type={showConfirmPassword ? "text" : "password"}
-                        placeholder="确认密码"
+                        placeholder="Confirm Password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className={`pr-10 h-12 border-border rounded-xl focus:ring-primary bg-background ${confirmPasswordError ? 'border-destructive' : ''}`}
+                        className={`pr-10 h-12 border-mindful-200 rounded-xl focus:ring-mindful-400 bg-white ${confirmPasswordError ? 'border-destructive' : ''}`}
                         disabled={isSubmitting}
                       />
                       <button
@@ -392,16 +396,16 @@ const AuthPage = () => {
 
                   <Button 
                     onClick={() => handleAuth('signup')}
-                    className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-all duration-300 mobile-button"
+                    className="w-full h-12 bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white rounded-xl font-medium transition-all duration-300 mobile-button zen-shadow"
                     disabled={isSubmitting || authLoading}
                   >
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        注册中...
+                        Creating Account...
                       </>
                     ) : (
-                      '创建账户'
+                      'Create Account'
                     )}
                   </Button>
                 </CardContent>
@@ -412,17 +416,17 @@ const AuthPage = () => {
 
         {/* Social Auth */}
         <div className="mt-6 space-y-3">
-          <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
-            <div className="h-px bg-border flex-1"></div>
-            <span>或使用其他方式{activeTab === 'login' ? '登录' : '注册'}</span>
-            <div className="h-px bg-border flex-1"></div>
+          <div className="flex items-center justify-center space-x-4 text-sm text-neutral-600">
+            <div className="h-px bg-mindful-200 flex-1"></div>
+            <span>Or continue with</span>
+            <div className="h-px bg-mindful-200 flex-1"></div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <Button
               variant="outline"
               onClick={() => handleSocialAuth('google')}
-              className="h-12 border-border hover:bg-accent rounded-xl bg-background mobile-button"
+              className="h-12 border-mindful-200 hover:bg-mindful-50 rounded-xl bg-white mobile-button"
               disabled={isSubmitting}
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -436,7 +440,7 @@ const AuthPage = () => {
             <Button
               variant="outline"
               onClick={() => handleSocialAuth('apple')}
-              className="h-12 border-border hover:bg-accent rounded-xl bg-background mobile-button"
+              className="h-12 border-mindful-200 hover:bg-mindful-50 rounded-xl bg-white mobile-button"
               disabled={isSubmitting}
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
@@ -449,20 +453,20 @@ const AuthPage = () => {
           <Button
             variant="outline"
             onClick={() => handleSocialAuth('google')} // Phone auth would need additional setup
-            className="w-full h-12 border-border hover:bg-accent rounded-xl bg-background mobile-button"
+            className="w-full h-12 border-mindful-200 hover:bg-mindful-50 rounded-xl bg-white mobile-button"
             disabled={isSubmitting}
           >
             <Phone className="w-5 h-5 mr-2" />
-            手机号{activeTab === 'login' ? '登录' : '注册'}
+            Phone Number
           </Button>
         </div>
 
         {/* Footer */}
-        <p className="text-center text-sm text-muted-foreground mt-6 leading-relaxed">
-          继续使用即表示您同意我们的{' '}
-          <a href="#" className="text-primary hover:underline">服务条款</a>
-          {' '}和{' '}
-          <a href="#" className="text-primary hover:underline">隐私政策</a>
+        <p className="text-center text-sm text-neutral-500 mt-6 leading-relaxed">
+          By continuing, you agree to our{' '}
+          <a href="#" className="text-mindful-600 hover:underline">Terms of Service</a>
+          {' '}and{' '}
+          <a href="#" className="text-mindful-600 hover:underline">Privacy Policy</a>
         </p>
       </div>
     </div>

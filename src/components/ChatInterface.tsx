@@ -26,10 +26,10 @@ const ChatInterface = () => {
 
   if (isLoading) {
     return (
-      <div className="h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center">
+      <div className="h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
-          <p className="text-slate-500 text-sm">Connecting...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-mindful-400" />
+          <p className="text-neutral-600 text-sm">Connecting...</p>
         </div>
       </div>
     );
@@ -37,15 +37,15 @@ const ChatInterface = () => {
 
   if (!therapist) {
     return (
-      <div className="h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center">
-        <div className="text-center max-w-md p-8 bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full mx-auto mb-6 flex items-center justify-center">
-            <User className="w-8 h-8 text-slate-600" />
+      <div className="h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex items-center justify-center">
+        <div className="text-center max-w-md p-8 bg-gradient-to-br from-mindful-50 to-enso-50 backdrop-blur-sm rounded-3xl zen-shadow border border-mindful-200">
+          <div className="w-16 h-16 bg-gradient-to-br from-mindful-400 to-enso-500 rounded-full mx-auto mb-6 flex items-center justify-center zen-shadow">
+            <User className="w-8 h-8 text-white" />
           </div>
-          <p className="text-lg text-slate-600 mb-6 font-light">Please select a therapist to start the conversation</p>
+          <p className="text-lg text-neutral-700 mb-6 font-light">Please select a therapist to start the conversation</p>
           <Button 
             onClick={() => navigate('/persona-selection')} 
-            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0 rounded-full px-8 py-3 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
+            className="bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white border-0 rounded-full px-8 py-3 zen-shadow transition-all duration-300 hover:scale-105"
           >
             Select Therapist
           </Button>
@@ -55,11 +55,11 @@ const ChatInterface = () => {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex flex-col relative overflow-hidden">
+    <div className="h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex flex-col relative overflow-hidden">
       {/* Subtle background elements */}
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-blue-200/20 to-purple-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-r from-pink-200/20 to-yellow-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-mindful-200/20 to-enso-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-r from-enso-200/20 to-mindful-200/20 rounded-full blur-3xl"></div>
       </div>
 
       <ChatHeader therapist={therapist} />

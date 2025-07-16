@@ -12,11 +12,11 @@ interface PasswordRequirement {
 }
 
 const requirements: PasswordRequirement[] = [
-  { test: (pwd) => pwd.length >= 8, label: '至少8位字符' },
-  { test: (pwd) => /[A-Z]/.test(pwd), label: '包含大写字母' },
-  { test: (pwd) => /[a-z]/.test(pwd), label: '包含小写字母' },
-  { test: (pwd) => /\d/.test(pwd), label: '包含数字' },
-  { test: (pwd) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd), label: '包含特殊字符' },
+  { test: (pwd) => pwd.length >= 8, label: 'At least 8 characters' },
+  { test: (pwd) => /[A-Z]/.test(pwd), label: 'Contains uppercase letter' },
+  { test: (pwd) => /[a-z]/.test(pwd), label: 'Contains lowercase letter' },
+  { test: (pwd) => /\d/.test(pwd), label: 'Contains number' },
+  { test: (pwd) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd), label: 'Contains special character' },
 ];
 
 export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicatorProps) {
@@ -36,31 +36,31 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
 
   const getStrengthColor = () => {
     switch (strength) {
-      case 'weak': return 'bg-red-500';
-      case 'fair': return 'bg-yellow-500';
-      case 'good': return 'bg-blue-500';
-      case 'strong': return 'bg-green-500';
-      default: return 'bg-gray-300';
+      case 'weak': return 'bg-destructive';
+      case 'fair': return 'bg-mindful-400';
+      case 'good': return 'bg-enso-400';
+      case 'strong': return 'bg-mindful-500';
+      default: return 'bg-neutral-300';
     }
   };
 
   const getStrengthText = () => {
     switch (strength) {
-      case 'weak': return '弱';
-      case 'fair': return '一般';
-      case 'good': return '良好';
-      case 'strong': return '强';
+      case 'weak': return 'Weak';
+      case 'fair': return 'Fair';
+      case 'good': return 'Good';
+      case 'strong': return 'Strong';
     }
   };
 
   return (
     <div className="space-y-3 mt-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">密码强度:</span>
+        <span className="text-sm text-neutral-600">Password Strength:</span>
         <span className={`text-sm font-medium ${
-          strength === 'strong' ? 'text-green-600' :
-          strength === 'good' ? 'text-blue-600' :
-          strength === 'fair' ? 'text-yellow-600' : 'text-red-600'
+          strength === 'strong' ? 'text-mindful-600' :
+          strength === 'good' ? 'text-enso-600' :
+          strength === 'fair' ? 'text-mindful-500' : 'text-destructive'
         }`}>
           {getStrengthText()}
         </span>
@@ -76,11 +76,11 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
           return (
             <div key={index} className="flex items-center space-x-2">
               {isPassed ? (
-                <Check className="w-3 h-3 text-green-500" />
+                <Check className="w-3 h-3 text-mindful-500" />
               ) : (
-                <X className="w-3 h-3 text-gray-400" />
+                <X className="w-3 h-3 text-neutral-400" />
               )}
-              <span className={`text-xs ${isPassed ? 'text-green-600' : 'text-gray-500'}`}>
+              <span className={`text-xs ${isPassed ? 'text-mindful-600' : 'text-neutral-500'}`}>
                 {req.label}
               </span>
             </div>
