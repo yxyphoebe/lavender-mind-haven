@@ -31,6 +31,7 @@ const AuthPage = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [nameError, setNameError] = useState('');
   
   const navigate = useNavigate();
   const { signUp, signIn, resetPassword, signInWithOAuth, user, loading: authLoading } = useAuth();
@@ -63,6 +64,11 @@ const AuthPage = () => {
     return '';
   };
 
+  const validateName = (name: string) => {
+    if (!name.trim()) return 'Please enter your full name';
+    return '';
+  };
+
   const handleAuth = async (type: 'login' | 'signup') => {
     if (!authEnabled) {
       // Skip authentication for testing
@@ -78,16 +84,19 @@ const AuthPage = () => {
     const emailErr = validateEmail(email);
     const passwordErr = validatePassword(password, type === 'signup');
     let confirmPasswordErr = '';
+    let nameErr = '';
     
     if (type === 'signup') {
       confirmPasswordErr = validateConfirmPassword(password, confirmPassword);
+      nameErr = validateName(name);
     }
 
     setEmailError(emailErr);
     setPasswordError(passwordErr);
     setConfirmPasswordError(confirmPasswordErr);
+    setNameError(nameErr);
 
-    if (emailErr || passwordErr || confirmPasswordErr) {
+    if (emailErr || passwordErr || confirmPasswordErr || nameErr) {
       return;
     }
 
@@ -170,6 +179,10 @@ const AuthPage = () => {
   useEffect(() => {
     if (confirmPasswordError && confirmPassword) setConfirmPasswordError('');
   }, [confirmPassword, confirmPasswordError]);
+
+  useEffect(() => {
+    if (nameError && name) setNameError('');
+  }, [name, nameError]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex items-center justify-center p-6 relative">
@@ -316,14 +329,22 @@ const AuthPage = () => {
                 <CardTitle className="text-center text-neutral-800 mb-6">Create Account</CardTitle>
                 <CardContent className="space-y-4 p-0">
                   <div className="space-y-4">
-                    <Input 
-                      type="text" 
-                      placeholder="Full Name (Optional)"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="h-12 border-mindful-200 rounded-xl focus:ring-mindful-400 bg-white"
-                      disabled={isSubmitting}
-                    />
+                    <div className="relative">
+                      <Input 
+                        type="text" 
+                        placeholder="Full Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className={`h-12 border-mindful-200 rounded-xl focus:ring-mindful-400 bg-white ${nameError ? 'border-destructive' : ''}`}
+                        disabled={isSubmitting}
+                      />
+                      {nameError && (
+                        <div className="flex items-center space-x-1 mt-1">
+                          <AlertCircle className="w-3 h-3 text-destructive" />
+                          <span className="text-xs text-destructive">{nameError}</span>
+                        </div>
+                      )}
+                    </div>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input 
