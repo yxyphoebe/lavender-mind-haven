@@ -4,17 +4,29 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Flower2, Mail, Phone, Eye, EyeOff } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Flower2, Mail, Phone, Eye, EyeOff, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const AuthPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [authEnabled, setAuthEnabled] = useState(false);
   const navigate = useNavigate();
 
   const handleAuth = async (type: 'login' | 'signup') => {
     setIsLoading(true);
-    // Simulate authentication
+    
+    if (!authEnabled) {
+      // Skip authentication for testing
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate('/onboarding');
+      }, 800);
+      return;
+    }
+    
+    // TODO: Real Supabase authentication will be implemented here
     setTimeout(() => {
       setIsLoading(false);
       navigate('/onboarding');
@@ -22,18 +34,38 @@ const AuthPage = () => {
   };
 
   const handleSocialAuth = (provider: string) => {
+    if (!authEnabled) {
+      // Skip authentication for testing
+      setTimeout(() => navigate('/onboarding'), 500);
+      return;
+    }
+    
     console.log(`Authenticating with ${provider}`);
-    // In a real app, this would integrate with actual social auth
+    // TODO: Real social auth will be implemented here
     setTimeout(() => navigate('/onboarding'), 1000);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center p-6">
       <div className="w-full max-w-md animate-slide-up">
+        {/* Dev Switch */}
+        <div className="absolute top-4 right-4 flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2 border border-blue-200">
+          <Settings className="w-4 h-4 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">认证模式</span>
+          <Switch 
+            checked={authEnabled} 
+            onCheckedChange={setAuthEnabled}
+            className="data-[state=checked]:bg-mindful-500"
+          />
+          <span className="text-sm font-medium text-foreground">
+            {authEnabled ? '真实' : '测试'}
+          </span>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-violet-400 rounded-2xl flex items-center justify-center zen-shadow">
+            <div className="w-16 h-16 bg-gradient-to-br from-mindful-400 to-mindful-500 rounded-2xl flex items-center justify-center zen-shadow">
               <Flower2 className="w-8 h-8 text-white" />
             </div>
           </div>
@@ -43,6 +75,12 @@ const AuthPage = () => {
           <p className="text-muted-foreground font-light">
             Your journey to wellness begins here
           </p>
+          {!authEnabled && (
+            <div className="mt-2 inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm">
+              <span className="w-2 h-2 bg-yellow-400 rounded-full mr-2"></span>
+              测试模式 - 无需认证
+            </div>
+          )}
         </div>
 
         {/* Auth Card */}
