@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, Brain, Star, CheckCircle, ArrowLeft, ArrowRight, MessageSquare, Coffee, FileText, Sunset, Lightbulb } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { calculateTherapistRecommendations } from '@/utils/therapistRecommendation';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface OnboardingStep {
   id: number;
@@ -25,6 +27,7 @@ const OnboardingPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string[]>>({});
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const steps: OnboardingStep[] = [
     {
@@ -119,21 +122,120 @@ const OnboardingPage = () => {
     return stepAnswers && stepAnswers.length > 0;
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Onboarding complete - calculate recommendations
-      console.log('Onboarding completed with answers:', answers);
-      
-      const recommendations = calculateTherapistRecommendations(answers);
-      console.log('Top 3 therapist recommendations:', recommendations);
-      
-      localStorage.setItem('onboardingComplete', 'true');
-      localStorage.setItem('onboardingAnswers', JSON.stringify(answers));
-      localStorage.setItem('therapistRecommendations', JSON.stringify(recommendations));
-      
-      navigate('/persona-selection');
+      try {
+        // Get current user
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          toast({
+            title: "Authentication Required",
+            description: "Please log in to complete onboarding",
+            variant: "destructive",
+          });
+          navigate('/auth');
+          return;
+        }
+
+        // Calculate recommendations
+        const recommendations = calculateTherapistRecommendations(answers);
+        console.log('Onboarding completed with answers:', answers);
+        console.log('Top 3 therapist recommendations:', recommendations);
+        
+        // Prepare onboarding responses for database
+        const onboardingResponses = [];
+        Object.entries(answers).forEach(([stepIndex, selectedOptions]) => {
+          const step = steps[parseInt(stepIndex)];
+          selectedOptions.forEach(optionId => {
+            const option = step.options.find(opt => opt.id === optionId);
+            if (option) {
+              onboardingResponses.push({
+                user_id: user.id,
+                question_key: optionId,
+                question_text: step.title,
+                answer_value: option.label,
+                answer_weight: 1
+              });
+            }
+          });
+        });
+
+        // Save to Supabase
+        const { error: responsesError } = await supabase
+          .from('onboarding_responses')
+          .insert(onboardingResponses);
+
+        if (responsesError) {
+          console.error('Error saving onboarding responses:', responsesError);
+        }
+
+        // Update user completion status
+        const { error: userError } = await supabase
+          .from('users')
+          .update({ 
+            onboarding_completed: true,
+            last_active: new Date().toISOString()
+          })
+          .eq('id', user.id);
+
+        if (userError) {
+          console.error('Error updating user status:', userError);
+        }
+
+        // Get therapist IDs from database to save recommendations
+        const { data: therapists } = await supabase
+          .from('therapists')
+          .select('id, name');
+
+        if (therapists && therapists.length > 0) {
+          const recommendationData = recommendations
+            .map(rec => {
+              const therapist = therapists.find(t => t.name === rec.name);
+              if (therapist) {
+                return {
+                  user_id: user.id,
+                  therapist_id: therapist.id,
+                  recommendation_score: rec.score,
+                  reasoning: { rank: rec.rank, answers: answers }
+                };
+              }
+              return null;
+            })
+            .filter(Boolean);
+
+          if (recommendationData.length > 0) {
+            const { error: recsError } = await supabase
+              .from('therapist_recommendations')
+              .insert(recommendationData);
+
+            if (recsError) {
+              console.error('Error saving recommendations:', recsError);
+            }
+          }
+        }
+
+        // Keep localStorage for backwards compatibility
+        localStorage.setItem('onboardingComplete', 'true');
+        localStorage.setItem('onboardingAnswers', JSON.stringify(answers));
+        localStorage.setItem('therapistRecommendations', JSON.stringify(recommendations));
+        
+        toast({
+          title: "Onboarding Complete!",
+          description: "Your preferences have been saved successfully",
+        });
+        
+        navigate('/persona-selection');
+      } catch (error) {
+        console.error('Error completing onboarding:', error);
+        toast({
+          title: "Error",
+          description: "Failed to save your preferences. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   };
 

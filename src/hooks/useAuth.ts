@@ -107,7 +107,10 @@ export function useAuth(): AuthState & AuthMethods {
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/`,
-          data: name ? { full_name: name } : undefined,
+          data: {
+            full_name: name || 'User',
+            name: name || 'User',
+          },
         },
       });
 
