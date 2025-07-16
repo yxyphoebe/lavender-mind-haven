@@ -44,6 +44,18 @@
     --sidebar-accent-foreground: 107 99 120;
     --sidebar-border: 243 240 255;
     --sidebar-ring: 221 212 255;
+
+    /* Mindful color system - purple theme */
+    --mindful-50: 250 249 255;
+    --mindful-100: 243 241 255;
+    --mindful-200: 237 232 255;
+    --mindful-300: 221 212 255;
+    --mindful-400: 196 181 255;
+    --mindful-500: 167 139 250;
+    --mindful-600: 140 118 255;
+    --mindful-700: 124 58 237;
+    --mindful-800: 107 33 168;
+    --mindful-900: 88 28 135;
   }
 
   .dark {
