@@ -39,10 +39,10 @@ const AuthPage = () => {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user && authEnabled) {
+    if (user) {
       navigate('/onboarding');
     }
-  }, [user, authEnabled, navigate]);
+  }, [user, navigate]);
 
   // Form validation
   const validateEmail = (email: string) => {
@@ -167,34 +167,33 @@ const AuthPage = () => {
     }
   };
 
-  // Clear errors on input change
+  // Clear errors on input change with debouncing
   useEffect(() => {
-    if (emailError && email) setEmailError('');
+    if (emailError && email) {
+      const timer = setTimeout(() => setEmailError(''), 300);
+      return () => clearTimeout(timer);
+    }
   }, [email, emailError]);
 
   useEffect(() => {
-    if (passwordError && password) setPasswordError('');
-    // Re-validate confirm password when password changes
-    if (confirmPassword && password !== confirmPassword) {
-      setConfirmPasswordError('Passwords do not match');
-    } else if (confirmPasswordError && password === confirmPassword) {
-      setConfirmPasswordError('');
+    if (passwordError && password) {
+      const timer = setTimeout(() => setPasswordError(''), 300);
+      return () => clearTimeout(timer);
     }
-  }, [password, passwordError, confirmPassword, confirmPasswordError]);
+  }, [password, passwordError]);
 
   useEffect(() => {
     if (confirmPasswordError && confirmPassword) {
-      // Re-validate when confirm password changes
-      if (password && password !== confirmPassword) {
-        setConfirmPasswordError('Passwords do not match');
-      } else if (password === confirmPassword) {
-        setConfirmPasswordError('');
-      }
+      const timer = setTimeout(() => setConfirmPasswordError(''), 300);
+      return () => clearTimeout(timer);
     }
-  }, [confirmPassword, confirmPasswordError, password]);
+  }, [confirmPassword, confirmPasswordError]);
 
   useEffect(() => {
-    if (nameError && name) setNameError('');
+    if (nameError && name) {
+      const timer = setTimeout(() => setNameError(''), 300);
+      return () => clearTimeout(timer);
+    }
   }, [name, nameError]);
 
   return (
