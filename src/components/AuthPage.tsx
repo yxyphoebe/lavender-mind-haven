@@ -39,10 +39,10 @@ const AuthPage = () => {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user) {
+    if (user && authEnabled) {
       navigate('/onboarding');
     }
-  }, [user, navigate]);
+  }, [user, authEnabled, navigate]);
 
   // Form validation
   const validateEmail = (email: string) => {
@@ -167,33 +167,34 @@ const AuthPage = () => {
     }
   };
 
-  // Clear errors on input change with debouncing
+  // Clear errors on input change
   useEffect(() => {
-    if (emailError && email) {
-      const timer = setTimeout(() => setEmailError(''), 300);
-      return () => clearTimeout(timer);
-    }
+    if (emailError && email) setEmailError('');
   }, [email, emailError]);
 
   useEffect(() => {
-    if (passwordError && password) {
-      const timer = setTimeout(() => setPasswordError(''), 300);
-      return () => clearTimeout(timer);
+    if (passwordError && password) setPasswordError('');
+    // Re-validate confirm password when password changes
+    if (confirmPassword && password !== confirmPassword) {
+      setConfirmPasswordError('Passwords do not match');
+    } else if (confirmPasswordError && password === confirmPassword) {
+      setConfirmPasswordError('');
     }
-  }, [password, passwordError]);
+  }, [password, passwordError, confirmPassword, confirmPasswordError]);
 
   useEffect(() => {
     if (confirmPasswordError && confirmPassword) {
-      const timer = setTimeout(() => setConfirmPasswordError(''), 300);
-      return () => clearTimeout(timer);
+      // Re-validate when confirm password changes
+      if (password && password !== confirmPassword) {
+        setConfirmPasswordError('Passwords do not match');
+      } else if (password === confirmPassword) {
+        setConfirmPasswordError('');
+      }
     }
-  }, [confirmPassword, confirmPasswordError]);
+  }, [confirmPassword, confirmPasswordError, password]);
 
   useEffect(() => {
-    if (nameError && name) {
-      const timer = setTimeout(() => setNameError(''), 300);
-      return () => clearTimeout(timer);
-    }
+    if (nameError && name) setNameError('');
   }, [name, nameError]);
 
   return (
