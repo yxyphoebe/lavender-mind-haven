@@ -128,21 +128,21 @@ const OnboardingPage = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center max-w-lg mx-auto w-full">
+      <div className="flex-1 flex flex-col items-center pt-20 max-w-md mx-auto w-full px-4">
         {/* Question Title */}
-        <h1 className="text-2xl font-semibold text-center text-gray-800 mb-16 leading-relaxed">
+        <h1 className="text-2xl font-semibold text-center text-gray-800 mb-12 leading-relaxed">
           {currentStepData.question}
         </h1>
 
         {/* Image Options - Vertical Layout */}
-        <div className="w-full space-y-6">
+        <div className="w-full space-y-8">
           {currentStepData.options.map((option, index) => (
             <div
               key={option.id}
               onClick={() => handleOptionSelect(option.id)}
-              className="w-full aspect-[4/3] bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
+              className="w-full aspect-[5/4] bg-gray-100 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 active:scale-98"
             >
-              <div className="text-gray-400 text-lg font-medium">
+              <div className="text-gray-400 text-xl font-medium">
                 Image {index + 1}
               </div>
             </div>
