@@ -13,6 +13,11 @@ const PersonaSelection = () => {
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [currentOtherMatchIndex, setCurrentOtherMatchIndex] = useState(0);
   const [recommendations, setRecommendations] = useState<TherapistRecommendation[]>([]);
+  
+  // Touch/swipe handling
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const navigate = useNavigate();
   const { data: therapists, isLoading, error } = useTherapists();
 
@@ -53,6 +58,40 @@ const PersonaSelection = () => {
       return "We think you'll feel deeply understood with her";
     }
     return "A compassionate soul aligned with your needs.";
+  };
+
+  // Swipe detection
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && !isTransitioning) {
+      // Swipe left - next therapist
+      setIsTransitioning(true);
+      setCurrentOtherMatchIndex(prev => prev < otherMatches.length - 1 ? prev + 1 : 0);
+      setTimeout(() => setIsTransitioning(false), 300);
+    }
+
+    if (isRightSwipe && !isTransitioning) {
+      // Swipe right - previous therapist  
+      setIsTransitioning(true);
+      setCurrentOtherMatchIndex(prev => prev > 0 ? prev - 1 : otherMatches.length - 1);
+      setTimeout(() => setIsTransitioning(false), 300);
+    }
   };
 
   const getKeywords = (style: string): string[] => {
@@ -218,25 +257,17 @@ const PersonaSelection = () => {
         <div className="flex-1 flex flex-col justify-center px-6">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-neutral-800 mb-2">Other Great Matches</h2>
-            <p className="text-lg text-neutral-600 mb-6">Choose your companion for this journey</p>
-            
-            {/* Position Indicator */}
-            <div className="flex justify-center items-center gap-2 mb-8">
-              <span className="text-sm text-neutral-500">
-                {currentOtherMatchIndex + 1} of {otherMatches.length}
-              </span>
-            </div>
+            <p className="text-lg text-neutral-600 mb-6">Swipe to explore your options</p>
           </div>
 
-          {/* Current Therapist Display */}
+          {/* Current Therapist Display - Swipeable */}
           {otherMatches[currentOtherMatchIndex] && (
-            <div className="text-center mb-8 animate-gentle-float">
-              {/* Rank Badge */}
-              <div className="flex justify-center mb-4">
-                <div className="bg-gradient-to-r from-mindful-400 to-enso-500 text-white text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">
-                  {currentOtherMatchIndex + 2}
-                </div>
-              </div>
+            <div 
+              className={`text-center mb-8 animate-gentle-float transition-transform duration-300 ${isTransitioning ? 'scale-95 opacity-80' : 'scale-100 opacity-100'}`}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+            >
 
               {/* Avatar with Glow */}
               <div className="relative mb-2 flex justify-center">
@@ -283,28 +314,6 @@ const PersonaSelection = () => {
             </div>
           )}
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-between items-center max-w-xs mx-auto mb-8">
-            <Button
-              onClick={() => setCurrentOtherMatchIndex(prev => prev > 0 ? prev - 1 : otherMatches.length - 1)}
-              variant="outline"
-              size="sm"
-              className="border-mindful-300 text-mindful-700 hover:bg-mindful-50"
-              disabled={otherMatches.length <= 1}
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            
-            <Button
-              onClick={() => setCurrentOtherMatchIndex(prev => prev < otherMatches.length - 1 ? prev + 1 : 0)}
-              variant="outline"
-              size="sm"
-              className="border-mindful-300 text-mindful-700 hover:bg-mindful-50"
-              disabled={otherMatches.length <= 1}
-            >
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </div>
 
           {/* Go Back Option */}
           <div className="text-center">
