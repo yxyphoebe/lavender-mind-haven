@@ -80,18 +80,26 @@ const PersonaSelection = () => {
     const isRightSwipe = distance < -minSwipeDistance;
 
     if (isLeftSwipe && !isTransitioning) {
-      // Swipe left - next therapist
-      setIsTransitioning(true);
-      setCurrentOtherMatchIndex(prev => prev < otherMatches.length - 1 ? prev + 1 : 0);
-      setTimeout(() => setIsTransitioning(false), 600); // 延长动画时间，降低频率
+      handleNextTherapist();
     }
 
     if (isRightSwipe && !isTransitioning) {
-      // Swipe right - previous therapist  
-      setIsTransitioning(true);
-      setCurrentOtherMatchIndex(prev => prev > 0 ? prev - 1 : otherMatches.length - 1);
-      setTimeout(() => setIsTransitioning(false), 600); // 统一动画时间
+      handlePrevTherapist();
     }
+  };
+
+  const handleNextTherapist = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentOtherMatchIndex(prev => prev < otherMatches.length - 1 ? prev + 1 : 0);
+    setTimeout(() => setIsTransitioning(false), 400);
+  };
+
+  const handlePrevTherapist = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentOtherMatchIndex(prev => prev > 0 ? prev - 1 : otherMatches.length - 1);
+    setTimeout(() => setIsTransitioning(false), 400);
   };
 
   const getKeywords = (style: string): string[] => {
@@ -262,55 +270,70 @@ const PersonaSelection = () => {
 
           {/* Current Therapist Display - Swipeable */}
           {otherMatches[currentOtherMatchIndex] && (
-            <div 
-              className={`text-center mb-8 animate-gentle-float transition-all duration-500 ease-out ${isTransitioning ? 'scale-95 opacity-80' : 'scale-100 opacity-100'}`}
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
-            >
-
-              {/* Avatar with Glow */}
-              <div className="relative mb-2 flex justify-center">
-                <div className="absolute inset-0 bg-gradient-to-r from-mindful-400/30 to-enso-500/30 rounded-xl blur-xl scale-110"></div>
-                <Avatar className="relative w-48 h-64 bloom-shadow ring-4 ring-white/50 rounded-xl">
-                  <AvatarImage 
-                    src={otherMatches[currentOtherMatchIndex].image_url || ''} 
-                    alt={otherMatches[currentOtherMatchIndex].name}
-                    className="object-cover rounded-xl"
-                  />
-                  <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-5xl rounded-xl">
-                    {otherMatches[currentOtherMatchIndex].name.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-
-              {/* Name */}
-              <h3 className="text-3xl font-bold text-neutral-800 mb-4">{otherMatches[currentOtherMatchIndex].name}</h3>
-
-              {/* Keywords */}
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
-                {getKeywords(otherMatches[currentOtherMatchIndex].style).slice(0, 4).map((keyword, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-gradient-to-r from-mindful-100 to-enso-100 text-mindful-700 rounded-full text-sm font-medium"
-                  >
-                    {keyword}
-                  </span>
-                ))}
-              </div>
-
-              {/* Emotional Intro */}
-              <p className="text-lg text-neutral-700 font-light italic leading-relaxed mb-4 max-w-xs mx-auto">
-                "{getEmotionalIntro(otherMatches[currentOtherMatchIndex], false)}"
-              </p>
-
-              {/* Choose Button */}
-              <Button
-                onClick={() => handleContinue(otherMatches[currentOtherMatchIndex].id)}
-                className="w-full max-w-xs bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-4"
+            <div className="relative">
+              <div 
+                className={`text-center mb-8 ${isTransitioning ? 'transform scale-95 opacity-80 transition-transform duration-400 ease-out' : ''}`}
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
               >
-                Begin Your Journey with {otherMatches[currentOtherMatchIndex].name}
-              </Button>
+                <div className="animate-gentle-float">
+                  {/* Avatar with Glow */}
+                  <div className="relative mb-2 flex justify-center">
+                    <div className="absolute inset-0 bg-gradient-to-r from-mindful-400/30 to-enso-500/30 rounded-xl blur-xl scale-110"></div>
+                    <Avatar className="relative w-48 h-64 bloom-shadow ring-4 ring-white/50 rounded-xl">
+                      <AvatarImage 
+                        src={otherMatches[currentOtherMatchIndex].image_url || ''} 
+                        alt={otherMatches[currentOtherMatchIndex].name}
+                        className="object-cover rounded-xl"
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-5xl rounded-xl">
+                        {otherMatches[currentOtherMatchIndex].name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+
+                  {/* Name */}
+                  <h3 className="text-3xl font-bold text-neutral-800 mb-4">{otherMatches[currentOtherMatchIndex].name}</h3>
+
+                  {/* Keywords */}
+                  <div className="flex flex-wrap justify-center gap-2 mb-6">
+                    {getKeywords(otherMatches[currentOtherMatchIndex].style).slice(0, 4).map((keyword, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-gradient-to-r from-mindful-100 to-enso-100 text-mindful-700 rounded-full text-sm font-medium"
+                      >
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Emotional Intro */}
+                  <p className="text-lg text-neutral-700 font-light italic leading-relaxed mb-4 max-w-xs mx-auto">
+                    "{getEmotionalIntro(otherMatches[currentOtherMatchIndex], false)}"
+                  </p>
+
+                  {/* Choose Button */}
+                  <Button
+                    onClick={() => handleContinue(otherMatches[currentOtherMatchIndex].id)}
+                    className="w-full max-w-xs bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-4"
+                  >
+                    Begin Your Journey with {otherMatches[currentOtherMatchIndex].name}
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Next Arrow Button */}
+              {otherMatches.length > 1 && (
+                <Button
+                  onClick={handleNextTherapist}
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 hover:bg-white shadow-lg border border-white/50 text-mindful-600 hover:text-mindful-700"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              )}
             </div>
           )}
 
