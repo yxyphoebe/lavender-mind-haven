@@ -329,9 +329,9 @@ const PersonaSelection = () => {
                   onClick={handleNextTherapist}
                   variant="ghost"
                   size="icon"
-                  className="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 hover:bg-white shadow-lg border border-white/50 text-mindful-600 hover:text-mindful-700"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-12 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors"
                 >
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowLeft className="w-5 h-5" />
                 </Button>
               )}
             </div>
