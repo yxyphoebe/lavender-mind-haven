@@ -184,7 +184,9 @@ const PersonaSelection = () => {
           <div className={`px-6 pb-8 transition-all duration-1000 ${showSuggestion ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <div className="text-center">
               <p className="text-neutral-500 text-sm leading-relaxed mb-4">
-                Looking for other kinds of energy? You might also click with these two beautiful souls.
+                Not quite feeling it?<br />
+                🌿 We've also found two more companions who deeply resonate with your vibe.<br />
+                Curious to meet them?
               </p>
               <Button
                 onClick={() => setShowMoreMatches(true)}
