@@ -15,8 +15,8 @@ const THERAPIST_PRIORITY: { [name: string]: number } = {
   'Sage': 1,
   'Camille': 2,
   'Elena': 3,
-  'Leo': 4,
-  'Jade': 5,
+  'Jade': 4,
+  'Leo': 5,
   'Lani': 6,
   'Elias': 7
 };
