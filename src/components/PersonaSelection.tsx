@@ -127,15 +127,15 @@ const PersonaSelection = () => {
             {topMatch && (
               <div className="text-center mb-8 animate-gentle-float">
                 {/* Avatar with Glow */}
-                <div className="relative mb-6">
+                <div className="relative mb-6 flex justify-center">
                   <div className="absolute inset-0 bg-gradient-to-r from-mindful-400/30 to-enso-500/30 rounded-xl blur-xl scale-110"></div>
-                  <Avatar className="relative w-36 h-52 bloom-shadow ring-4 ring-white/50 rounded-xl">
+                  <Avatar className="relative w-48 h-64 bloom-shadow ring-4 ring-white/50 rounded-xl">
                     <AvatarImage 
                       src={topMatch.image_url || ''} 
                       alt={`${topMatch.name} avatar`}
                       className="object-cover rounded-xl"
                     />
-                    <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-4xl rounded-xl">
+                    <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-5xl rounded-xl">
                       {topMatch.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
