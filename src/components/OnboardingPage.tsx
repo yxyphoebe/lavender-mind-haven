@@ -247,107 +247,59 @@ const OnboardingPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 flex items-center justify-center p-4">
-      <div className="max-w-lg w-full">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-violet-400 rounded-xl flex items-center justify-center zen-shadow">
-              <Heart className="w-6 h-6 text-white" />
-            </div>
-          </div>
-          <h1 className="font-display text-xl font-bold text-neutral-800 mb-1">
-            Let's personalize your journey
+      <div className="max-w-2xl w-full">
+        {/* Main Title - Question */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-bold text-slate-800 leading-tight">
+            {currentStepData.question}
           </h1>
-          <p className="text-slate-600 font-light text-sm mb-4">
-            A few questions to help us understand you better
-          </p>
-          
-          {/* Progress */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs text-slate-500">
-              <span>Step {currentStep + 1} of {steps.length}</span>
-              <span>{Math.round(progress)}% complete</span>
-            </div>
-            <Progress value={progress} className="h-1.5" />
-          </div>
         </div>
 
-        {/* Step Content */}
-        <Card className="bg-white/90 backdrop-blur-sm border border-blue-100 zen-shadow mb-8">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-semibold text-slate-800 text-center">
-              {currentStepData.title}
-            </CardTitle>
-            <p className="text-slate-600 text-xs text-center">
-              {currentStepData.description}
-            </p>
-            <p className="font-medium text-slate-800 text-sm mt-2 text-center">
-              {currentStepData.question}
-            </p>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="space-y-2">
-              {currentStepData.options.map((option) => {
-                const IconComponent = option.icon;
-                const isSelected = isOptionSelected(option.id);
+        {/* Options with Image Placeholders */}
+        <div className="space-y-6 mb-12">
+          {currentStepData.options.map((option) => {
+            const isSelected = isOptionSelected(option.id);
+            
+            return (
+              <div
+                key={option.id}
+                className={`p-6 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                  isSelected
+                    ? 'border-blue-400 bg-blue-50'
+                    : 'border-blue-200 hover:border-blue-300 hover:bg-blue-25'
+                }`}
+                onClick={() => handleOptionSelect(option.id)}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-medium text-slate-800 text-lg">
+                    {option.label}
+                  </h3>
+                  {isSelected && (
+                    <CheckCircle className="w-6 h-6 text-blue-600" />
+                  )}
+                </div>
                 
-                return (
-                  <div
-                    key={option.id}
-                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
-                      isSelected
-                        ? 'border-blue-400 bg-blue-50 zen-shadow'
-                        : 'border-blue-200 hover:border-blue-300 hover:bg-blue-25'
-                    }`}
-                    onClick={() => handleOptionSelect(option.id)}
-                  >
-                    <div className="flex items-center space-x-3">
-                      {IconComponent && (
-                        <div className={`w-5 h-5 rounded-md flex items-center justify-center ${
-                          isSelected ? 'bg-blue-400 text-white' : 'bg-blue-100 text-blue-600'
-                        }`}>
-                          <IconComponent className="w-3 h-3" />
-                        </div>
-                      )}
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-medium text-slate-800 text-sm">
-                            {option.label}
-                          </h4>
-                          {isSelected && (
-                            <CheckCircle className="w-4 h-4 text-blue-600 flex-shrink-0 ml-2" />
-                          )}
-                        </div>
-                        {option.description && (
-                          <p className="text-xs text-slate-600 mt-1">
-                            {option.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                {/* Two Image Placeholders */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="aspect-video bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
+                    <div className="text-gray-400 text-sm">Image 1</div>
                   </div>
-                );
-              })}
-            </div>
-
-            {currentStepData.multiSelect && (
-              <div className="mt-3 text-center">
-                <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">
-                  You can select multiple options
-                </Badge>
+                  <div className="aspect-video bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
+                    <div className="text-gray-400 text-sm">Image 2</div>
+                  </div>
+                </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
+            );
+          })}
+        </div>
 
         {/* Navigation */}
-        <div className="flex justify-between">
+        <div className="flex justify-between mb-8">
           <Button
             variant="outline"
             onClick={handleBack}
             disabled={currentStep === 0}
-            className="flex items-center space-x-2 border-blue-200 hover:bg-blue-50 bg-white text-sm"
+            className="flex items-center space-x-2"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back</span>
@@ -356,15 +308,16 @@ const OnboardingPage = () => {
           <Button
             onClick={handleNext}
             disabled={!canProceed()}
-            className={`flex items-center space-x-2 text-sm ${
-              canProceed()
-                ? 'bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white'
-                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-            }`}
+            className="flex items-center space-x-2"
           >
             <span>{currentStep === steps.length - 1 ? 'Complete' : 'Next'}</span>
             <ArrowRight className="w-4 h-4" />
           </Button>
+        </div>
+
+        {/* Progress Bar at Bottom */}
+        <div className="space-y-2">
+          <Progress value={progress} className="h-2" />
         </div>
       </div>
     </div>
