@@ -22,6 +22,8 @@ const OnboardingPage = () => {
   }
 
   if (error || !questions || questions.length === 0) {
+    console.log('Onboarding error:', error);
+    console.log('Questions:', questions);
     return (
       <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-white to-enso-50 flex items-center justify-center">
         <div className="text-lg text-red-600">Failed to load questions. Please try again.</div>
@@ -30,6 +32,9 @@ const OnboardingPage = () => {
   }
 
   const currentQuestion = questions[currentStep];
+  
+  console.log('Current question:', currentQuestion);
+  console.log('Current question options:', currentQuestion?.options);
 
   const handleOptionSelect = async (optionValue: string) => {
     // Save answer
