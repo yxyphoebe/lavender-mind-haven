@@ -61,7 +61,7 @@ const PersonaSelection = () => {
   };
 
   // Swipe detection
-  const minSwipeDistance = 50;
+  const minSwipeDistance = 80; // 增加滑动距离阈值，减少误触
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
@@ -83,14 +83,14 @@ const PersonaSelection = () => {
       // Swipe left - next therapist
       setIsTransitioning(true);
       setCurrentOtherMatchIndex(prev => prev < otherMatches.length - 1 ? prev + 1 : 0);
-      setTimeout(() => setIsTransitioning(false), 300);
+      setTimeout(() => setIsTransitioning(false), 600); // 延长动画时间，降低频率
     }
 
     if (isRightSwipe && !isTransitioning) {
       // Swipe right - previous therapist  
       setIsTransitioning(true);
       setCurrentOtherMatchIndex(prev => prev > 0 ? prev - 1 : otherMatches.length - 1);
-      setTimeout(() => setIsTransitioning(false), 300);
+      setTimeout(() => setIsTransitioning(false), 600); // 统一动画时间
     }
   };
 
@@ -263,7 +263,7 @@ const PersonaSelection = () => {
           {/* Current Therapist Display - Swipeable */}
           {otherMatches[currentOtherMatchIndex] && (
             <div 
-              className={`text-center mb-8 animate-gentle-float transition-transform duration-300 ${isTransitioning ? 'scale-95 opacity-80' : 'scale-100 opacity-100'}`}
+              className={`text-center mb-8 animate-gentle-float transition-all duration-500 ease-out ${isTransitioning ? 'scale-95 opacity-80' : 'scale-100 opacity-100'}`}
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
