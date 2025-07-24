@@ -118,21 +118,28 @@ const OnboardingPage = () => {
               className="w-full aspect-square bg-gray-100 border-2 border-gray-200 rounded-2xl overflow-hidden cursor-pointer hover:border-gray-300 hover:shadow-lg transition-all duration-200 active:scale-[0.98] relative group"
             >
               {/* Image */}
-              {option.image_url && (
+              {option.image_url ? (
                 <div className="absolute inset-0">
                   <img 
                     src={option.image_url} 
                     alt={option.option_value}
                     className="w-full h-full object-cover"
+                    onLoad={() => console.log('Image loaded:', option.image_url)}
+                    onError={(e) => {
+                      console.error('Image failed to load:', option.image_url);
+                      e.currentTarget.style.display = 'none';
+                    }}
                   />
                   {/* Overlay for better text readability */}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-200" />
                 </div>
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-purple-100" />
               )}
               
               {/* Text Overlay */}
               <div className="absolute inset-0 flex items-center justify-center p-6">
-                <div className="text-white text-center text-lg font-medium leading-relaxed drop-shadow-lg">
+                <div className={`text-center text-lg font-medium leading-relaxed ${option.image_url ? 'text-white drop-shadow-lg' : 'text-gray-700'}`}>
                   {option.option_value}
                 </div>
               </div>
