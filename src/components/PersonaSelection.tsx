@@ -214,31 +214,31 @@ const PersonaSelection = () => {
                 {/* Begin Button */}
                 <Button
                   onClick={() => handleContinue(topMatch.id)}
-                  className="w-full max-w-xs bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-4"
+                  className="w-full max-w-xs bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-6"
                 >
                   Begin Your Journey with {topMatch.name}
                 </Button>
+
+                {/* Subtle Suggestion - moved up */}
+                <div className={`transition-all duration-1000 ${showSuggestion ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                  <div className="text-center">
+                    <p className="text-neutral-500 text-sm leading-relaxed mb-3">
+                      Not quite feeling it?<br />
+                      🌿 We've also found two more companions who deeply resonate with your vibe.<br />
+                      Curious to meet them?
+                    </p>
+                    <Button
+                      onClick={() => setShowMoreMatches(true)}
+                      variant="outline"
+                      className="border-mindful-300 text-mindful-600 hover:bg-mindful-50 rounded-xl px-6 py-2"
+                    >
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Explore more matches
+                    </Button>
+                  </div>
+                </div>
               </div>
             )}
-          </div>
-
-          {/* Subtle Suggestion */}
-          <div className={`px-6 pb-4 transition-all duration-1000 ${showSuggestion ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <div className="text-center">
-              <p className="text-neutral-500 text-sm leading-relaxed mb-2">
-                Not quite feeling it?<br />
-                🌿 We've also found two more companions who deeply resonate with your vibe.<br />
-                Curious to meet them?
-              </p>
-              <Button
-                onClick={() => setShowMoreMatches(true)}
-                variant="outline"
-                className="border-mindful-300 text-mindful-600 hover:bg-mindful-50 rounded-xl px-6 py-2"
-              >
-                <Sparkles className="w-4 h-4 mr-2" />
-                Explore more matches
-              </Button>
-            </div>
           </div>
         </div>
       </div>
