@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { Heart, Sparkles, Loader2 } from 'lucide-react';
+import { Heart, Sparkles, Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapists } from '@/hooks/useTherapists';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -11,6 +11,7 @@ import { TherapistRecommendation } from '@/utils/therapistRecommendation';
 const PersonaSelection = () => {
   const [showMoreMatches, setShowMoreMatches] = useState(false);
   const [showSuggestion, setShowSuggestion] = useState(false);
+  const [currentOtherMatchIndex, setCurrentOtherMatchIndex] = useState(0);
   const [recommendations, setRecommendations] = useState<TherapistRecommendation[]>([]);
   const navigate = useNavigate();
   const { data: therapists, isLoading, error } = useTherapists();
@@ -199,106 +200,122 @@ const PersonaSelection = () => {
 
   // Expanded View - Other Matches
   return (
-    <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 p-4 safe-area-top safe-area-bottom">
-      <div className="max-w-md mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 safe-area-top safe-area-bottom">
+      <div className="max-w-md mx-auto flex flex-col min-h-screen">
         {/* Header */}
-        <div className="text-center mb-8 animate-fade-in">
+        <div className="p-6">
           <Button
             onClick={() => setShowMoreMatches(false)}
             variant="ghost"
-            className="mb-4 text-mindful-600 hover:text-mindful-700"
+            className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800"
           >
-            ← Back to Perfect Match
+            <ArrowLeft className="w-4 h-4" />
+            Back to Perfect Match
           </Button>
-          <h1 className="font-display text-2xl font-bold text-neutral-800 mb-2">
-            More Companions You May Like
-          </h1>
-          <p className="text-neutral-600 text-sm leading-relaxed">
-            These beautiful souls also resonate with your unique energy
-          </p>
         </div>
 
-        {/* Other Matches Carousel */}
-        <div className="mb-8">
-          <Carousel className="w-full">
-            <CarouselContent className="-ml-2 md:-ml-4">
-              {otherMatches.map((therapist) => {
-                const recommendation = getTherapistRecommendation(therapist.name);
-                
-                return (
-                  <CarouselItem key={therapist.id} className="pl-2 md:pl-4">
-                    <Card className="cursor-pointer transition-all duration-300 border-2 bg-gradient-to-br from-mindful-50 to-enso-50 backdrop-blur-sm border-mindful-200 zen-shadow hover:border-mindful-300 hover:scale-105">
-                      <CardContent className="p-6 text-center">
-                        {/* Rank Badge */}
-                        <div className="absolute top-2 right-2">
-                          <div className="bg-gradient-to-r from-mindful-400 to-enso-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                            #{recommendation?.rank}
-                          </div>
-                        </div>
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col justify-center px-6">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-neutral-800 mb-2">Other Great Matches</h2>
+            <p className="text-lg text-neutral-600 mb-6">Choose your companion for this journey</p>
+            
+            {/* Position Indicator */}
+            <div className="flex justify-center items-center gap-2 mb-8">
+              <span className="text-sm text-neutral-500">
+                {currentOtherMatchIndex + 1} of {otherMatches.length}
+              </span>
+            </div>
+          </div>
 
-                        {/* Avatar */}
-                        <div className="flex justify-center mb-4">
-                          <Avatar className="w-24 h-24 zen-shadow ring-2 ring-mindful-200">
-                            <AvatarImage 
-                              src={therapist.image_url || ''} 
-                              alt={`${therapist.name} avatar`}
-                              className="object-cover"
-                            />
-                            <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-2xl">
-                              {therapist.name.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                        </div>
+          {/* Current Therapist Display */}
+          {otherMatches[currentOtherMatchIndex] && (
+            <div className="text-center mb-8 animate-gentle-float">
+              {/* Rank Badge */}
+              <div className="flex justify-center mb-4">
+                <div className="bg-gradient-to-r from-mindful-400 to-enso-500 text-white text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">
+                  {currentOtherMatchIndex + 2}
+                </div>
+              </div>
 
-                        {/* Name */}
-                        <h3 className="font-display text-lg font-semibold text-neutral-800 mb-2">
-                          {therapist.name}
-                        </h3>
+              {/* Avatar with Glow */}
+              <div className="relative mb-2 flex justify-center">
+                <div className="absolute inset-0 bg-gradient-to-r from-mindful-400/30 to-enso-500/30 rounded-xl blur-xl scale-110"></div>
+                <Avatar className="relative w-48 h-64 bloom-shadow ring-4 ring-white/50 rounded-xl">
+                  <AvatarImage 
+                    src={otherMatches[currentOtherMatchIndex].image_url || ''} 
+                    alt={otherMatches[currentOtherMatchIndex].name}
+                    className="object-cover rounded-xl"
+                  />
+                  <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-5xl rounded-xl">
+                    {otherMatches[currentOtherMatchIndex].name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
 
-                        {/* Keywords */}
-                        <div className="flex flex-wrap justify-center gap-1 mb-3">
-                          {getKeywords(therapist.style).slice(0, 2).map((keyword, index) => (
-                            <span 
-                              key={index}
-                              className="px-2 py-1 bg-mindful-100 text-mindful-600 rounded-full text-xs"
-                            >
-                              {keyword}
-                            </span>
-                          ))}
-                        </div>
+              {/* Name */}
+              <h3 className="text-3xl font-bold text-neutral-800 mb-4">{otherMatches[currentOtherMatchIndex].name}</h3>
 
-                        {/* Emotional intro */}
-                        <p className="text-sm text-neutral-600 italic mb-4 leading-relaxed">
-                          "{getEmotionalIntro(therapist)}"
-                        </p>
+              {/* Keywords */}
+              <div className="flex flex-wrap justify-center gap-2 mb-6">
+                {getKeywords(otherMatches[currentOtherMatchIndex].style).slice(0, 4).map((keyword, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-gradient-to-r from-mindful-100 to-enso-100 text-mindful-700 rounded-full text-sm font-medium"
+                  >
+                    {keyword}
+                  </span>
+                ))}
+              </div>
 
-                        {/* Choose Button */}
-                        <Button
-                          onClick={() => handleContinue(therapist.id)}
-                          className="w-full bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-2 text-sm font-medium rounded-lg transition-all duration-300"
-                        >
-                          Choose {therapist.name}
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </CarouselItem>
-                );
-              })}
-            </CarouselContent>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </Carousel>
-        </div>
+              {/* Emotional Intro */}
+              <p className="text-lg text-neutral-700 font-light italic leading-relaxed mb-4 max-w-xs mx-auto">
+                "{getEmotionalIntro(otherMatches[currentOtherMatchIndex], false)}"
+              </p>
 
-        {/* Or go back to perfect match */}
-        <div className="text-center">
-          <Button
-            onClick={() => topMatch && handleContinue(topMatch.id)}
-            variant="outline"
-            className="border-mindful-300 text-mindful-600 hover:bg-mindful-50 rounded-xl px-8 py-3"
-          >
-            Actually, I'll go with {topMatch?.name}
-          </Button>
+              {/* Choose Button */}
+              <Button
+                onClick={() => handleContinue(otherMatches[currentOtherMatchIndex].id)}
+                className="w-full max-w-xs bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-4"
+              >
+                Begin Your Journey with {otherMatches[currentOtherMatchIndex].name}
+              </Button>
+            </div>
+          )}
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between items-center max-w-xs mx-auto mb-8">
+            <Button
+              onClick={() => setCurrentOtherMatchIndex(prev => prev > 0 ? prev - 1 : otherMatches.length - 1)}
+              variant="outline"
+              size="sm"
+              className="border-mindful-300 text-mindful-700 hover:bg-mindful-50"
+              disabled={otherMatches.length <= 1}
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            
+            <Button
+              onClick={() => setCurrentOtherMatchIndex(prev => prev < otherMatches.length - 1 ? prev + 1 : 0)}
+              variant="outline"
+              size="sm"
+              className="border-mindful-300 text-mindful-700 hover:bg-mindful-50"
+              disabled={otherMatches.length <= 1}
+            >
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+
+          {/* Go Back Option */}
+          <div className="text-center">
+            <Button
+              onClick={() => setShowMoreMatches(false)}
+              variant="outline"
+              className="border-mindful-300 text-mindful-700 hover:bg-mindful-50"
+            >
+              Actually, go back to my perfect match
+            </Button>
+          </div>
         </div>
       </div>
     </div>
