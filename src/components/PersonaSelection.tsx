@@ -220,7 +220,7 @@ const PersonaSelection = () => {
                 </Button>
 
                 {/* Subtle Suggestion - moved up */}
-                <div className={`transition-all duration-1000 ${showSuggestion ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                <div className={`mt-6 transition-all duration-1000 ${showSuggestion ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                   <div className="text-center">
                     <p className="text-neutral-500 text-sm leading-relaxed mb-3">
                       Not quite feeling it?<br />
