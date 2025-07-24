@@ -145,6 +145,7 @@ export type Database = {
           option_order: number
           option_value: string
           question_id: string
+          therapist_weights: Json | null
           updated_at: string
         }
         Insert: {
@@ -156,6 +157,7 @@ export type Database = {
           option_order: number
           option_value: string
           question_id: string
+          therapist_weights?: Json | null
           updated_at?: string
         }
         Update: {
@@ -167,6 +169,7 @@ export type Database = {
           option_order?: number
           option_value?: string
           question_id?: string
+          therapist_weights?: Json | null
           updated_at?: string
         }
         Relationships: [

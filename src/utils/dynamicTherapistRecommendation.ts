@@ -61,12 +61,18 @@ export const calculateTherapistRecommendationsFromDB = async (
         );
 
         if (option && Array.isArray(option.matching_roles)) {
+          // Check if option has custom weights
+          const hasWeights = option.therapist_weights && typeof option.therapist_weights === 'object';
+          
           // Add points to matching therapists
           option.matching_roles.forEach((therapistName: string) => {
             if (!therapistScores[therapistName]) {
               therapistScores[therapistName] = 0;
             }
-            therapistScores[therapistName] += 1;
+            
+            // Use custom weight if available, otherwise default to 1
+            const weight = hasWeights ? (option.therapist_weights as any)[therapistName] || 1 : 1;
+            therapistScores[therapistName] += weight;
           });
         }
       });
