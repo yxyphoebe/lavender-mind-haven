@@ -49,13 +49,7 @@ const PersonaSelection = () => {
 
   const getEmotionalIntro = (therapist: any, isTopMatch: boolean = false): string => {
     if (isTopMatch) {
-      if (therapist.name === 'Sage') return "She's here for what you're feeling, right now.";
-      if (therapist.name === 'Camille') return "Ready to walk through life's moments with you.";
-      if (therapist.name === 'Elena') return "Your gentle guide through emotional storms.";
-      if (therapist.name === 'Jade') return "Bringing clarity to your inner world.";
-      if (therapist.name === 'Leo') return "Here to help you find your strength.";
-      if (therapist.name === 'Lani') return "Your companion for healing and growth.";
-      if (therapist.name === 'Elias') return "Ready to support your journey forward.";
+      return "We think you'll feel deeply understood with her";
     }
     return "A compassionate soul aligned with your needs.";
   };
@@ -134,14 +128,14 @@ const PersonaSelection = () => {
               <div className="text-center mb-8 animate-gentle-float">
                 {/* Avatar with Glow */}
                 <div className="relative mb-6">
-                  <div className="absolute inset-0 bg-gradient-to-r from-mindful-400/30 to-enso-500/30 rounded-full blur-xl scale-110"></div>
-                  <Avatar className="relative w-40 h-40 bloom-shadow ring-4 ring-white/50">
+                  <div className="absolute inset-0 bg-gradient-to-r from-mindful-400/30 to-enso-500/30 rounded-xl blur-xl scale-110"></div>
+                  <Avatar className="relative w-36 h-52 bloom-shadow ring-4 ring-white/50 rounded-xl">
                     <AvatarImage 
                       src={topMatch.image_url || ''} 
                       alt={`${topMatch.name} avatar`}
-                      className="object-cover"
+                      className="object-cover rounded-xl"
                     />
-                    <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-4xl">
+                    <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-4xl rounded-xl">
                       {topMatch.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
