@@ -1,71 +1,46 @@
 import { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { calculateTherapistRecommendations } from '@/utils/therapistRecommendation';
+import { calculateTherapistRecommendationsFromDB } from '@/utils/dynamicTherapistRecommendation';
+import { useOnboardingQuestions } from '@/hooks/useOnboarding';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-
-interface OnboardingStep {
-  id: number;
-  question: string;
-  options: Array<{
-    id: string;
-  }>;
-}
 
 const OnboardingPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string[]>>({});
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { data: questions, isLoading, error } = useOnboardingQuestions();
 
-  const steps: OnboardingStep[] = [
-    {
-      id: 0,
-      question: "When you're going through something, how do you usually process it?",
-      options: [
-        { id: 'talk-emotions' },
-        { id: 'logical-thinking' }
-      ]
-    },
-    {
-      id: 1,
-      question: "Which of these do you relate to most right now?",
-      options: [
-        { id: 'emotionally-overwhelmed' },
-        { id: 'stuck-decisions' }
-      ]
-    },
-    {
-      id: 2,
-      question: "What kind of support would feel most comforting to you now?",
-      options: [
-        { id: 'warm-motherly' },
-        { id: 'calm-grounded' }
-      ]
-    },
-    {
-      id: 3,
-      question: "If you had to choose a vibe right now...",
-      options: [
-        { id: 'cozy-tea' },
-        { id: 'clean-desk' }
-      ]
-    }
-  ];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-white to-enso-50 flex items-center justify-center">
+        <div className="text-lg text-gray-600">Loading questions...</div>
+      </div>
+    );
+  }
 
-  const currentStepData = steps[currentStep];
+  if (error || !questions || questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-white to-enso-50 flex items-center justify-center">
+        <div className="text-lg text-red-600">Failed to load questions. Please try again.</div>
+      </div>
+    );
+  }
 
-  const handleOptionSelect = async (optionId: string) => {
+  const currentQuestion = questions[currentStep];
+
+  const handleOptionSelect = async (optionValue: string) => {
     // Save answer
     setAnswers({
       ...answers,
-      [currentStep]: [optionId]
+      [currentStep]: [optionValue]
     });
 
     // Auto-advance after small delay
     setTimeout(async () => {
-      if (currentStep < steps.length - 1) {
+      if (currentStep < questions.length - 1) {
         setCurrentStep(currentStep + 1);
       } else {
         // Complete onboarding
@@ -82,8 +57,8 @@ const OnboardingPage = () => {
             return;
           }
 
-          const finalAnswers = { ...answers, [currentStep]: [optionId] };
-          const recommendations = calculateTherapistRecommendations(finalAnswers);
+          const finalAnswers = { ...answers, [currentStep]: [optionValue] };
+          const recommendations = await calculateTherapistRecommendationsFromDB(finalAnswers);
           
           localStorage.setItem('onboardingComplete', 'true');
           localStorage.setItem('onboardingAnswers', JSON.stringify(finalAnswers));
@@ -131,19 +106,19 @@ const OnboardingPage = () => {
       <div className="flex-1 flex flex-col items-center pt-20 max-w-lg mx-auto w-full px-4">
         {/* Question Title */}
         <h1 className="text-lg font-medium text-center text-gray-800 mb-10 leading-relaxed">
-          {currentStepData.question}
+          {currentQuestion.question_text}
         </h1>
 
         {/* Image Options - Vertical Layout */}
         <div className="w-full space-y-6">
-          {currentStepData.options.map((option, index) => (
+          {currentQuestion.options.map((option, index) => (
             <div
               key={option.id}
-              onClick={() => handleOptionSelect(option.id)}
+              onClick={() => handleOptionSelect(option.option_value)}
               className="w-full aspect-square bg-gray-100 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 active:scale-98"
             >
               <div className="text-gray-400 text-lg font-medium">
-                Image {index + 1}
+                Option {option.option_key}
               </div>
             </div>
           ))}

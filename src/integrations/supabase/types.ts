@@ -135,6 +135,77 @@ export type Database = {
           },
         ]
       }
+      onboarding_options: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          matching_roles: Json
+          option_key: string
+          option_order: number
+          option_value: string
+          question_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          matching_roles?: Json
+          option_key: string
+          option_order: number
+          option_value: string
+          question_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          matching_roles?: Json
+          option_key?: string
+          option_order?: number
+          option_value?: string
+          question_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_questions: {
+        Row: {
+          created_at: string
+          id: string
+          question_key: string
+          question_order: number
+          question_text: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          question_key: string
+          question_order: number
+          question_text: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          question_key?: string
+          question_order?: number
+          question_text?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       onboarding_responses: {
         Row: {
           answer_value: string
