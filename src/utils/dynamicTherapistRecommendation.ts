@@ -10,6 +10,17 @@ interface TherapistScores {
   [therapistName: string]: number;
 }
 
+// Therapist priority order for tie-breaking (lower number = higher priority)
+const THERAPIST_PRIORITY: { [name: string]: number } = {
+  'Sage': 1,
+  'Camille': 2,
+  'Elena': 3,
+  'Leo': 4,
+  'Jade': 5,
+  'Lani': 6,
+  'Elias': 7
+};
+
 export const calculateTherapistRecommendationsFromDB = async (
   answers: Record<number, string[]>
 ): Promise<TherapistRecommendation[]> => {
@@ -61,10 +72,19 @@ export const calculateTherapistRecommendationsFromDB = async (
       });
     });
 
-    // Convert to array and sort by score
+    // Convert to array and sort by score with tie-breaking
     const recommendations = Object.entries(therapistScores)
       .map(([name, score]) => ({ name, score, rank: 0 }))
-      .sort((a, b) => b.score - a.score);
+      .sort((a, b) => {
+        // First, sort by score (higher score wins)
+        if (b.score !== a.score) {
+          return b.score - a.score;
+        }
+        // If scores are tied, sort by priority (lower number = higher priority)
+        const aPriority = THERAPIST_PRIORITY[a.name] || 999;
+        const bPriority = THERAPIST_PRIORITY[b.name] || 999;
+        return aPriority - bPriority;
+      });
 
     // Assign ranks
     recommendations.forEach((rec, index) => {
