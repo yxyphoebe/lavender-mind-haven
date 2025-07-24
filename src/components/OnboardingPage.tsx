@@ -140,7 +140,7 @@ const OnboardingPage = () => {
             <div
               key={option.id}
               onClick={() => handleOptionSelect(option.id)}
-              className="w-full aspect-[3/2] bg-gray-100 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 active:scale-98"
+              className="w-full aspect-square bg-gray-100 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 active:scale-98"
             >
               <div className="text-gray-400 text-lg font-medium">
                 Image {index + 1}
