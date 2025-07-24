@@ -331,7 +331,7 @@ const PersonaSelection = () => {
                   size="icon"
                   className="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-12 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors"
                 >
-                  <ArrowLeft className="w-5 h-5" />
+                  <ArrowRight className="w-5 h-5" />
                 </Button>
               )}
             </div>
