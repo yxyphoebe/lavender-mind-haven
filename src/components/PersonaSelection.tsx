@@ -114,7 +114,7 @@ const PersonaSelection = () => {
           {/* Perfect Match Hero Section */}
           <div className="flex-1 flex flex-col items-center justify-center px-6 animate-fade-in">
             {/* Title */}
-            <div className="text-center mb-12">
+            <div className="text-center mb-8">
               <h1 className="font-display text-3xl font-bold text-neutral-800 mb-3 leading-tight">
                 Meet Your Perfect Match
               </h1>
@@ -127,7 +127,7 @@ const PersonaSelection = () => {
             {topMatch && (
               <div className="text-center mb-8 animate-gentle-float">
                 {/* Avatar with Glow */}
-                <div className="relative mb-6 flex justify-center">
+                <div className="relative mb-4 flex justify-center">
                   <div className="absolute inset-0 bg-gradient-to-r from-mindful-400/30 to-enso-500/30 rounded-xl blur-xl scale-110"></div>
                   <Avatar className="relative w-48 h-64 bloom-shadow ring-4 ring-white/50 rounded-xl">
                     <AvatarImage 
@@ -159,7 +159,7 @@ const PersonaSelection = () => {
                 </div>
 
                 {/* Emotional Intro */}
-                <p className="text-lg text-neutral-700 font-light italic leading-relaxed mb-8 max-w-xs mx-auto">
+                <p className="text-lg text-neutral-700 font-light italic leading-relaxed mb-6 max-w-xs mx-auto">
                   "{getEmotionalIntro(topMatch, true)}"
                 </p>
 
@@ -175,9 +175,9 @@ const PersonaSelection = () => {
           </div>
 
           {/* Subtle Suggestion */}
-          <div className={`px-6 pb-8 transition-all duration-1000 ${showSuggestion ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className={`px-6 pb-6 transition-all duration-1000 ${showSuggestion ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <div className="text-center">
-              <p className="text-neutral-500 text-sm leading-relaxed mb-4">
+              <p className="text-neutral-500 text-sm leading-relaxed mb-3">
                 Not quite feeling it?<br />
                 🌿 We've also found two more companions who deeply resonate with your vibe.<br />
                 Curious to meet them?
