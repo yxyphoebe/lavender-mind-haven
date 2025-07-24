@@ -135,8 +135,8 @@ const OnboardingPage = () => {
                       e.currentTarget.style.display = 'none';
                     }}
                   />
-                  {/* Overlay for better text readability */}
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-200" />
+                  {/* Light overlay for better text readability */}
+                  <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 transition-colors duration-200" />
                 </div>
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-purple-100" />
