@@ -323,16 +323,33 @@ const PersonaSelection = () => {
                 </div>
               </div>
               
-              {/* Next Arrow Button */}
+              {/* Dynamic Arrow Buttons */}
               {otherMatches.length > 1 && (
-                <Button
-                  onClick={handleNextTherapist}
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-12 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors"
-                >
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
+                <>
+                  {/* First page: Right arrow on right side */}
+                  {currentOtherMatchIndex === 0 && (
+                    <Button
+                      onClick={handleNextTherapist}
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-12 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors"
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </Button>
+                  )}
+                  
+                  {/* Second page: Left arrow on left side */}
+                  {currentOtherMatchIndex === 1 && (
+                    <Button
+                      onClick={handlePrevTherapist}
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-1/2 left-2 -translate-y-1/2 w-12 h-12 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors"
+                    >
+                      <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                  )}
+                </>
               )}
             </div>
           )}
