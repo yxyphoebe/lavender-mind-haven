@@ -242,7 +242,7 @@ const PersonaSelection = () => {
         {/* Main Content */}
         <div className="flex-1 flex flex-col justify-start pt-16 px-6">
           <div className="text-center mb-8">
-            <h2 className="text-xl font-bold text-neutral-800 mb-2">More Who Might Feel Right</h2>
+            <h2 className="text-2xl font-bold text-neutral-800 mb-2">More Who Might Feel Right</h2>
             <p className="text-lg text-neutral-600 mb-6">Swipe to explore your options</p>
           </div>
 
