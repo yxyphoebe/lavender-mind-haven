@@ -166,9 +166,6 @@ const PersonaSelection = () => {
               <h1 className="font-display text-3xl font-bold text-neutral-800 mb-3 leading-tight">
                 Meet Your Perfect Match
               </h1>
-              <p className="text-neutral-600 text-lg font-light leading-relaxed">
-                Your emotional support, chosen just for you.
-              </p>
             </div>
 
             {/* Perfect Match Card */}
