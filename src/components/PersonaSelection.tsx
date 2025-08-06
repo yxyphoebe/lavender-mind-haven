@@ -239,20 +239,8 @@ const PersonaSelection = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 safe-area-top safe-area-bottom">
       <div className="max-w-md mx-auto flex flex-col min-h-screen">
-        {/* Header */}
-        <div className="p-6">
-          <Button
-            onClick={() => setShowMoreMatches(false)}
-            variant="ghost"
-            className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Perfect Match
-          </Button>
-        </div>
-
         {/* Main Content */}
-        <div className="flex-1 flex flex-col justify-start pt-12 px-6">
+        <div className="flex-1 flex flex-col justify-start pt-16 px-6">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-neutral-800 mb-2">Other Great Matches</h2>
             <p className="text-lg text-neutral-600 mb-6">Swipe to explore your options</p>
@@ -269,7 +257,7 @@ const PersonaSelection = () => {
               >
                 <div className="animate-gentle-float">
                   {/* Video/Avatar - Large */}
-                  <div className="relative mb-4 flex justify-center">
+                  <div className="relative mb-6 flex justify-center">
                     <VideoAvatar
                       videoUrl={otherMatches[currentOtherMatchIndex].intro_video_url}
                       imageUrl={otherMatches[currentOtherMatchIndex].image_url}
@@ -296,7 +284,7 @@ const PersonaSelection = () => {
                   {/* Choose Button */}
                   <Button
                     onClick={() => handleContinue(otherMatches[currentOtherMatchIndex].id)}
-                    className="w-full max-w-sm bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-4"
+                    className="w-full max-w-sm bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-6"
                   >
                     Begin with {otherMatches[currentOtherMatchIndex].name}
                   </Button>
