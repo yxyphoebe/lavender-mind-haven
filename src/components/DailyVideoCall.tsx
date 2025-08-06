@@ -210,16 +210,15 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave, thera
   useEffect(() => {
     // Create Daily call object with optimized settings for low latency
     const daily = Daily.createCallObject({
-      // Start without audio/video to enable them after join for better connection
-      audioSource: false,
-      videoSource: false,
+      // Enable audio/video immediately so Tavus can see and hear the user
+      audioSource: true,
+      videoSource: true,
       
       // Network and connection optimization
       subscribeToTracksAutomatically: true,
       
       // Additional configuration for performance
       dailyConfig: {
-        // Remove the unsupported property - only use valid Daily.co config
         userMediaAudioConstraints: {
           echoCancellation: true,
           noiseSuppression: true,
