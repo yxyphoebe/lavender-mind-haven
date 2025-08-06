@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Loader2, Heart, Zap, Star, AlertCircle } from 'lucide-react';
 import DailyVideoCall from './DailyVideoCall';
+import RatingDialog from './RatingDialog';
 
 const VideoChat = () => {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ const VideoChat = () => {
   
   const [isInCall, setIsInCall] = useState(false);
   const [roomUrl, setRoomUrl] = useState<string | null>(null);
+  const [showRating, setShowRating] = useState(false);
+  const [sessionId] = useState(() => crypto.randomUUID());
 
   // Tavus integration
   const { 
@@ -83,6 +86,12 @@ const VideoChat = () => {
     setIsInCall(false);
     setRoomUrl(null);
     
+    // Show rating dialog instead of navigating directly
+    setShowRating(true);
+  };
+
+  const handleRatingClose = () => {
+    setShowRating(false);
     navigate('/user-center');
   };
 
@@ -165,6 +174,14 @@ const VideoChat = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
+
+      {/* Rating Dialog */}
+      <RatingDialog
+        open={showRating}
+        onClose={handleRatingClose}
+        therapistId={selectedTherapistId}
+        sessionId={sessionId}
+      />
     </div>
   );
 };
