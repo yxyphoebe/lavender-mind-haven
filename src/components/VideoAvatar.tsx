@@ -105,7 +105,7 @@ export const VideoAvatar = ({
             </Avatar>
             
             {/* Beautiful glassmorphism "Hear from [Name]" button overlay */}
-            <div className="absolute inset-0 flex items-end justify-center pb-8 bg-gradient-to-t from-black/50 via-black/20 to-transparent">
+            <div className="absolute inset-0 flex items-end justify-center pb-8 bg-gradient-to-t from-black/40 via-black/15 to-transparent">
               <button
                 onClick={(e) => {
                   console.log('Button clicked for:', name);
@@ -152,7 +152,7 @@ export const VideoAvatar = ({
 
           {/* Replay button when video has ended */}
           {hasEnded && !isVideoLoading && hasStarted && (
-            <div className="absolute inset-0 flex items-end justify-center pb-8 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+            <div className="absolute inset-0 flex items-end justify-center pb-8 bg-gradient-to-t from-black/40 via-black/15 to-transparent">
               <button
                 onClick={handleReplay}
                 className="group/btn relative px-6 py-3 rounded-xl bg-white/20 backdrop-blur-md text-white font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out border border-white/30 hover:bg-white/30"
