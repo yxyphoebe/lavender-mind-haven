@@ -128,42 +128,43 @@ export const VideoAvatar = ({
           </div>
         )}
 
-        {/* Video element (hidden until started) */}
-        {hasStarted && (
-          <>
-            {/* Loading state */}
-            {isVideoLoading && (
-              <div className="absolute inset-0 bg-gradient-to-br from-mindful-100 to-enso-100 flex items-center justify-center z-10">
-                <Loader2 className="w-8 h-8 animate-spin text-mindful-400" />
-              </div>
-            )}
+        {/* Video element (always rendered, visibility controlled by CSS) */}
+        <>
+          {/* Loading state */}
+          {isVideoLoading && hasStarted && (
+            <div className="absolute inset-0 bg-gradient-to-br from-mindful-100 to-enso-100 flex items-center justify-center z-10">
+              <Loader2 className="w-8 h-8 animate-spin text-mindful-400" />
+            </div>
+          )}
 
-            <video
-              ref={videoRef}
-              src={videoUrl}
-              className="w-full h-full object-cover"
-              playsInline
-              onLoadedData={handleVideoLoad}
-              onError={handleVideoError}
-              onEnded={handleVideoEnded}
-            />
-
-            {/* Replay button when video has ended */}
-            {hasEnded && !isVideoLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/60 via-black/20 to-transparent">
-                <button
-                  onClick={handleReplay}
-                  className="group/btn relative px-6 py-3 rounded-xl bg-white/20 backdrop-blur-md text-white font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out border border-white/30 hover:bg-white/30"
-                >
-                  <div className="flex items-center gap-2">
-                    <Play className="w-4 h-4 ml-0.5 group-hover/btn:animate-pulse" />
-                    <span>Watch Again</span>
-                  </div>
-                </button>
-              </div>
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            className={cn(
+              "w-full h-full object-cover transition-opacity duration-300",
+              hasStarted ? "opacity-100" : "opacity-0 pointer-events-none"
             )}
-          </>
-        )}
+            playsInline
+            onLoadedData={handleVideoLoad}
+            onError={handleVideoError}
+            onEnded={handleVideoEnded}
+          />
+
+          {/* Replay button when video has ended */}
+          {hasEnded && !isVideoLoading && hasStarted && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+              <button
+                onClick={handleReplay}
+                className="group/btn relative px-6 py-3 rounded-xl bg-white/20 backdrop-blur-md text-white font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out border border-white/30 hover:bg-white/30"
+              >
+                <div className="flex items-center gap-2">
+                  <Play className="w-4 h-4 ml-0.5 group-hover/btn:animate-pulse" />
+                  <span>Watch Again</span>
+                </div>
+              </button>
+            </div>
+          )}
+        </>
       </div>
     </div>
   );
