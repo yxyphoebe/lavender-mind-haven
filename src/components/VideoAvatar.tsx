@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Play, VolumeX, Volume2, Loader2 } from 'lucide-react';
+import { Play, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface VideoAvatarProps {
@@ -20,22 +20,26 @@ export const VideoAvatar = ({
 }: VideoAvatarProps) => {
   const [isVideoLoading, setIsVideoLoading] = useState(true);
   const [hasVideoError, setHasVideoError] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [hasStarted, setHasStarted] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleVideoLoad = () => {
     setIsVideoLoading(false);
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        setHasVideoError(true);
-      });
-    }
   };
 
   const handleVideoError = () => {
     setIsVideoLoading(false);
     setHasVideoError(true);
+  };
+
+  const handleVideoClick = () => {
+    if (videoRef.current && !hasStarted) {
+      setHasStarted(true);
+      videoRef.current.play().catch(() => {
+        setHasVideoError(true);
+      });
+    }
   };
 
   const handleVideoEnded = () => {
@@ -47,13 +51,6 @@ export const VideoAvatar = ({
       setHasEnded(false);
       videoRef.current.currentTime = 0;
       videoRef.current.play();
-    }
-  };
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
     }
   };
 
@@ -94,30 +91,23 @@ export const VideoAvatar = ({
         <video
           ref={videoRef}
           src={videoUrl}
-          className="w-full h-full object-cover"
-          muted={isMuted}
+          className="w-full h-full object-cover cursor-pointer"
           playsInline
           onLoadedData={handleVideoLoad}
           onError={handleVideoError}
           onEnded={handleVideoEnded}
+          onClick={handleVideoClick}
         />
 
-        {/* Video controls overlay */}
-        {showControls && !isVideoLoading && (
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 flex items-center justify-center">
-            <div className="flex gap-3">
-              {/* Mute/Unmute button */}
-              <button
-                onClick={toggleMute}
-                className="w-12 h-12 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
-              >
-                {isMuted ? (
-                  <VolumeX className="w-5 h-5" />
-                ) : (
-                  <Volume2 className="w-5 h-5" />
-                )}
-              </button>
-            </div>
+        {/* Play button overlay when video hasn't started */}
+        {!hasStarted && !isVideoLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+            <button
+              onClick={handleVideoClick}
+              className="w-16 h-16 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors backdrop-blur-sm"
+            >
+              <Play className="w-8 h-8 ml-1" />
+            </button>
           </div>
         )}
 
