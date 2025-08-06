@@ -104,8 +104,8 @@ export const VideoAvatar = ({
               </AvatarFallback>
             </Avatar>
             
-            {/* Beautiful glassmorphism "Talk to [Name]" button overlay */}
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/40 via-transparent to-transparent">
+            {/* Beautiful glassmorphism "Hear from [Name]" button overlay */}
+            <div className="absolute inset-0 flex items-end justify-center pb-8 bg-gradient-to-t from-black/50 via-black/20 to-transparent">
               <button
                 onClick={(e) => {
                   console.log('Button clicked for:', name);
@@ -117,7 +117,7 @@ export const VideoAvatar = ({
               >
                 <div className="flex items-center gap-3 relative z-10">
                   <MessageCircle className="w-5 h-5 group-hover/btn:animate-pulse" />
-                  <span className="text-lg font-semibold">Talk to {name}</span>
+                  <span className="text-lg font-semibold">Hear from {name}</span>
                 </div>
                 {/* Glassmorphism inner glow */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/10 to-white/5 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
