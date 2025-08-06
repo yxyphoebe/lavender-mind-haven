@@ -8,9 +8,14 @@ import { PhoneOff, Eye, EyeOff, Move } from 'lucide-react';
 interface DailyVideoCallProps {
   roomUrl: string;
   onLeave: () => void;
+  therapist?: {
+    id: string;
+    name: string;
+    image_url?: string;
+  };
 }
 
-const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
+const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string; name: string; image_url?: string } }> = ({ onLeave, therapist }) => {
   const daily = useDaily();
   const localParticipant = useLocalParticipant();
   const [remoteParticipant, setRemoteParticipant] = useState<any>(null);
@@ -197,7 +202,7 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
       {/* Header Message */}
       <div className="mb-8 text-center">
         <h2 className="text-2xl font-display font-semibold text-slate-700 mb-2">
-          Nuva is here with you
+          {therapist?.name || 'Nuva'} is here with you
         </h2>
         <p className="text-slate-600 font-medium">
           Take a deep breath and let's begin this mindful conversation
@@ -223,10 +228,20 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
         {!remoteVideo && (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg">
-                <span className="text-white text-4xl font-bold">N</span>
+              <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg overflow-hidden">
+                {therapist?.image_url ? (
+                  <img 
+                    src={therapist.image_url} 
+                    alt={therapist.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-white text-4xl font-bold">
+                    {therapist?.name?.[0] || 'N'}
+                  </span>
+                )}
               </div>
-              <p className="text-slate-600 font-medium">Connecting to Nuva...</p>
+              <p className="text-slate-600 font-medium">Connecting to {therapist?.name || 'Nuva'}...</p>
             </div>
           </div>
         )}
@@ -271,7 +286,7 @@ const VideoCallContent: React.FC<{ onLeave: () => void }> = ({ onLeave }) => {
   );
 };
 
-const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave }) => {
+const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave, therapist }) => {
   const [callObject, setCallObject] = useState<any>(null);
 
   useEffect(() => {
@@ -322,8 +337,18 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave }) => 
     return (
       <div className="h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mb-4 mx-auto animate-pulse">
-            <span className="text-white text-xl font-bold">N</span>
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mb-4 mx-auto animate-pulse overflow-hidden">
+            {therapist?.image_url ? (
+              <img 
+                src={therapist.image_url} 
+                alt={therapist.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-white text-xl font-bold">
+                {therapist?.name?.[0] || 'N'}
+              </span>
+            )}
           </div>
           <p className="text-slate-600 font-medium">Initializing video call...</p>
         </div>
@@ -333,7 +358,7 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave }) => 
 
   return (
     <DailyProvider callObject={callObject}>
-      <VideoCallContent onLeave={onLeave} />
+      <VideoCallContent onLeave={onLeave} therapist={therapist} />
     </DailyProvider>
   );
 };

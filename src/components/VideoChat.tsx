@@ -88,7 +88,7 @@ const VideoChat = () => {
 
   // If in call, show the Daily video interface
   if (isInCall && roomUrl) {
-    return <DailyVideoCall roomUrl={roomUrl} onLeave={handleLeaveCall} />;
+    return <DailyVideoCall roomUrl={roomUrl} onLeave={handleLeaveCall} therapist={therapist} />;
   }
 
   // Pre-call interface
