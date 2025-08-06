@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { Heart, Sparkles, Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Heart, Sparkles, Loader2, ArrowLeft, ArrowRight, Play, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapists } from '@/hooks/useTherapists';
 import { VideoAvatar } from '@/components/VideoAvatar';
@@ -206,7 +206,8 @@ const PersonaSelection = () => {
                   onClick={() => handleContinue(topMatch.id)}
                   className="w-full max-w-sm bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-xl font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-6"
                 >
-                  Begin with {topMatch.name}
+                  <Play className="w-5 h-5 mr-2" />
+                  Start with {topMatch.name}
                 </Button>
 
                 {/* Suggestion */}
@@ -217,11 +218,11 @@ const PersonaSelection = () => {
                     </p>
                     <Button
                       onClick={() => setShowMoreMatches(true)}
-                      variant="outline"
-                      className="border-mindful-300 text-mindful-600 hover:bg-mindful-50 rounded-xl px-8 py-3"
+                      variant="secondary"
+                      className="px-8 py-3 text-lg font-medium"
                     >
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      See Other Matches
+                      <Users className="w-5 h-5 mr-2" />
+                      View Other Matches
                     </Button>
                   </div>
                 </div>
@@ -242,10 +243,10 @@ const PersonaSelection = () => {
           <Button
             onClick={() => setShowMoreMatches(false)}
             variant="ghost"
-            className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800"
+            className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800 p-2"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Perfect Match
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-base font-medium">Back</span>
           </Button>
         </div>
 
@@ -296,7 +297,8 @@ const PersonaSelection = () => {
                     onClick={() => handleContinue(otherMatches[currentOtherMatchIndex].id)}
                     className="w-full max-w-sm bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-4"
                   >
-                    Begin with {otherMatches[currentOtherMatchIndex].name}
+                    <Play className="w-5 h-5 mr-2" />
+                    Choose {otherMatches[currentOtherMatchIndex].name}
                   </Button>
                 </div>
               </div>
@@ -304,45 +306,33 @@ const PersonaSelection = () => {
               {/* Dynamic Arrow Buttons */}
               {otherMatches.length > 1 && (
                 <>
-                  {/* First page: Right arrow on right side */}
-                  {currentOtherMatchIndex === 0 && (
-                    <Button
-                      onClick={handleNextTherapist}
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-12 rounded-full hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 transition-colors"
-                    >
-                      <ArrowRight className="w-5 h-5" />
-                    </Button>
-                  )}
+                  {/* Navigation Arrows - Always visible but disabled when needed */}
+                  <Button
+                    onClick={handlePrevTherapist}
+                    variant="ghost"
+                    size="icon"
+                    disabled={currentOtherMatchIndex === 0}
+                    className="absolute top-1/2 left-2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 hover:bg-white shadow-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+                  >
+                    <ArrowLeft className="w-6 h-6" />
+                  </Button>
                   
-                  {/* Second page: Left arrow on left side */}
-                  {currentOtherMatchIndex === 1 && (
-                    <Button
-                      onClick={handlePrevTherapist}
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-1/2 left-2 -translate-y-1/2 w-12 h-12 rounded-full hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 transition-colors"
-                    >
-                      <ArrowLeft className="w-5 h-5" />
-                    </Button>
-                  )}
+                  <Button
+                    onClick={handleNextTherapist}
+                    variant="ghost"
+                    size="icon"
+                    disabled={currentOtherMatchIndex === otherMatches.length - 1}
+                    className="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 hover:bg-white shadow-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+                  >
+                    <ArrowRight className="w-6 h-6" />
+                  </Button>
                 </>
               )}
             </div>
           )}
 
 
-          {/* Go Back Option */}
-          <div className="text-center">
-            <Button
-              onClick={() => setShowMoreMatches(false)}
-              variant="outline"
-              className="border-mindful-300 text-mindful-700 hover:bg-mindful-50"
-            >
-              Actually, go back to my perfect match
-            </Button>
-          </div>
+          {/* Go Back Option - Removed as we have header button */}
         </div>
       </div>
     </div>
