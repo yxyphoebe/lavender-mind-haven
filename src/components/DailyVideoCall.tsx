@@ -131,9 +131,7 @@ const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string
       onClick={handleScreenTap}
       style={{ 
         height: '100vh', 
-        width: '100vw',
-        paddingTop: 'env(safe-area-inset-top)',
-        paddingBottom: 'env(safe-area-inset-bottom)'
+        width: '100vw'
       }}
     >
       {/* Full-screen Remote Video */}
@@ -165,37 +163,41 @@ const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string
         {remoteAudioElement}
       </div>
 
-
       {/* FaceTime-style Controls */}
       <div 
-        className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-opacity duration-300 ${
+        className={`fixed bottom-0 left-0 right-0 z-50 transition-opacity duration-300 ${
           showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={(e) => e.stopPropagation()}
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        style={{ 
+          paddingBottom: 'calc(env(safe-area-inset-bottom) + 2rem)',
+          paddingTop: '2rem'
+        }}
       >
-        <div className="flex items-center space-x-6 bg-black/40 backdrop-blur-md rounded-full px-6 py-4">
-          <button
-            onClick={toggleMute}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isMuted 
-                ? 'bg-red-500 text-white hover:bg-red-600' 
-                : 'bg-white/20 text-white hover:bg-white/30'
-            }`}
-          >
-            {isMuted ? (
-              <MicOff className="w-6 h-6" />
-            ) : (
-              <Mic className="w-6 h-6" />
-            )}
-          </button>
-          
-          <button
-            onClick={handleLeave}
-            className="w-16 h-16 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg"
-          >
-            <PhoneOff className="w-8 h-8 text-white" />
-          </button>
+        <div className="flex items-center justify-center">
+          <div className="flex items-center space-x-6 bg-black/60 backdrop-blur-lg rounded-full px-8 py-4 shadow-2xl border border-white/10">
+            <button
+              onClick={toggleMute}
+              className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 ${
+                isMuted 
+                  ? 'bg-red-500 text-white hover:bg-red-600 shadow-lg' 
+                  : 'bg-white/20 text-white hover:bg-white/30'
+              }`}
+            >
+              {isMuted ? (
+                <MicOff className="w-6 h-6" />
+              ) : (
+                <Mic className="w-6 h-6" />
+              )}
+            </button>
+            
+            <button
+              onClick={handleLeave}
+              className="w-16 h-16 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-all duration-200 shadow-xl"
+            >
+              <PhoneOff className="w-8 h-8 text-white" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
