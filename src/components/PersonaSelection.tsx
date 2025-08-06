@@ -5,7 +5,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Heart, Sparkles, Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapists } from '@/hooks/useTherapists';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { VideoAvatar } from '@/components/VideoAvatar';
 import { TherapistRecommendation } from '@/utils/therapistRecommendation';
 
 const PersonaSelection = () => {
@@ -174,66 +174,54 @@ const PersonaSelection = () => {
             {/* Perfect Match Card */}
             {topMatch && (
               <div className="text-center mb-8 animate-gentle-float">
-                {/* Avatar with Glow */}
-                <div className="relative mb-2 flex justify-center">
-                  <div className="absolute inset-0 bg-gradient-to-r from-mindful-400/30 to-enso-500/30 rounded-xl blur-xl scale-110"></div>
-                  <Avatar className="relative w-48 h-64 bloom-shadow ring-4 ring-white/50 rounded-xl">
-                    <AvatarImage 
-                      src={topMatch.image_url || ''} 
-                      alt={`${topMatch.name} avatar`}
-                      className="object-cover rounded-xl"
-                    />
-                    <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-5xl rounded-xl">
-                      {topMatch.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
+                {/* Video/Avatar - Much Larger */}
+                <div className="relative mb-6 flex justify-center">
+                  <VideoAvatar
+                    videoUrl={topMatch.intro_video_url}
+                    imageUrl={topMatch.image_url}
+                    name={topMatch.name}
+                    className="w-80 h-96"
+                  />
                 </div>
 
                 {/* Name */}
-                <h2 className="font-display text-2xl font-semibold text-neutral-800 mb-2">
+                <h2 className="font-display text-3xl font-bold text-neutral-800 mb-3">
                   {topMatch.name}
                 </h2>
 
-                {/* Keywords */}
+                {/* Keywords - Reduced */}
                 <div className="flex flex-wrap justify-center gap-2 mb-4">
-                  {getKeywords(topMatch.style).slice(0, 3).map((keyword, index) => (
+                  {getKeywords(topMatch.style).slice(0, 2).map((keyword, index) => (
                     <span 
                       key={index}
-                      className="px-3 py-1 bg-gradient-to-r from-mindful-100 to-enso-100 text-mindful-700 rounded-full text-sm font-medium"
+                      className="px-4 py-2 bg-gradient-to-r from-mindful-100 to-enso-100 text-mindful-700 rounded-full text-base font-medium"
                     >
                       {keyword}
                     </span>
                   ))}
                 </div>
 
-                {/* Emotional Intro */}
-                <p className="text-lg text-neutral-700 font-light italic leading-relaxed mb-4 max-w-xs mx-auto">
-                  "{getEmotionalIntro(topMatch, true)}"
-                </p>
-
                 {/* Begin Button */}
                 <Button
                   onClick={() => handleContinue(topMatch.id)}
-                  className="w-full max-w-xs bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-6"
+                  className="w-full max-w-sm bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-xl font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-6"
                 >
-                  Begin Your Journey with {topMatch.name}
+                  Begin with {topMatch.name}
                 </Button>
 
-                {/* Subtle Suggestion - moved up */}
-                <div className={`mt-6 transition-all duration-1000 ${showSuggestion ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                {/* Suggestion */}
+                <div className={`mt-4 transition-all duration-1000 ${showSuggestion ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                   <div className="text-center">
-                    <p className="text-neutral-500 text-sm leading-relaxed mb-3">
-                      Not quite feeling it?<br />
-                      🌿 We've also found two more companions who deeply resonate with your vibe.<br />
-                      Curious to meet them?
+                    <p className="text-neutral-500 text-base leading-relaxed mb-4">
+                      Want to explore other matches?
                     </p>
                     <Button
                       onClick={() => setShowMoreMatches(true)}
                       variant="outline"
-                      className="border-mindful-300 text-mindful-600 hover:bg-mindful-50 rounded-xl px-6 py-2"
+                      className="border-mindful-300 text-mindful-600 hover:bg-mindful-50 rounded-xl px-8 py-3"
                     >
                       <Sparkles className="w-4 h-4 mr-2" />
-                      Explore more matches
+                      See Other Matches
                     </Button>
                   </div>
                 </div>
@@ -278,27 +266,22 @@ const PersonaSelection = () => {
                 onTouchEnd={onTouchEnd}
               >
                 <div className="animate-gentle-float">
-                  {/* Avatar with Glow */}
-                  <div className="relative mb-2 flex justify-center">
-                    <div className="absolute inset-0 bg-gradient-to-r from-mindful-400/30 to-enso-500/30 rounded-xl blur-xl scale-110"></div>
-                    <Avatar className="relative w-48 h-64 bloom-shadow ring-4 ring-white/50 rounded-xl">
-                      <AvatarImage 
-                        src={otherMatches[currentOtherMatchIndex].image_url || ''} 
-                        alt={otherMatches[currentOtherMatchIndex].name}
-                        className="object-cover rounded-xl"
-                      />
-                      <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-5xl rounded-xl">
-                        {otherMatches[currentOtherMatchIndex].name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
+                  {/* Video/Avatar - Large */}
+                  <div className="relative mb-4 flex justify-center">
+                    <VideoAvatar
+                      videoUrl={otherMatches[currentOtherMatchIndex].intro_video_url}
+                      imageUrl={otherMatches[currentOtherMatchIndex].image_url}
+                      name={otherMatches[currentOtherMatchIndex].name}
+                      className="w-72 h-80"
+                    />
                   </div>
 
                   {/* Name */}
-                  <h3 className="text-3xl font-bold text-neutral-800 mb-4">{otherMatches[currentOtherMatchIndex].name}</h3>
+                  <h3 className="text-2xl font-bold text-neutral-800 mb-3">{otherMatches[currentOtherMatchIndex].name}</h3>
 
-                  {/* Keywords */}
-                  <div className="flex flex-wrap justify-center gap-2 mb-6">
-                    {getKeywords(otherMatches[currentOtherMatchIndex].style).slice(0, 4).map((keyword, index) => (
+                  {/* Keywords - Reduced */}
+                  <div className="flex flex-wrap justify-center gap-2 mb-4">
+                    {getKeywords(otherMatches[currentOtherMatchIndex].style).slice(0, 2).map((keyword, index) => (
                       <span
                         key={index}
                         className="px-3 py-1 bg-gradient-to-r from-mindful-100 to-enso-100 text-mindful-700 rounded-full text-sm font-medium"
@@ -308,17 +291,12 @@ const PersonaSelection = () => {
                     ))}
                   </div>
 
-                  {/* Emotional Intro */}
-                  <p className="text-lg text-neutral-700 font-light italic leading-relaxed mb-4 max-w-xs mx-auto">
-                    "{getEmotionalIntro(otherMatches[currentOtherMatchIndex], false)}"
-                  </p>
-
                   {/* Choose Button */}
                   <Button
                     onClick={() => handleContinue(otherMatches[currentOtherMatchIndex].id)}
-                    className="w-full max-w-xs bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-4"
+                    className="w-full max-w-sm bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-4"
                   >
-                    Begin Your Journey with {otherMatches[currentOtherMatchIndex].name}
+                    Begin with {otherMatches[currentOtherMatchIndex].name}
                   </Button>
                 </div>
               </div>
