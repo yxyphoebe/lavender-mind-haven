@@ -291,15 +291,15 @@ const PersonaSelection = () => {
 
                   {/* Navigation arrows below button */}
                   {otherMatches.length > 1 && (
-                    <div className="flex justify-center mt-1 space-x-1">
+                    <div className="flex justify-center mt-0 space-x-0">
                       {currentOtherMatchIndex > 0 && (
                         <Button
                           onClick={handlePrevTherapist}
                           variant="ghost"
                           size="sm"
-                          className="text-neutral-600 hover:text-neutral-800 transition-colors px-2 py-1"
+                          className="text-neutral-600 hover:text-neutral-800 transition-colors p-1 h-auto w-auto"
                         >
-                          <ArrowLeft className="w-3 h-3" />
+                          <ArrowLeft className="w-2.5 h-2.5" />
                         </Button>
                       )}
                       
@@ -308,9 +308,9 @@ const PersonaSelection = () => {
                           onClick={handleNextTherapist}
                           variant="ghost"
                           size="sm"
-                          className="text-neutral-600 hover:text-neutral-800 transition-colors px-2 py-1"
+                          className="text-neutral-600 hover:text-neutral-800 transition-colors p-1 h-auto w-auto"
                         >
-                          <ArrowRight className="w-3 h-3" />
+                          <ArrowRight className="w-2.5 h-2.5" />
                         </Button>
                       )}
                     </div>
