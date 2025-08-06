@@ -269,7 +269,7 @@ const PersonaSelection = () => {
                       videoUrl={otherMatches[currentOtherMatchIndex].intro_video_url}
                       imageUrl={otherMatches[currentOtherMatchIndex].image_url}
                       name={otherMatches[currentOtherMatchIndex].name}
-                      className="w-72 h-80"
+                      className="w-96 h-[28rem]"
                     />
                   </div>
 
