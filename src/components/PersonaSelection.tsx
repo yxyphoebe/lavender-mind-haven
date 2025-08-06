@@ -300,9 +300,9 @@ const PersonaSelection = () => {
                       onClick={handleNextTherapist}
                       variant="ghost"
                       size="icon"
-                      className="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-12 rounded-full hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 transition-colors"
+                      className="absolute top-1/3 right-4 -translate-y-1/2 w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-neutral-700 hover:text-neutral-900 transition-all duration-300 shadow-lg z-20 border border-white/50"
                     >
-                      <ArrowRight className="w-5 h-5" />
+                      <ArrowRight className="w-6 h-6" />
                     </Button>
                   )}
                   
@@ -312,9 +312,9 @@ const PersonaSelection = () => {
                       onClick={handlePrevTherapist}
                       variant="ghost"
                       size="icon"
-                      className="absolute top-1/2 left-2 -translate-y-1/2 w-12 h-12 rounded-full hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 transition-colors"
+                      className="absolute top-1/3 left-4 -translate-y-1/2 w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-neutral-700 hover:text-neutral-900 transition-all duration-300 shadow-lg z-20 border border-white/50"
                     >
-                      <ArrowLeft className="w-5 h-5" />
+                      <ArrowLeft className="w-6 h-6" />
                     </Button>
                   )}
                 </>
