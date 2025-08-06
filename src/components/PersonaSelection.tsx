@@ -129,6 +129,11 @@ const PersonaSelection = () => {
 
   const topMatch = recommendedTherapists[0];
   const otherMatches = recommendedTherapists.slice(1, 3);
+  
+  // Debug logging for arrows
+  console.log('Other matches length:', otherMatches.length);
+  console.log('Current other match index:', currentOtherMatchIndex);
+  console.log('Other matches data:', otherMatches);
 
   if (isLoading) {
     return (
