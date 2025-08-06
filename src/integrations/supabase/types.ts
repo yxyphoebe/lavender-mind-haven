@@ -299,6 +299,7 @@ export type Database = {
           intro_video_url: string | null
           name: string
           style: string | null
+          tavus_config: Json | null
           updated_at: string
         }
         Insert: {
@@ -310,6 +311,7 @@ export type Database = {
           intro_video_url?: string | null
           name: string
           style?: string | null
+          tavus_config?: Json | null
           updated_at?: string
         }
         Update: {
@@ -321,6 +323,7 @@ export type Database = {
           intro_video_url?: string | null
           name?: string
           style?: string | null
+          tavus_config?: Json | null
           updated_at?: string
         }
         Relationships: []
