@@ -34,10 +34,19 @@ export const VideoAvatar = ({
   };
 
   const handleStartVideo = () => {
-    if (videoRef.current && !hasStarted) {
+    console.log('handleStartVideo called for:', name, 'videoUrl:', videoUrl);
+    if (videoRef.current && !hasStarted && videoUrl) {
+      console.log('Starting video playback...');
       setHasStarted(true);
-      videoRef.current.play().catch(() => {
+      videoRef.current.play().catch((error) => {
+        console.error('Video play error:', error);
         setHasVideoError(true);
+      });
+    } else {
+      console.warn('Cannot start video:', { 
+        hasVideoRef: !!videoRef.current, 
+        hasStarted, 
+        hasVideoUrl: !!videoUrl 
       });
     }
   };
@@ -95,18 +104,25 @@ export const VideoAvatar = ({
               </AvatarFallback>
             </Avatar>
             
-            {/* Beautiful "Talk to [Name]" button overlay */}
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+            {/* Beautiful glassmorphism "Talk to [Name]" button overlay */}
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/40 via-transparent to-transparent">
               <button
-                onClick={handleStartVideo}
-                className="group/btn px-8 py-4 rounded-2xl bg-gradient-to-r from-mindful-500 to-enso-500 text-white font-medium shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 ease-out backdrop-blur-sm border border-white/20 hover:from-mindful-400 hover:to-enso-400"
+                onClick={(e) => {
+                  console.log('Button clicked for:', name);
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleStartVideo();
+                }}
+                className="group/btn relative px-8 py-4 rounded-2xl bg-white/20 backdrop-blur-md text-white font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out border border-white/30 hover:bg-white/30 hover:border-white/40"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 relative z-10">
                   <MessageCircle className="w-5 h-5 group-hover/btn:animate-pulse" />
-                  <span className="text-lg">Talk to {name}</span>
+                  <span className="text-lg font-semibold">Talk to {name}</span>
                 </div>
-                {/* Subtle inner glow */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                {/* Glassmorphism inner glow */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/10 to-white/5 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                {/* Subtle shimmer effect */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
               </button>
             </div>
           </div>
@@ -137,7 +153,7 @@ export const VideoAvatar = ({
               <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/60 via-black/20 to-transparent">
                 <button
                   onClick={handleReplay}
-                  className="group/btn px-6 py-3 rounded-xl bg-gradient-to-r from-mindful-500 to-enso-500 text-white font-medium shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 ease-out backdrop-blur-sm border border-white/20 hover:from-mindful-400 hover:to-enso-400"
+                  className="group/btn relative px-6 py-3 rounded-xl bg-white/20 backdrop-blur-md text-white font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out border border-white/30 hover:bg-white/30"
                 >
                   <div className="flex items-center gap-2">
                     <Play className="w-4 h-4 ml-0.5 group-hover/btn:animate-pulse" />
