@@ -1,6 +1,7 @@
 
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,21 +18,13 @@ serve(async (req) => {
     
     // Check environment variables
     const tavusApiKey = Deno.env.get('TAVUS_API_KEY');
-    const tavusReplicaId = Deno.env.get('TAVUS_REPLICA_ID');
-    const tavusPersonaId = Deno.env.get('TAVUS_PERSONA_ID');
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
     console.log('=== TAVUS EDGE FUNCTION DEBUG ===');
     console.log('Action:', action);
     console.log('Therapist Name:', therapistName);
     console.log('Conversation ID:', conversationId);
-    console.log('Environment check:', {
-      hasApiKey: !!tavusApiKey,
-      hasReplicaId: !!tavusReplicaId,
-      hasPersonaId: !!tavusPersonaId,
-      apiKeyLength: tavusApiKey ? tavusApiKey.length : 0,
-      replicaIdLength: tavusReplicaId ? tavusReplicaId.length : 0,
-      personaIdLength: tavusPersonaId ? tavusPersonaId.length : 0
-    });
 
     if (!tavusApiKey) {
       const errorMsg = 'TAVUS_API_KEY is missing from environment variables';
@@ -46,45 +39,87 @@ serve(async (req) => {
       });
     }
 
-    if (!tavusReplicaId) {
-      const errorMsg = 'TAVUS_REPLICA_ID is missing from environment variables';
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      const errorMsg = 'Supabase configuration is missing';
       console.error(errorMsg);
       return new Response(JSON.stringify({ 
         success: false, 
         error: errorMsg,
-        debug: 'Check Supabase Edge Function secrets configuration'
+        debug: 'Check Supabase configuration'
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    if (!tavusPersonaId) {
-      const errorMsg = 'TAVUS_PERSONA_ID is missing from environment variables';
-      console.error(errorMsg);
+    // Initialize Supabase client
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    // Get therapist configuration from database
+    const { data: therapist, error: therapistError } = await supabase
+      .from('therapists')
+      .select('tavus_config')
+      .eq('name', therapistName)
+      .maybeSingle();
+
+    if (therapistError) {
+      console.error('Error fetching therapist:', therapistError);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: errorMsg,
-        debug: 'Check Supabase Edge Function secrets configuration'
+        error: 'Failed to fetch therapist configuration',
+        debug: therapistError
       }), {
-        status: 400,
+        status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    if (!therapist || !therapist.tavus_config) {
+      console.error('Therapist not found or missing tavus_config:', therapistName);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'Therapist configuration not found',
+        debug: `Therapist "${therapistName}" not found or missing tavus_config`
+      }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { replica_id, persona_id, custom_greeting } = therapist.tavus_config;
+
+    if (!replica_id || !persona_id) {
+      console.error('Incomplete tavus_config for therapist:', therapistName);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'Therapist Tavus configuration is incomplete',
+        debug: { replica_id: !!replica_id, persona_id: !!persona_id }
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    console.log('Using therapist config:', { 
+      replica_id: replica_id.substring(0, 10) + '...', 
+      persona_id: persona_id.substring(0, 10) + '...',
+      hasCustomGreeting: !!custom_greeting
+    });
 
     if (action === 'create') {
       console.log('=== CREATING TAVUS CONVERSATION ===');
       
       const requestBody = {
-        replica_id: tavusReplicaId,
-        persona_id: tavusPersonaId,
+        replica_id: replica_id,
+        persona_id: persona_id,
         properties: {
           max_call_duration: 3600,
           participant_left_timeout: 5,
           participant_absent_timeout: 15,
           enable_recording: false,
           enable_transcription: false,
-          language: 'english'
+          language: 'english',
+          ...(custom_greeting && { greeting: custom_greeting })
         }
       };
 
@@ -143,8 +178,8 @@ serve(async (req) => {
             rawResponse: responseText,
             parsedError: errorDetails,
             apiKeyPresent: !!tavusApiKey,
-            replicaIdPresent: !!tavusReplicaId,
-            personaIdPresent: !!tavusPersonaId
+            replicaIdPresent: !!replica_id,
+            personaIdPresent: !!persona_id
           }
         }), {
           status: response.status,
