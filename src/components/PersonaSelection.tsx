@@ -288,37 +288,35 @@ const PersonaSelection = () => {
                   >
                     Begin with {otherMatches[currentOtherMatchIndex].name}
                   </Button>
+
+                  {/* Navigation arrows below button */}
+                  {otherMatches.length > 1 && (
+                    <div className="flex justify-center mt-4 space-x-8">
+                      {currentOtherMatchIndex > 0 && (
+                        <Button
+                          onClick={handlePrevTherapist}
+                          variant="ghost"
+                          size="icon"
+                          className="text-neutral-600 hover:text-neutral-800 transition-colors"
+                        >
+                          <ArrowLeft className="w-6 h-6" />
+                        </Button>
+                      )}
+                      
+                      {currentOtherMatchIndex < otherMatches.length - 1 && (
+                        <Button
+                          onClick={handleNextTherapist}
+                          variant="ghost"
+                          size="icon"
+                          className="text-neutral-600 hover:text-neutral-800 transition-colors"
+                        >
+                          <ArrowRight className="w-6 h-6" />
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
-              
-              {/* Dynamic Arrow Buttons */}
-              {otherMatches.length > 1 && (
-                <>
-                  {/* First page: Right arrow on right side */}
-                  {currentOtherMatchIndex === 0 && (
-                    <Button
-                      onClick={handleNextTherapist}
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-1/3 right-4 -translate-y-1/2 w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-neutral-700 hover:text-neutral-900 transition-all duration-300 shadow-lg z-20 border border-white/50"
-                    >
-                      <ArrowRight className="w-6 h-6" />
-                    </Button>
-                  )}
-                  
-                  {/* Second page: Left arrow on left side */}
-                  {currentOtherMatchIndex === 1 && (
-                    <Button
-                      onClick={handlePrevTherapist}
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-1/3 left-4 -translate-y-1/2 w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-neutral-700 hover:text-neutral-900 transition-all duration-300 shadow-lg z-20 border border-white/50"
-                    >
-                      <ArrowLeft className="w-6 h-6" />
-                    </Button>
-                  )}
-                </>
-              )}
             </div>
           )}
 
