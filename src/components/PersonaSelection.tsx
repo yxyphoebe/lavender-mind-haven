@@ -160,7 +160,7 @@ const PersonaSelection = () => {
       <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 safe-area-top safe-area-bottom">
         <div className="max-w-md mx-auto flex flex-col min-h-screen">
           {/* Perfect Match Hero Section */}
-          <div className="flex-1 flex flex-col items-center justify-center px-6 animate-fade-in">
+          <div className="flex-1 flex flex-col pt-16 px-6 animate-fade-in">
             {/* Title */}
             <div className="text-center mb-8">
               <h1 className="font-display text-3xl font-bold text-neutral-800 mb-3 leading-tight">
@@ -177,7 +177,7 @@ const PersonaSelection = () => {
                     videoUrl={topMatch.intro_video_url}
                     imageUrl={topMatch.image_url}
                     name={topMatch.name}
-                    className="w-80 h-96"
+                    className="w-96 h-[28rem]"
                   />
                 </div>
 
