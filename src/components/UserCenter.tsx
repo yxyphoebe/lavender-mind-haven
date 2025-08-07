@@ -62,9 +62,9 @@ const UserCenter = () => {
           >
             <div className="w-full max-w-lg">
               <div className="flex items-center justify-center">
-                {/* Message Bubble */}
+                {/* Message Bubble with Arrow */}
                 <div className="w-full">
-                  <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30">
+                  <div className="relative bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 animate-bubble-appear before:content-[''] before:absolute before:left-[-8px] before:top-6 before:w-0 before:h-0 before:border-t-[8px] before:border-t-transparent before:border-b-[8px] before:border-b-transparent before:border-r-[8px] before:border-r-white/20">
                     <p className="text-white text-base leading-relaxed whitespace-pre-line">
                       {welcomePrompt || `我一直在这里，准备好陪你慢慢聊聊了。🌿`}
                     </p>
@@ -72,32 +72,34 @@ const UserCenter = () => {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Lower Half - Action Buttons */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="flex justify-center space-x-8">
+            
+            {/* Action Buttons - Moved to background area */}
+            <div className="absolute bottom-8 right-8 flex space-x-4">
               {/* Chat Button */}
               <Button
                 onClick={() => navigate('/chat')}
-                className="bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full w-24 h-24 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
+                className="bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full w-16 h-16 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
                 variant="ghost"
               >
-                <MessageCircle className="w-7 h-7 text-white mb-1" />
+                <MessageCircle className="w-5 h-5 text-white mb-1" />
                 <span className="text-xs text-white font-medium">Chat</span>
               </Button>
               
               {/* Video Button */}
               <Button
                 onClick={() => navigate('/video-call')}
-                className="bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full w-24 h-24 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
+                className="bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full w-16 h-16 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
                 variant="ghost"
                 style={{ animationDelay: '15s' }}
               >
-                <Video className="w-7 h-7 text-white mb-1" />
+                <Video className="w-5 h-5 text-white mb-1" />
                 <span className="text-xs text-white font-medium">Video</span>
               </Button>
             </div>
+          </div>
+
+          {/* Lower Half - Empty space for cleaner layout */}
+          <div className="flex-1">
           </div>
         </div>
       </div>
