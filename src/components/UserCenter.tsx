@@ -51,27 +51,21 @@ const UserCenter = () => {
         {/* Large Vertical Dialog Container */}
         <div className="w-full h-[85vh] glass-effect bg-white/30 backdrop-blur-lg rounded-3xl border border-white/20 shadow-md animate-fade-in flex flex-col">
           {/* Upper Half - Chat Dialog */}
-          <div className="flex-1 flex items-center justify-center p-8">
+          <div 
+            className="flex-1 flex items-center justify-center p-8 relative"
+            style={{
+              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${therapist.image_url})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          >
             <div className="w-full max-w-lg">
-              <div className="flex items-start space-x-4">
-                {/* Therapist Avatar */}
-                <div className="flex-shrink-0">
-                  <Avatar className="w-16 h-16 zen-shadow">
-                    <AvatarImage 
-                      src={therapist.image_url || ''} 
-                      alt={`${therapist.name} avatar`}
-                      className="object-cover"
-                    />
-                    <AvatarFallback className="bg-gradient-to-br from-mindful-400 to-enso-500 text-white text-xl">
-                      {therapist.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-                
+              <div className="flex items-center justify-center">
                 {/* Message Bubble */}
-                <div className="flex-1">
-                  <div className="bg-white/50 backdrop-blur-sm rounded-2xl rounded-tl-md p-6 border border-white/30">
-                    <p className="text-neutral-800 text-base leading-relaxed whitespace-pre-line">
+                <div className="w-full">
+                  <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30">
+                    <p className="text-white text-base leading-relaxed whitespace-pre-line">
                       {welcomePrompt || `我一直在这里，准备好陪你慢慢聊聊了。🌿`}
                     </p>
                   </div>
