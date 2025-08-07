@@ -86,22 +86,22 @@ const UserCenter = () => {
               {/* Chat Button */}
               <Button
                 onClick={() => navigate('/chat')}
-                className="bg-white/40 backdrop-blur-xl hover:bg-white/50 hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl border border-white/30 rounded-full w-24 h-24 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
+                className="bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full w-24 h-24 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
                 variant="ghost"
               >
-                <MessageCircle className="w-7 h-7 text-mindful-600 mb-1" />
-                <span className="text-xs text-mindful-700 font-medium">Chat</span>
+                <MessageCircle className="w-7 h-7 text-white mb-1" />
+                <span className="text-xs text-white font-medium">Chat</span>
               </Button>
               
               {/* Video Button */}
               <Button
                 onClick={() => navigate('/video-call')}
-                className="bg-white/40 backdrop-blur-xl hover:bg-white/50 hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl border border-white/30 rounded-full w-24 h-24 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
+                className="bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full w-24 h-24 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
                 variant="ghost"
-                style={{ animationDelay: '2s' }}
+                style={{ animationDelay: '15s' }}
               >
-                <Video className="w-7 h-7 text-enso-600 mb-1" />
-                <span className="text-xs text-enso-700 font-medium">Video</span>
+                <Video className="w-7 h-7 text-white mb-1" />
+                <span className="text-xs text-white font-medium">Video</span>
               </Button>
             </div>
           </div>

@@ -223,7 +223,7 @@
   }
 
   .animate-gentle-float-ultra-slow {
-    animation: animate-gentle-float 10s ease-in-out infinite;
+    animation: animate-gentle-float 30s ease-in-out infinite;
   }
 
   .animate-fade-in {
