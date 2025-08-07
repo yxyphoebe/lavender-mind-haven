@@ -78,7 +78,7 @@ const UserCenter = () => {
               {/* Chat Button */}
               <Button
                 onClick={() => navigate('/chat')}
-                className="bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full w-16 h-16 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
+                className="bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full w-16 h-16 flex flex-col items-center justify-center"
                 variant="ghost"
               >
                 <MessageCircle className="w-5 h-5 text-white mb-1" />
@@ -88,9 +88,8 @@ const UserCenter = () => {
               {/* Video Button */}
               <Button
                 onClick={() => navigate('/video-call')}
-                className="bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full w-16 h-16 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
+                className="bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full w-16 h-16 flex flex-col items-center justify-center"
                 variant="ghost"
-                style={{ animationDelay: '15s' }}
               >
                 <Video className="w-5 h-5 text-white mb-1" />
                 <span className="text-xs text-white font-medium">Video</span>
