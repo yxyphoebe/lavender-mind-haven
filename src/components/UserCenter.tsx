@@ -48,10 +48,10 @@ const UserCenter = () => {
           </Button>
         </div>
 
-        {/* Floating Dialog Container */}
+        {/* Dialog Container */}
         <div className="w-full max-w-sm animate-fade-in">
           {/* Chat Dialog */}
-          <div className="glass-effect bg-white/40 backdrop-blur-xl rounded-3xl p-6 zen-shadow border border-white/30 animate-gentle-float">
+          <div className="glass-effect bg-white/30 backdrop-blur-lg rounded-3xl p-6 border border-white/20 shadow-md">
             <div className="flex items-start space-x-4">
               {/* Therapist Avatar */}
               <div className="flex-shrink-0">
@@ -83,7 +83,7 @@ const UserCenter = () => {
             {/* Chat Button */}
             <Button
               onClick={() => navigate('/chat')}
-              className="bg-white/30 backdrop-blur-sm hover:bg-white/40 hover:scale-105 transition-all duration-300 zen-shadow border border-white/20 rounded-2xl w-16 h-16 flex flex-col items-center justify-center"
+              className="bg-white/40 backdrop-blur-xl hover:bg-white/50 hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl border border-white/30 rounded-2xl w-16 h-16 flex flex-col items-center justify-center animate-gentle-float"
               variant="ghost"
             >
               <MessageCircle className="w-6 h-6 text-mindful-600 mb-1" />
@@ -93,8 +93,9 @@ const UserCenter = () => {
             {/* Video Button */}
             <Button
               onClick={() => navigate('/video-call')}
-              className="bg-white/30 backdrop-blur-sm hover:bg-white/40 hover:scale-105 transition-all duration-300 zen-shadow border border-white/20 rounded-2xl w-16 h-16 flex flex-col items-center justify-center"
+              className="bg-white/40 backdrop-blur-xl hover:bg-white/50 hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl border border-white/30 rounded-2xl w-16 h-16 flex flex-col items-center justify-center animate-gentle-float"
               variant="ghost"
+              style={{ animationDelay: '0.2s' }}
             >
               <Video className="w-6 h-6 text-enso-600 mb-1" />
               <span className="text-xs text-enso-700 font-medium">Video</span>
