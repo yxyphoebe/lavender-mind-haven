@@ -56,7 +56,7 @@ const UserCenter = () => {
       </div>
 
       {/* Main Content Container */}
-      <div className="min-h-screen flex items-center justify-start px-8">
+      <div className="min-h-screen flex items-start justify-start px-8 pt-[20vh]">
         {/* Left Side - Avatar and Dialogue */}
         <div className="flex items-center space-x-6 animate-fade-in">
           {/* Therapist Avatar */}
@@ -83,8 +83,8 @@ const UserCenter = () => {
           </div>
         </div>
 
-        {/* Action Buttons - Bottom Right */}
-        <div className="absolute bottom-8 right-8 flex space-x-4">
+        {/* Action Buttons - Center */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex space-x-4">
           {/* Chat Button */}
           <Button
             onClick={() => navigate('/chat')}
