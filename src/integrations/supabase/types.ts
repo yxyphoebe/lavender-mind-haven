@@ -89,6 +89,39 @@ export type Database = {
         }
         Relationships: []
       }
+      generation_prompts: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          language: string
+          prompt_text: string
+          prompt_type: string
+          therapist_id: string
+          therapist_name: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          language: string
+          prompt_text: string
+          prompt_type: string
+          therapist_id: string
+          therapist_name: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          language?: string
+          prompt_text?: string
+          prompt_type?: string
+          therapist_id?: string
+          therapist_name?: string
+        }
+        Relationships: []
+      }
       gratitudes: {
         Row: {
           created_at: string | null
