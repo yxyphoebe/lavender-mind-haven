@@ -89,6 +89,45 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_messages: {
+        Row: {
+          created_at: string
+          id: string
+          is_used: boolean
+          language: string | null
+          message_text: string | null
+          message_type: string | null
+          therapist_id: string | null
+          therapist_name: string | null
+          user_id: string
+          user_name: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_used?: boolean
+          language?: string | null
+          message_text?: string | null
+          message_type?: string | null
+          therapist_id?: string | null
+          therapist_name?: string | null
+          user_id: string
+          user_name?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_used?: boolean
+          language?: string | null
+          message_text?: string | null
+          message_type?: string | null
+          therapist_id?: string | null
+          therapist_name?: string | null
+          user_id?: string
+          user_name?: string | null
+        }
+        Relationships: []
+      }
       generation_prompts: {
         Row: {
           active: boolean
