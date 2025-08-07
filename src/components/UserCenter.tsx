@@ -86,7 +86,7 @@ const UserCenter = () => {
         </div>
 
         {/* Action Buttons - Center */}
-        <div className={`absolute top-[45%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex ${isMobile ? 'space-x-6' : 'space-x-4'}`}>
+        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex ${isMobile ? 'space-x-6' : 'space-x-4'}`}>
           {/* Chat Button */}
           <Button
             onClick={() => navigate('/chat')}
