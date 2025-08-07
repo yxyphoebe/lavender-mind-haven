@@ -64,7 +64,7 @@ const UserCenter = () => {
               <div className="flex items-center justify-center">
                 {/* Message Bubble with Arrow */}
                 <div className="w-full">
-                  <div className="relative bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 animate-bubble-appear before:content-[''] before:absolute before:left-[-8px] before:top-6 before:w-0 before:h-0 before:border-t-[8px] before:border-t-transparent before:border-b-[8px] before:border-b-transparent before:border-r-[8px] before:border-r-white/20">
+                  <div className="relative bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 animate-bubble-appear before:content-[''] before:absolute before:left-[-12px] before:top-1/2 before:-translate-y-1/2 before:w-0 before:h-0 before:border-t-[12px] before:border-t-transparent before:border-b-[12px] before:border-b-transparent before:border-r-[12px] before:border-r-white/20 before:backdrop-blur-md">
                     <p className="text-white text-base leading-relaxed whitespace-pre-line">
                       {welcomePrompt || `我一直在这里，准备好陪你慢慢聊聊了。🌿`}
                     </p>
