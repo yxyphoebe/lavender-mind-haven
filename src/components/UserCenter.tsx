@@ -82,26 +82,26 @@ const UserCenter = () => {
 
           {/* Lower Half - Action Buttons */}
           <div className="flex-1 flex items-center justify-center">
-            <div className="flex flex-col space-y-4 w-full max-w-sm px-6">
+            <div className="flex justify-center space-x-8">
               {/* Chat Button */}
               <Button
                 onClick={() => navigate('/chat')}
-                className="w-full bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow animate-gentle-float-slow"
+                className="bg-white/40 backdrop-blur-xl hover:bg-white/50 hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl border border-white/30 rounded-full w-24 h-24 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
                 variant="ghost"
               >
-                <MessageCircle className="w-6 h-6 text-white mr-2" />
-                <span className="text-base text-white font-medium">Chat with {therapist.name}</span>
+                <MessageCircle className="w-7 h-7 text-mindful-600 mb-1" />
+                <span className="text-xs text-mindful-700 font-medium">Chat</span>
               </Button>
               
               {/* Video Button */}
               <Button
                 onClick={() => navigate('/video-call')}
-                className="w-full bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow animate-gentle-float-slow"
+                className="bg-white/40 backdrop-blur-xl hover:bg-white/50 hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl border border-white/30 rounded-full w-24 h-24 flex flex-col items-center justify-center animate-gentle-float-ultra-slow"
                 variant="ghost"
-                style={{ animationDelay: '1s' }}
+                style={{ animationDelay: '2s' }}
               >
-                <Video className="w-6 h-6 text-white mr-2" />
-                <span className="text-base text-white font-medium">Video with {therapist.name}</span>
+                <Video className="w-7 h-7 text-enso-600 mb-1" />
+                <span className="text-xs text-enso-700 font-medium">Video</span>
               </Button>
             </div>
           </div>
