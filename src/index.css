@@ -218,6 +218,10 @@
     animation: animate-gentle-float 3s ease-in-out infinite;
   }
 
+  .animate-gentle-float-slow {
+    animation: animate-gentle-float 6s ease-in-out infinite;
+  }
+
   .animate-fade-in {
     animation: fade-in 0.6s ease-out;
   }
