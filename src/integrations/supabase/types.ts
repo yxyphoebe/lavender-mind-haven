@@ -161,79 +161,6 @@ export type Database = {
         }
         Relationships: []
       }
-      gratitudes: {
-        Row: {
-          created_at: string | null
-          id: string
-          item1: string | null
-          item2: string | null
-          item3: string | null
-          session_id: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          item1?: string | null
-          item2?: string | null
-          item3?: string | null
-          session_id?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          item1?: string | null
-          item2?: string | null
-          item3?: string | null
-          session_id?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "gratitudes_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      memories: {
-        Row: {
-          created_at: string | null
-          description: string | null
-          id: string
-          source_session_id: string | null
-          title: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          source_session_id?: string | null
-          title?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          source_session_id?: string | null
-          title?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "memories_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       onboarding_options: {
         Row: {
           created_at: string
@@ -427,50 +354,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_preferences: {
-        Row: {
-          created_at: string | null
-          data_sharing_consent: boolean | null
-          id: string
-          notification_enabled: boolean | null
-          preferred_communication_style: string | null
-          preferred_session_length: number | null
-          session_reminders: boolean | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          data_sharing_consent?: boolean | null
-          id?: string
-          notification_enabled?: boolean | null
-          preferred_communication_style?: string | null
-          preferred_session_length?: number | null
-          session_reminders?: boolean | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          data_sharing_consent?: boolean | null
-          id?: string
-          notification_enabled?: boolean | null
-          preferred_communication_style?: string | null
-          preferred_session_length?: number | null
-          session_reminders?: boolean | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_preferences_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       users: {
         Row: {
           avatar_choice: string | null
@@ -523,44 +406,6 @@ export type Database = {
             columns: ["selected_therapist_id"]
             isOneToOne: false
             referencedRelation: "therapists"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      videos: {
-        Row: {
-          created_at: string | null
-          id: string
-          prompt_text: string | null
-          response_text: string | null
-          session_id: string | null
-          user_id: string | null
-          video_url: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          prompt_text?: string | null
-          response_text?: string | null
-          session_id?: string | null
-          user_id?: string | null
-          video_url?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          prompt_text?: string | null
-          response_text?: string | null
-          session_id?: string | null
-          user_id?: string | null
-          video_url?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "videos_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
