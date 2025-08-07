@@ -318,6 +318,8 @@ export type Database = {
       therapists: {
         Row: {
           age_range: string
+          background_image_url: string | null
+          background_music_url: string | null
           background_story: string | null
           created_at: string
           id: string
@@ -330,6 +332,8 @@ export type Database = {
         }
         Insert: {
           age_range: string
+          background_image_url?: string | null
+          background_music_url?: string | null
           background_story?: string | null
           created_at?: string
           id?: string
@@ -342,6 +346,8 @@ export type Database = {
         }
         Update: {
           age_range?: string
+          background_image_url?: string | null
+          background_music_url?: string | null
           background_story?: string | null
           created_at?: string
           id?: string
