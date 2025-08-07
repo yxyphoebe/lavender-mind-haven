@@ -58,7 +58,7 @@ const UserCenter = () => {
       </div>
 
       {/* Main Content Container */}
-      <div className={`h-full flex items-start justify-start px-4 md:px-8 ${isMobile ? 'pt-20' : 'pt-[20vh]'}`}>
+      <div className={`h-full flex items-start justify-start px-4 md:px-8 ${isMobile ? 'pt-28' : 'pt-[30vh]'}`}>
         {/* Left Side - Avatar and Dialogue */}
         <div className={`flex items-center ${isMobile ? 'space-x-4' : 'space-x-6'} animate-fade-in`}>
           {/* Therapist Avatar */}
