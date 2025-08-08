@@ -42,33 +42,26 @@ export const useDailyMessage = (therapistId?: string | null) => {
 
     const generateFive = async (awaitResult = true) => {
       console.log('[useDailyMessage] triggering edge function generate-daily-messages (5 items)…');
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
-
-      const url = 'https://vsiiedactvlzdvprwgkq.supabase.co/functions/v1/generate-daily-messages';
-      const fetchPromise = fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          therapist_id: normalizedTherapistId,
+      const invokePromise = supabase.functions.invoke('generate-daily-messages', {
+        body: {
+          therapistId: normalizedTherapistId,
           count: 5,
-        }),
+        },
       });
 
       if (awaitResult) {
-        const resp = await fetchPromise;
-        const ok = resp.ok;
-        console.log('[useDailyMessage] generate response ok?', ok);
-        if (!ok) {
-          const text = await resp.text().catch(() => '');
-          console.warn('[useDailyMessage] generate-daily-messages failed:', text);
+        const { data, error } = await invokePromise;
+        console.log('[useDailyMessage] generate response error?', !!error);
+        if (error) {
+          console.warn('[useDailyMessage] generate-daily-messages failed:', error.message || error.name || error);
         }
       } else {
         // 背景触发：不等待结果
-        void fetchPromise.catch((e) => console.warn('[useDailyMessage] background generate failed:', e));
+        void invokePromise
+          .then(({ error }) => {
+            if (error) console.warn('[useDailyMessage] background generate failed:', error.message || error);
+          })
+          .catch((e) => console.warn('[useDailyMessage] background generate exception:', e));
       }
     };
 
@@ -106,7 +99,7 @@ export const useDailyMessage = (therapistId?: string | null) => {
           return;
         }
 
-        if (remaining === 2) {
+        if (remaining === 2 || remaining === 1) {
           // 先抽取展示
           const msg = await pickMessage();
           if (!isCancelled) setDailyMessage(msg);
