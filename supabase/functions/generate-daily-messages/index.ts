@@ -92,14 +92,25 @@ serve(async (req) => {
     console.log('Using prompt for therapist:', prompt.therapist_name)
 
     // Call OpenAI to generate 5 daily messages
+    const openAIApiKey = Deno.env.get('OPENAI_API_KEY')
+    if (!openAIApiKey) {
+      console.error('Missing OPENAI_API_KEY environment variable')
+      return new Response(
+        JSON.stringify({ error: 'Missing OpenAI credentials' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      )
+    }
+
+    const model = Deno.env.get('OPENAI_CHAT_MODEL') || 'gpt-4o-mini'
+
     const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+        'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: Deno.env.get('OPENAI_CHAT_MODEL') || 'gpt-5-mini',
+        model,
         messages: [
           {
             role: 'system',
@@ -116,7 +127,8 @@ serve(async (req) => {
     })
 
     if (!openAIResponse.ok) {
-      console.error('OpenAI API error:', openAIResponse.statusText)
+      const errorBody = await openAIResponse.text()
+      console.error('OpenAI API error:', openAIResponse.status, openAIResponse.statusText, errorBody)
       return new Response(
         JSON.stringify({ error: 'Failed to generate messages' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
