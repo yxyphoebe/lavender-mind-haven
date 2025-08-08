@@ -1,7 +1,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
+
 
 /**
  * useDailyMessage
@@ -9,12 +9,12 @@ import { useToast } from '@/components/ui/use-toast';
  * 1) 统计该 therapist 剩余 is_used = false 的条数
  * 2) 根据规则执行：
  *    - >=3: 直接随机抽取并设为已用
- *    - ==2: 先抽取并设为已用，然后后台触发生成 5 条
- *    - ==0: 先生成 5 条，随后抽取并设为已用
- * 3) 返回抽取到的 message_text
+ *    - ==1 或 ==2: 先抽取并设为已用，然后后台触发生成 5 条
+ *    - ==0: 不抽取，直接显示欢迎语，并在后台生成 5 条
+ * 3) 返回抽取到的 message_text（若为 0 条，则返回 null 以便 UI 显示欢迎语）
  */
 export const useDailyMessage = (therapistId?: string | null) => {
-  const { toast } = useToast();
+  
   const [dailyMessage, setDailyMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // status 主要用于在 UI 层做提示（可选）
@@ -106,27 +106,16 @@ export const useDailyMessage = (therapistId?: string | null) => {
 
           // 再后台生成 5 条
           setStatus('replenishing');
-          toast({
-            title: '正在准备更多每日关怀',
-            description: '我会在后台为你补充 5 条新消息。',
-          });
           await generateFive(false);
           setStatus('idle');
           return;
         }
 
-        // remaining === 0（或异常为0）：先生成，再抽取
-        setStatus('generating');
-        toast({
-          title: '正在为你生成每日关怀',
-          description: '稍等一下，我马上为你准备 5 条新消息。',
-        });
-        await generateFive(true);
-
-        // 生成完成后抽取
-        const msg = await pickMessage();
-        if (!isCancelled) setDailyMessage(msg);
+        // remaining === 0：直接使用欢迎语，后台生成
+        setStatus('replenishing');
+        await generateFive(false);
         setStatus('idle');
+        // 不抽取每日消息，保持 dailyMessage 为 null
       } catch (e) {
         console.error('[useDailyMessage] unexpected error:', e);
         if (!isCancelled) setDailyMessage(null);
@@ -140,7 +129,7 @@ export const useDailyMessage = (therapistId?: string | null) => {
     return () => {
       isCancelled = true;
     };
-  }, [normalizedTherapistId, toast]);
+  }, [normalizedTherapistId]);
 
   return { dailyMessage, isLoading, status };
 };
