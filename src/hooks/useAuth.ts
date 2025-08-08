@@ -47,9 +47,12 @@ export function useAuth(): AuthState & AuthMethods {
 
         // Handle auth events
         if (event === 'SIGNED_IN') {
+          const userName = session?.user?.user_metadata?.name
+            || session?.user?.user_metadata?.full_name
+            || session?.user?.email?.split('@')[0]
+            || 'friend';
           toast({
-            title: "欢迎回来！",
-            description: "您已成功登录",
+            title: `welcome back, ${userName}`,
           });
         } else if (event === 'SIGNED_OUT') {
           toast({
