@@ -70,7 +70,7 @@ const UserCenter = () => {
       {/* Main Content Container */}
       <div className={`h-full flex items-start justify-start px-4 md:px-8 ${isMobile ? 'pt-28' : 'pt-[30vh]'}`}>
         {/* Left Side - Avatar and Dialogue */}
-        <div className={`flex items-center ${isMobile ? 'space-x-4' : 'space-x-6'} animate-fade-in`}>
+        <div className={`flex items-start ${isMobile ? 'space-x-4' : 'space-x-6'}`}>
           {/* Therapist Avatar */}
           <div className="relative">
             <Avatar className={`${isMobile ? 'w-16 h-16' : 'w-20 h-20'} border-4 border-white/30 shadow-lg`}>
@@ -87,7 +87,7 @@ const UserCenter = () => {
 
           {/* Dialogue Bubble */}
           <div className={`relative ${isMobile ? 'max-w-xs' : 'max-w-md'}`}>
-            <div className={`relative bg-white/20 backdrop-blur-md rounded-2xl ${isMobile ? 'p-4' : 'p-6'} border border-white/30 shadow-lg before:content-[''] before:absolute before:left-[-12px] before:top-1/2 before:-translate-y-1/2 before:w-0 before:h-0 before:border-t-[12px] before:border-t-transparent before:border-b-[12px] before:border-b-transparent before:border-r-[12px] before:border-r-white/20`}>
+            <div className={`relative bg-white/20 backdrop-blur-md rounded-2xl ${isMobile ? 'p-4' : 'p-6'} border border-white/30 shadow-lg before:content-[''] before:absolute before:left-[-12px] before:top-8 md:before:top-10 before:w-0 before:h-0 before:border-t-[12px] before:border-t-transparent before:border-b-[12px] before:border-b-transparent before:border-r-[12px] before:border-r-white/20`}>
 {dailyMessage ? (
                 <TypingText
                   text={dailyMessage}
