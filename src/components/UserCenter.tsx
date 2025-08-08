@@ -8,6 +8,7 @@ import { useWelcomePrompt } from '@/hooks/useWelcomePrompt';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/hooks/useAuth';
 import { useDailyMessage } from '@/hooks/useDailyMessage';
+import TypingText from '@/components/TypingText';
 
 const UserCenter = () => {
   const navigate = useNavigate();
@@ -87,9 +88,19 @@ const UserCenter = () => {
           {/* Dialogue Bubble */}
           <div className={`relative ${isMobile ? 'max-w-xs' : 'max-w-md'}`}>
             <div className={`relative bg-white/20 backdrop-blur-md rounded-2xl ${isMobile ? 'p-4' : 'p-6'} border border-white/30 shadow-lg before:content-[''] before:absolute before:left-[-12px] before:top-1/2 before:-translate-y-1/2 before:w-0 before:h-0 before:border-t-[12px] before:border-t-transparent before:border-b-[12px] before:border-b-transparent before:border-r-[12px] before:border-r-white/20`}>
-              <p className={`text-white ${isMobile ? 'text-sm' : 'text-base'} leading-relaxed whitespace-pre-line`}>
-                {dailyMessage || welcomePrompt || `我一直在这里，准备好陪你慢慢聊聊了。🌿`}
-              </p>
+{dailyMessage ? (
+                <TypingText
+                  text={dailyMessage}
+                  preDelay={700}
+                  speed={30}
+                  className={`text-white ${isMobile ? 'text-sm' : 'text-base'} leading-relaxed whitespace-pre-line`}
+                  clickToSkip
+                />
+              ) : (
+                <p className={`text-white ${isMobile ? 'text-sm' : 'text-base'} leading-relaxed whitespace-pre-line`}>
+                  {welcomePrompt || `我一直在这里，准备好陪你慢慢聊聊了。🌿`}
+                </p>
+              )}
             </div>
           </div>
         </div>
