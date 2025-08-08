@@ -421,7 +421,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      pick_and_use_random_daily_message: {
+        Args: { therapist_id_input: string }
+        Returns: {
+          id: string
+          message_text: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

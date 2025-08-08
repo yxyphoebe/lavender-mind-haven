@@ -6,15 +6,24 @@ import { useTherapist } from '@/hooks/useTherapists';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useWelcomePrompt } from '@/hooks/useWelcomePrompt';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/hooks/useAuth';
+import { useDailyMessage } from '@/hooks/useDailyMessage';
 
 const UserCenter = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { user, initialized } = useAuth();
+
   const selectedTherapistId = localStorage.getItem('selectedTherapistId') || '';
   const { data: therapist, isLoading } = useTherapist(selectedTherapistId);
   const { welcomePrompt, isLoading: promptLoading } = useWelcomePrompt(selectedTherapistId);
 
-  if (isLoading || promptLoading) {
+  // 仅在已登录且 therapistId 存在时获取每日消息
+  const { dailyMessage, isLoading: dailyLoading } = useDailyMessage(
+    initialized && user ? selectedTherapistId : ''
+  );
+
+  if (!initialized || isLoading || promptLoading || dailyLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-mindful-400" />
@@ -79,7 +88,7 @@ const UserCenter = () => {
           <div className={`relative ${isMobile ? 'max-w-xs' : 'max-w-md'}`}>
             <div className={`relative bg-white/20 backdrop-blur-md rounded-2xl ${isMobile ? 'p-4' : 'p-6'} border border-white/30 shadow-lg before:content-[''] before:absolute before:left-[-12px] before:top-1/2 before:-translate-y-1/2 before:w-0 before:h-0 before:border-t-[12px] before:border-t-transparent before:border-b-[12px] before:border-b-transparent before:border-r-[12px] before:border-r-white/20`}>
               <p className={`text-white ${isMobile ? 'text-sm' : 'text-base'} leading-relaxed whitespace-pre-line`}>
-                {welcomePrompt || `我一直在这里，准备好陪你慢慢聊聊了。🌿`}
+                {dailyMessage || welcomePrompt || `我一直在这里，准备好陪你慢慢聊聊了。🌿`}
               </p>
             </div>
           </div>
