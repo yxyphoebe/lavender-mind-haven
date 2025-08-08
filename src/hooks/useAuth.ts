@@ -51,13 +51,11 @@ export function useAuth(): AuthState & AuthMethods {
             || session?.user?.user_metadata?.full_name
             || session?.user?.email?.split('@')[0]
             || 'friend';
-          toast({
-            title: `welcome back, ${userName}`,
-          });
+          // no toast on sign-in
         } else if (event === 'SIGNED_OUT') {
           toast({
-            title: "已退出登录",
-            description: "期待您的再次使用",
+            title: "Signed out",
+            description: "You have been signed out.",
           });
         } else if (event === 'TOKEN_REFRESHED') {
           console.log('Token refreshed successfully');
@@ -119,14 +117,14 @@ export function useAuth(): AuthState & AuthMethods {
 
       if (error) {
         toast({
-          title: "注册失败",
+          title: "Sign up failed",
           description: getErrorMessage(error),
           variant: "destructive",
         });
       } else {
         toast({
-          title: "注册成功！",
-          description: "请检查您的邮箱以验证账户",
+          title: "Sign up successful",
+          description: "Please check your email to verify your account.",
         });
       }
 
@@ -134,8 +132,8 @@ export function useAuth(): AuthState & AuthMethods {
     } catch (err) {
       const error = err as AuthError;
       toast({
-        title: "注册失败",
-        description: "网络错误，请稍后重试",
+        title: "Sign up failed",
+        description: "Network error. Please try again later.",
         variant: "destructive",
       });
       return { error };
@@ -155,7 +153,7 @@ export function useAuth(): AuthState & AuthMethods {
 
       if (error) {
         toast({
-          title: "登录失败",
+          title: "Sign in failed",
           description: getErrorMessage(error),
           variant: "destructive",
         });
@@ -165,8 +163,8 @@ export function useAuth(): AuthState & AuthMethods {
     } catch (err) {
       const error = err as AuthError;
       toast({
-        title: "登录失败",
-        description: "网络错误，请稍后重试",
+        title: "Sign in failed",
+        description: "Network error. Please try again later.",
         variant: "destructive",
       });
       return { error };
@@ -184,8 +182,8 @@ export function useAuth(): AuthState & AuthMethods {
     } catch (err) {
       const error = err as AuthError;
       toast({
-        title: "退出失败",
-        description: "网络错误，请稍后重试",
+        title: "Sign out failed",
+        description: "Network error. Please try again later.",
         variant: "destructive",
       });
       return { error };
@@ -202,14 +200,14 @@ export function useAuth(): AuthState & AuthMethods {
 
       if (error) {
         toast({
-          title: "重置失败",
+          title: "Password reset failed",
           description: getErrorMessage(error),
           variant: "destructive",
         });
       } else {
         toast({
-          title: "重置邮件已发送",
-          description: "请检查您的邮箱以重置密码",
+          title: "Password reset email sent",
+          description: "Please check your inbox to reset your password.",
         });
       }
 
@@ -217,8 +215,8 @@ export function useAuth(): AuthState & AuthMethods {
     } catch (err) {
       const error = err as AuthError;
       toast({
-        title: "重置失败",
-        description: "网络错误，请稍后重试",
+        title: "Password reset failed",
+        description: "Network error. Please try again later.",
         variant: "destructive",
       });
       return { error };
@@ -236,7 +234,7 @@ export function useAuth(): AuthState & AuthMethods {
 
       if (error) {
         toast({
-          title: "社交登录失败",
+          title: "Social sign-in failed",
           description: getErrorMessage(error),
           variant: "destructive",
         });
@@ -246,8 +244,8 @@ export function useAuth(): AuthState & AuthMethods {
     } catch (err) {
       const error = err as AuthError;
       toast({
-        title: "社交登录失败",
-        description: "网络错误，请稍后重试",
+        title: "Social sign-in failed",
+        description: "Network error. Please try again later.",
         variant: "destructive",
       });
       return { error };
@@ -267,18 +265,18 @@ export function useAuth(): AuthState & AuthMethods {
 function getErrorMessage(error: AuthError): string {
   switch (error.message) {
     case 'Invalid login credentials':
-      return '邮箱或密码错误';
+      return 'Incorrect email or password.';
     case 'Email not confirmed':
-      return '请先验证您的邮箱';
+      return 'Please verify your email before signing in.';
     case 'User already registered':
-      return '该邮箱已注册，请直接登录';
+      return 'This email is already registered. Please sign in.';
     case 'Password should be at least 6 characters':
-      return '密码至少需要6位字符';
+      return 'Password must be at least 6 characters.';
     case 'Invalid email':
-      return '邮箱格式不正确';
+      return 'Invalid email address.';
     case 'Email rate limit exceeded':
-      return '邮件发送过于频繁，请稍后重试';
+      return 'Too many requests. Please try again later.';
     default:
-      return error.message || '未知错误';
+      return error.message || 'Unexpected error occurred.';
   }
 }
