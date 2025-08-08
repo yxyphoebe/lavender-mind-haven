@@ -131,14 +131,27 @@ serve(async (req) => {
     // Parse the generated messages
     let messages: string[]
     try {
-      messages = JSON.parse(generatedContent)
+      // Clean the generated content by removing markdown code blocks
+      const cleanedContent = generatedContent
+        .replace(/```json\s*/g, '')
+        .replace(/```\s*/g, '')
+        .trim()
+      
+      console.log('Cleaned content:', cleanedContent)
+      
+      messages = JSON.parse(cleanedContent)
       if (!Array.isArray(messages) || messages.length !== 5) {
-        throw new Error('Invalid format')
+        throw new Error('Invalid format - expected array of 5 messages')
       }
     } catch (parseError) {
       console.error('Error parsing generated messages:', parseError)
-      // Fallback: split by lines and take first 5
-      messages = generatedContent.split('\n').filter((line: string) => line.trim()).slice(0, 5)
+      console.log('Original content:', generatedContent)
+      // Fallback: split by lines and take first 5 non-empty lines
+      messages = generatedContent
+        .split('\n')
+        .filter((line: string) => line.trim() && !line.includes('```'))
+        .slice(0, 5)
+        .map((line: string) => line.replace(/^["']|["']$/g, '').trim())
     }
 
     // Get user info for the messages
@@ -159,7 +172,7 @@ serve(async (req) => {
       therapist_id: therapistId,
       therapist_name: prompt.therapist_name,
       message_text: messageText,
-      message_type: 'daily_support',
+      message_type: 'text_message',
       language: userData?.preferred_language || 'en',
       is_used: false
     }))
