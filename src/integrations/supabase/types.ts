@@ -435,6 +435,10 @@ export type Database = {
           message_text: string
         }[]
       }
+      run_cleanup_if_8am_pacific: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
