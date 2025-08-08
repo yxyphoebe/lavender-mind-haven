@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTherapists } from '@/hooks/useTherapists';
 import { VideoAvatar } from '@/components/VideoAvatar';
 import { TherapistRecommendation } from '@/utils/therapistRecommendation';
+import { supabase } from '@/integrations/supabase/client';
 
 const PersonaSelection = () => {
   const [showMoreMatches, setShowMoreMatches] = useState(false);
@@ -46,7 +47,49 @@ const PersonaSelection = () => {
 
   const handleContinue = (therapistId: string) => {
     localStorage.setItem('selectedTherapistId', therapistId);
+    
+    // Navigate immediately
     navigate('/user-center');
+    
+    // Check and generate daily messages in background (no await)
+    checkAndGenerateDailyMessages(therapistId);
+  };
+
+  const checkAndGenerateDailyMessages = async (therapistId: string) => {
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Check if user already has 3+ unused messages for this therapist
+      const { data: existingMessages } = await supabase
+        .from('daily_messages')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('therapist_id', therapistId)
+        .eq('is_used', false);
+
+      // Only generate if fewer than 3 unused messages
+      if (!existingMessages || existingMessages.length < 3) {
+        console.log('Generating daily messages in background for therapist:', therapistId);
+        
+        // Call Edge Function without awaiting (fire and forget)
+        supabase.functions.invoke('generate-daily-messages', {
+          body: { therapistId }
+        }).then(({ data, error }) => {
+          if (error) {
+            console.error('Error generating daily messages:', error);
+          } else {
+            console.log('Successfully triggered daily message generation:', data);
+          }
+        });
+      } else {
+        console.log('User already has enough unused messages:', existingMessages.length);
+      }
+    } catch (error) {
+      console.error('Error in checkAndGenerateDailyMessages:', error);
+      // Silently fail - don't impact user experience
+    }
   };
 
   const getTherapistRecommendation = (therapistName: string): TherapistRecommendation | null => {
