@@ -99,6 +99,7 @@ export type Database = {
           message_type: string | null
           therapist_id: string | null
           therapist_name: string | null
+          used_at: string | null
           user_id: string
           user_name: string | null
         }
@@ -111,6 +112,7 @@ export type Database = {
           message_type?: string | null
           therapist_id?: string | null
           therapist_name?: string | null
+          used_at?: string | null
           user_id: string
           user_name?: string | null
         }
@@ -123,6 +125,7 @@ export type Database = {
           message_type?: string | null
           therapist_id?: string | null
           therapist_name?: string | null
+          used_at?: string | null
           user_id?: string
           user_name?: string | null
         }
@@ -421,6 +424,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_used_daily_messages: {
+        Args: { max_days?: number; max_per_pair?: number }
+        Returns: undefined
+      }
       pick_and_use_random_daily_message: {
         Args: { therapist_id_input: string }
         Returns: {
