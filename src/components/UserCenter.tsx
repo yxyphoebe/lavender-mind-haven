@@ -50,7 +50,7 @@ const UserCenter = () => {
     <div 
       className={`${isMobile ? 'h-screen' : 'min-h-screen'} safe-area-top safe-area-bottom relative`}
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${therapist.background_image_url || therapist.image_url})`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${therapist.background_image_url || therapist.image_url})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
