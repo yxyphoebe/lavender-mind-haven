@@ -42,10 +42,6 @@ const RatingDialog = ({ open, onClose, therapistId, sessionId }: RatingDialogPro
 
       if (error) throw error;
 
-      toast({
-        title: "Thank you!",
-        description: "Your feedback has been recorded.",
-      });
 
       onClose();
     } catch (error) {
