@@ -1,9 +1,9 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/hooks/useTherapists';
 import { useTavusVideo } from '@/hooks/useTavusVideo';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Loader2, Heart, Zap, Star, AlertCircle } from 'lucide-react';
 import DailyVideoCall from './DailyVideoCall';
@@ -19,7 +19,7 @@ const VideoChat = () => {
   const [roomUrl, setRoomUrl] = useState<string | null>(null);
   const [showRating, setShowRating] = useState(false);
   const [sessionId] = useState(() => crypto.randomUUID());
-
+  const startedRef = useRef(false);
   // Tavus integration
   const { 
     isConnecting, 
@@ -95,6 +95,21 @@ const VideoChat = () => {
     navigate('/user-center');
   };
 
+  // Redirect if no therapist is selected
+  useEffect(() => {
+    if (!selectedTherapistId) {
+      navigate('/user-center');
+    }
+  }, [selectedTherapistId, navigate]);
+
+  // Auto-start the Tavus session once therapist is loaded
+  useEffect(() => {
+    if (therapist && !startedRef.current && !isConnecting && !isInCall && !roomUrl) {
+      startedRef.current = true;
+      handleStartCall();
+    }
+  }, [therapist, isConnecting, isInCall, roomUrl]);
+
   // If in call, show the Daily video interface
   if (isInCall && roomUrl) {
     return <DailyVideoCall roomUrl={roomUrl} onLeave={handleLeaveCall} therapist={therapist} />;
@@ -147,21 +162,29 @@ const VideoChat = () => {
           </div>
         )}
 
-        {/* Start call button */}
-        <Button
-          onClick={handleStartCall}
-          disabled={!therapist || isConnecting}
-          className="bg-mindful-300 hover:bg-mindful-400 text-white px-12 py-6 rounded-2xl text-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg border border-mindful-200 disabled:opacity-50"
-        >
-          {isConnecting ? (
-            <>
-              <Loader2 className="w-6 h-6 animate-spin mr-3" />
-              Connecting...
-            </>
-          ) : (
-            'Start Video Call'
-          )}
-        </Button>
+        {/* Connecting state and retry */}
+        {!error ? (
+          <>
+            <div className="flex items-center justify-center gap-3 text-muted-foreground">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Connecting to video...</span>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">This may take a few seconds.</p>
+          </>
+        ) : (
+          <div className="flex items-center justify-center gap-3">
+            <Button onClick={handleStartCall} disabled={isConnecting}>
+              {isConnecting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Retrying...
+                </>
+              ) : (
+                'Retry'
+              )}
+            </Button>
+          </div>
+        )}
 
       </div>
 
