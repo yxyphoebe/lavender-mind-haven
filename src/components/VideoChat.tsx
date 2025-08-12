@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/hooks/useTherapists';
 import { useTavusVideo } from '@/hooks/useTavusVideo';
-import { useToast } from '@/hooks/use-toast';
+
 
 import { Heart, Zap, Star } from 'lucide-react';
 import DailyVideoCall from './DailyVideoCall';
@@ -11,7 +11,7 @@ import RatingDialog from './RatingDialog';
 
 const VideoChat = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  
   const selectedTherapistId = localStorage.getItem('selectedTherapistId') || '';
   const { data: therapist } = useTherapist(selectedTherapistId);
   
@@ -43,11 +43,6 @@ const VideoChat = () => {
 
   const handleStartCall = async () => {
     if (!therapist) {
-      toast({
-        title: "No Therapist Selected",
-        description: "Please select a therapist first",
-        variant: "destructive"
-      });
       return;
     }
 
@@ -66,11 +61,6 @@ const VideoChat = () => {
       
     } catch (error) {
       console.error('Error starting video call:', error);
-      toast({
-        title: "Connection Failed",
-        description: "Unable to establish video session, please try again",
-        variant: "destructive"
-      });
     }
   };
 

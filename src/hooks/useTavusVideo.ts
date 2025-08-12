@@ -68,10 +68,6 @@ export const useTavusVideo = () => {
       setSession(tavusSession);
       setIsConnected(true);
       
-      toast({
-        title: "AI Voice Session Established",
-        description: `Intelligent conversation with ${therapistName} has started`
-      });
 
       return tavusSession;
     } catch (err) {
@@ -116,10 +112,6 @@ export const useTavusVideo = () => {
       setIsConnected(false);
       setError(null);
       
-      toast({
-        title: "AI Session Ended",
-        description: "Intelligent voice conversation ended successfully"
-      });
 
       // Wait for API cleanup in background
       cleanupPromise.then(({ error }) => {
@@ -137,7 +129,7 @@ export const useTavusVideo = () => {
     } finally {
       requestInProgress.current = false;
     }
-  }, [session, toast]);
+  }, [session]);
 
   return {
     isConnecting,
