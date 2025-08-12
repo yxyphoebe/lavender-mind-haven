@@ -108,9 +108,10 @@ const VideoChat = () => {
       <FullScreenBackdrop 
         imageUrl={therapist?.image_url}
         name={therapist?.name}
-        showLoading
+        showLoading={!showRating}
         error={!!error}
         onRetry={error ? handleStartCall : undefined}
+        overlayVariant={showRating ? 'light' : 'medium'}
       />
 
       <RatingDialog

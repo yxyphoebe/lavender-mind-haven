@@ -66,33 +66,33 @@ const RatingDialog = ({ open, onClose, therapistId, sessionId }: RatingDialogPro
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-sm p-5 sm:rounded-2xl bg-background/50 backdrop-blur-md border border-border/50 shadow-lg animate-fade-in">
         <DialogHeader>
-          <DialogTitle className="text-center text-xl font-semibold text-mindful-800">
+          <DialogTitle className="text-center text-lg font-semibold text-foreground">
             How do you feel about this talk?
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex flex-col items-center space-y-6 py-6">
-          <div className="flex space-x-8">
+        <div className="flex flex-col items-center space-y-5 py-5">
+          <div className="flex space-x-6">
             <Button
               onClick={() => handleRating('thumbs_up')}
               disabled={isSubmitting}
               variant="ghost"
-              className="flex flex-col items-center space-y-2 p-6 hover:bg-green-50 hover:text-green-700 transition-colors"
+              className="flex flex-col items-center space-y-2 p-4 rounded-xl hover:bg-primary/10 transition-colors"
             >
-              <ThumbsUp className="w-12 h-12" />
-              <span className="text-sm font-medium">Good</span>
+              <ThumbsUp className="w-8 h-8" />
+              <span className="text-sm text-foreground">Good</span>
             </Button>
             
             <Button
               onClick={() => handleRating('thumbs_down')}
               disabled={isSubmitting}
               variant="ghost"
-              className="flex flex-col items-center space-y-2 p-6 hover:bg-red-50 hover:text-red-700 transition-colors"
+              className="flex flex-col items-center space-y-2 p-4 rounded-xl hover:bg-destructive/10 transition-colors"
             >
-              <ThumbsDown className="w-12 h-12" />
-              <span className="text-sm font-medium">Not Good</span>
+              <ThumbsDown className="w-8 h-8" />
+              <span className="text-sm text-foreground">Not Good</span>
             </Button>
           </div>
           
@@ -100,7 +100,7 @@ const RatingDialog = ({ open, onClose, therapistId, sessionId }: RatingDialogPro
             onClick={handleSkip}
             disabled={isSubmitting}
             variant="outline"
-            className="text-sm text-mindful-600 hover:text-mindful-700"
+            className="text-xs px-4 py-2 rounded-full border-border/60 text-muted-foreground hover:bg-background/60"
           >
             Skip
           </Button>

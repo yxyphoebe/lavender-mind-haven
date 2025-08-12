@@ -8,6 +8,7 @@ interface FullScreenBackdropProps {
   error?: boolean;
   onRetry?: () => void;
   className?: string;
+  overlayVariant?: 'none' | 'light' | 'medium' | 'dark';
 }
 
 const FullScreenBackdrop: React.FC<FullScreenBackdropProps> = ({
@@ -17,7 +18,15 @@ const FullScreenBackdrop: React.FC<FullScreenBackdropProps> = ({
   error = false,
   onRetry,
   className = '',
+  overlayVariant = 'medium',
 }) => {
+  const overlayCls = overlayVariant === 'none'
+    ? ''
+    : overlayVariant === 'light'
+    ? 'bg-background/10'
+    : overlayVariant === 'dark'
+    ? 'bg-background/50'
+    : 'bg-background/30';
   return (
     <section
       className={cn(
@@ -43,7 +52,9 @@ const FullScreenBackdrop: React.FC<FullScreenBackdropProps> = ({
       )}
 
       {/* Subtle shadow/overlay for readability */}
-      <div className="absolute inset-0 bg-background/30" />
+      {overlayVariant !== 'none' && (
+        <div className={cn('absolute inset-0 backdrop-blur-sm', overlayCls)} />
+      )}
 
       {/* Loading indicator */}
       {showLoading && (
