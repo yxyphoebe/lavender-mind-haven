@@ -89,6 +89,14 @@ const VideoChat = () => {
     }
   }, [therapist, isConnecting, isInCall, roomUrl]);
 
+  // Preload therapist image for seamless transition
+  useEffect(() => {
+    if (therapist?.image_url) {
+      const img = new Image();
+      img.src = therapist.image_url;
+    }
+  }, [therapist?.image_url]);
+
   // If in call, show the Daily video interface
   if (isInCall && roomUrl) {
     return <DailyVideoCall roomUrl={roomUrl} onLeave={handleLeaveCall} therapist={therapist} />;

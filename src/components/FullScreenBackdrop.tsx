@@ -21,7 +21,7 @@ const FullScreenBackdrop: React.FC<FullScreenBackdropProps> = ({
   return (
     <section
       className={cn(
-        'fixed inset-0 overflow-hidden',
+        'fixed inset-0 overflow-hidden bg-background',
         error ? 'cursor-pointer' : 'cursor-default',
         className
       )}

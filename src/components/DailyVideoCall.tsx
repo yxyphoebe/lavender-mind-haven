@@ -94,6 +94,10 @@ const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string
   const remoteVideo = remoteParticipant?.videoTrack;
   const remoteAudio = remoteParticipant?.audioTrack;
 
+  // Reset video readiness when the remote video track changes
+  useEffect(() => {
+    setVideoReady(false);
+  }, [remoteVideo]);
 
   const remoteAudioElement = useMemo(() => {
     if (!remoteAudio) return null;
@@ -122,17 +126,24 @@ const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string
       {/* Full-screen Remote Video */}
       <div className="absolute inset-0">
         {remoteVideo ? (
-          <video
-            autoPlay
-            playsInline
-            onLoadedMetadata={() => setVideoReady(true)}
-            className={`w-full h-full object-cover transition-opacity duration-300 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
-            ref={(video) => {
-              if (video && remoteVideo) {
-                video.srcObject = new MediaStream([remoteVideo]);
-              }
-            }}
-          />
+          <>
+            <video
+              autoPlay
+              playsInline
+              onLoadedMetadata={() => setVideoReady(true)}
+              className={`w-full h-full object-cover transition-opacity duration-300 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
+              ref={(video) => {
+                if (video && remoteVideo) {
+                  video.srcObject = new MediaStream([remoteVideo]);
+                }
+              }}
+            />
+            {!videoReady && (
+              <div className="absolute inset-0">
+                <FullScreenBackdrop imageUrl={therapist?.image_url} name={therapist?.name} showLoading />
+              </div>
+            )}
+          </>
         ) : (
           <div className="w-full h-full">
             <FullScreenBackdrop imageUrl={therapist?.image_url} name={therapist?.name} showLoading />
