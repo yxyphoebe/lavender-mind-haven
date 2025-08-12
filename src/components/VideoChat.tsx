@@ -5,7 +5,7 @@ import { useTherapist } from '@/hooks/useTherapists';
 import { useTavusVideo } from '@/hooks/useTavusVideo';
 import { useToast } from '@/hooks/use-toast';
 
-import { Loader2, Heart, Zap, Star } from 'lucide-react';
+import { Heart, Zap, Star } from 'lucide-react';
 import DailyVideoCall from './DailyVideoCall';
 import RatingDialog from './RatingDialog';
 
@@ -137,11 +137,6 @@ const VideoChat = () => {
           <IconComponent className="w-20 h-20 text-slate-600" />
         )}
 
-        {isConnecting && (
-          <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-background/80 flex items-center justify-center shadow">
-            <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-          </div>
-        )}
       </div>
 
       <RatingDialog

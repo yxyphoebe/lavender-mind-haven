@@ -1,8 +1,7 @@
 
-import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react';
-import { DailyProvider, useDaily, useLocalParticipant } from '@daily-co/daily-react';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import { DailyProvider, useDaily } from '@daily-co/daily-react';
 import Daily from '@daily-co/daily-js';
-import { Button } from '@/components/ui/button';
 import { PhoneOff, Mic, MicOff } from 'lucide-react';
 
 interface DailyVideoCallProps {
@@ -17,10 +16,11 @@ interface DailyVideoCallProps {
 
 const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string; name: string; image_url?: string } }> = ({ onLeave, therapist }) => {
   const daily = useDaily();
-  const localParticipant = useLocalParticipant();
+  
   const [remoteParticipant, setRemoteParticipant] = useState<any>(null);
   const [showControls, setShowControls] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
     if (!daily) return;
@@ -93,22 +93,6 @@ const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string
   const remoteVideo = remoteParticipant?.videoTrack;
   const remoteAudio = remoteParticipant?.audioTrack;
 
-  const remoteVideoElement = useMemo(() => {
-    if (!remoteVideo) return null;
-    
-    return (
-      <video
-        autoPlay
-        playsInline
-        className="w-full h-full object-cover"
-        ref={(video) => {
-          if (video && remoteVideo) {
-            video.srcObject = new MediaStream([remoteVideo]);
-          }
-        }}
-      />
-    );
-  }, [remoteVideo]);
 
   const remoteAudioElement = useMemo(() => {
     if (!remoteAudio) return null;
@@ -127,7 +111,7 @@ const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string
 
   return (
     <div 
-      className="fixed inset-0 bg-black overflow-hidden"
+      className="fixed inset-0 bg-background overflow-hidden"
       onClick={handleScreenTap}
       style={{ 
         height: '100vh', 
@@ -137,24 +121,31 @@ const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string
       {/* Full-screen Remote Video */}
       <div className="absolute inset-0">
         {remoteVideo ? (
-          remoteVideoElement
+          <video
+            autoPlay
+            playsInline
+            onLoadedMetadata={() => setVideoReady(true)}
+            className={`w-full h-full object-cover transition-opacity duration-300 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
+            ref={(video) => {
+              if (video && remoteVideo) {
+                video.srcObject = new MediaStream([remoteVideo]);
+              }
+            }}
+          />
         ) : (
-          <div className="w-full h-full bg-black flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-24 h-24 bg-slate-600 rounded-full flex items-center justify-center mb-4 mx-auto overflow-hidden">
-                {therapist?.image_url ? (
-                  <img 
-                    src={therapist.image_url} 
-                    alt={therapist.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-white text-2xl font-bold">
-                    {therapist?.name?.[0] || 'N'}
-                  </span>
-                )}
-              </div>
-              <p className="text-white/80 font-medium">Connecting to {therapist?.name || 'Nuva'}...</p>
+          <div className="w-full h-full bg-background flex items-center justify-center">
+            <div className="w-40 h-40 bg-muted rounded-full flex items-center justify-center mx-auto overflow-hidden">
+              {therapist?.image_url ? (
+                <img 
+                  src={therapist.image_url} 
+                  alt={therapist.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-2xl font-bold text-foreground/80">
+                  {therapist?.name?.[0] || 'N'}
+                </span>
+              )}
             </div>
           </div>
         )}
@@ -252,22 +243,19 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave, thera
 
   if (!callObject) {
     return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-slate-600 rounded-full flex items-center justify-center mb-4 mx-auto animate-pulse overflow-hidden">
-            {therapist?.image_url ? (
-              <img 
-                src={therapist.image_url} 
-                alt={therapist.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-white text-xl font-bold">
-                {therapist?.name?.[0] || 'N'}
-              </span>
-            )}
-          </div>
-          <p className="text-white/80 font-medium">Initializing video call...</p>
+      <div className="fixed inset-0 bg-background flex items-center justify-center">
+        <div className="w-40 h-40 bg-muted rounded-full flex items-center justify-center mx-auto overflow-hidden">
+          {therapist?.image_url ? (
+            <img 
+              src={therapist.image_url} 
+              alt={therapist.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <span className="text-2xl font-bold text-foreground/80">
+              {therapist?.name?.[0] || 'N'}
+            </span>
+          )}
         </div>
       </div>
     );
