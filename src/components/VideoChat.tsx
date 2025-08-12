@@ -5,8 +5,9 @@ import { useTherapist } from '@/hooks/useTherapists';
 import { useTavusVideo } from '@/hooks/useTavusVideo';
 
 
-import { Heart, Zap, Star } from 'lucide-react';
+
 import DailyVideoCall from './DailyVideoCall';
+import FullScreenBackdrop from './FullScreenBackdrop';
 import RatingDialog from './RatingDialog';
 
 const VideoChat = () => {
@@ -29,17 +30,6 @@ const VideoChat = () => {
     endAudioSession 
   } = useTavusVideo();
 
-  // Get selected persona from localStorage for fallback display
-  const selectedPersona = localStorage.getItem('selectedPersona') || 'nuva';
-  
-  const personas = {
-    nuva: { name: 'Nuva', icon: Heart, color: 'violet' },
-    nova: { name: 'Nova', icon: Zap, color: 'blue' },
-    sage: { name: 'Sage', icon: Star, color: 'indigo' }
-  };
-
-  const currentPersona = personas[selectedPersona as keyof typeof personas] || personas.nuva;
-  const IconComponent = currentPersona.icon;
 
   const handleStartCall = async () => {
     if (!therapist) {
@@ -106,28 +96,14 @@ const VideoChat = () => {
 
   // Pre-call minimal interface
   return (
-    <div className="h-screen w-screen bg-background flex items-center justify-center">
-      <div
-        className={`relative w-40 h-40 rounded-full bg-gradient-to-br shadow-lg flex items-center justify-center ${
-          currentPersona.color === 'blue'
-            ? 'from-blue-200 to-purple-300'
-            : currentPersona.color === 'violet'
-              ? 'from-blue-200 to-blue-300'
-              : 'from-blue-300 to-purple-200'
-        } ${error ? 'cursor-pointer' : ''}`}
-        onClick={error ? handleStartCall : undefined}
-      >
-        {therapist?.image_url ? (
-          <img
-            src={therapist.image_url}
-            alt={therapist.name}
-            className="w-full h-full rounded-full object-cover"
-          />
-        ) : (
-          <IconComponent className="w-20 h-20 text-slate-600" />
-        )}
-
-      </div>
+    <div className="h-screen w-screen bg-background">
+      <FullScreenBackdrop 
+        imageUrl={therapist?.image_url}
+        name={therapist?.name}
+        showLoading
+        error={!!error}
+        onRetry={error ? handleStartCall : undefined}
+      />
 
       <RatingDialog
         open={showRating}

@@ -3,6 +3,7 @@ import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { DailyProvider, useDaily } from '@daily-co/daily-react';
 import Daily from '@daily-co/daily-js';
 import { PhoneOff, Mic, MicOff } from 'lucide-react';
+import FullScreenBackdrop from './FullScreenBackdrop';
 
 interface DailyVideoCallProps {
   roomUrl: string;
@@ -133,20 +134,8 @@ const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string
             }}
           />
         ) : (
-          <div className="w-full h-full bg-background flex items-center justify-center">
-            <div className="w-40 h-40 bg-muted rounded-full flex items-center justify-center mx-auto overflow-hidden">
-              {therapist?.image_url ? (
-                <img 
-                  src={therapist.image_url} 
-                  alt={therapist.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-2xl font-bold text-foreground/80">
-                  {therapist?.name?.[0] || 'N'}
-                </span>
-              )}
-            </div>
+          <div className="w-full h-full">
+            <FullScreenBackdrop imageUrl={therapist?.image_url} name={therapist?.name} showLoading />
           </div>
         )}
         
@@ -243,21 +232,7 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave, thera
 
   if (!callObject) {
     return (
-      <div className="fixed inset-0 bg-background flex items-center justify-center">
-        <div className="w-40 h-40 bg-muted rounded-full flex items-center justify-center mx-auto overflow-hidden">
-          {therapist?.image_url ? (
-            <img 
-              src={therapist.image_url} 
-              alt={therapist.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <span className="text-2xl font-bold text-foreground/80">
-              {therapist?.name?.[0] || 'N'}
-            </span>
-          )}
-        </div>
-      </div>
+      <FullScreenBackdrop imageUrl={therapist?.image_url} name={therapist?.name} showLoading />
     );
   }
 
