@@ -25,7 +25,7 @@ const FullScreenBackdrop: React.FC<FullScreenBackdropProps> = ({
     : overlayVariant === 'light'
     ? 'bg-background/10'
     : overlayVariant === 'dark'
-    ? 'bg-background/50'
+    ? 'bg-background/60'
     : 'bg-background/30';
   return (
     <section
