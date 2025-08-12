@@ -111,7 +111,7 @@ const VideoChat = () => {
         showLoading={!showRating}
         error={!!error}
         onRetry={error ? handleStartCall : undefined}
-        overlayVariant={showRating ? 'light' : 'medium'}
+        overlayVariant={showRating ? 'light' : 'dark'}
       />
 
       <RatingDialog

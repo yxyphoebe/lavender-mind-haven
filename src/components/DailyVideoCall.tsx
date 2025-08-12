@@ -140,13 +140,13 @@ const VideoCallContent: React.FC<{ onLeave: () => void; therapist?: { id: string
             />
             {!videoReady && (
               <div className="absolute inset-0">
-                <FullScreenBackdrop imageUrl={therapist?.image_url} name={therapist?.name} showLoading />
+                <FullScreenBackdrop imageUrl={therapist?.image_url} name={therapist?.name} showLoading overlayVariant="dark" />
               </div>
             )}
           </>
         ) : (
           <div className="w-full h-full">
-            <FullScreenBackdrop imageUrl={therapist?.image_url} name={therapist?.name} showLoading />
+            <FullScreenBackdrop imageUrl={therapist?.image_url} name={therapist?.name} showLoading overlayVariant="dark" />
           </div>
         )}
         
@@ -243,7 +243,7 @@ const DailyVideoCall: React.FC<DailyVideoCallProps> = ({ roomUrl, onLeave, thera
 
   if (!callObject) {
     return (
-      <FullScreenBackdrop imageUrl={therapist?.image_url} name={therapist?.name} showLoading />
+      <FullScreenBackdrop imageUrl={therapist?.image_url} name={therapist?.name} showLoading overlayVariant="dark" />
     );
   }
 
