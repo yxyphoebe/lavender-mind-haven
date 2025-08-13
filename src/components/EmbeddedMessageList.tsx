@@ -42,10 +42,10 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
       <div className="px-4 py-4 space-y-4">
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
-            <div className={`flex items-start space-x-3 max-w-[85%] ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-              {/* Avatar */}
-              <div className="flex-shrink-0">
-                {message.sender === 'ai' ? (
+            <div className={`flex items-start max-w-[85%] ${message.sender === 'user' ? '' : 'space-x-3'}`}>
+              {/* Avatar - only for AI */}
+              {message.sender === 'ai' && (
+                <div className="flex-shrink-0">
                   <Avatar className="w-7 h-7 ring-1 ring-white/30">
                     <AvatarImage 
                       src={therapist.image_url || ''} 
@@ -56,19 +56,15 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
                       {therapist.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                ) : (
-                  <div className="w-7 h-7 bg-white/25 backdrop-blur-sm rounded-full flex items-center justify-center ring-1 ring-white/30">
-                    <User className="w-4 h-4 text-white" />
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* Message Content */}
               <div className={`flex-1 min-w-0 ${message.sender === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
                 {message.text && (
                   <div className={`rounded-2xl px-3 py-2 border border-white/20 ${
                     message.sender === 'user' 
-                      ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white' 
+                      ? 'bg-slate-200/60 backdrop-blur-sm text-slate-700' 
                       : 'bg-white/15 backdrop-blur-md text-white'
                   }`}>
                     {message.hasTypingAnimation ? (

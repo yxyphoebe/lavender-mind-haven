@@ -40,10 +40,10 @@ const MessageList = ({ messages, therapist, isTyping }: MessageListProps) => {
       <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
-            <div className={`flex items-start space-x-4 max-w-2xl ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-              {/* Avatar */}
-              <div className="flex-shrink-0">
-                {message.sender === 'ai' ? (
+            <div className={`flex items-start max-w-2xl ${message.sender === 'user' ? '' : 'space-x-4'}`}>
+              {/* Avatar - only for AI */}
+              {message.sender === 'ai' && (
+                <div className="flex-shrink-0">
                   <Avatar className="w-9 h-9 ring-2 ring-white/50 shadow-md">
                     <AvatarImage 
                       src={therapist.image_url || ''} 
@@ -54,23 +54,19 @@ const MessageList = ({ messages, therapist, isTyping }: MessageListProps) => {
                       {therapist.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                ) : (
-                  <div className="w-9 h-9 bg-gradient-to-br from-slate-400 to-slate-500 rounded-full flex items-center justify-center shadow-md">
-                    <User className="w-5 h-5 text-white" />
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* Message Content */}
               <div className={`flex-1 min-w-0 ${message.sender === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
                 {message.text && (
                   <div className={`rounded-2xl px-4 py-3 shadow-sm border border-white/30 ${
                     message.sender === 'user' 
-                      ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white' 
+                      ? 'bg-slate-200/60 backdrop-blur-sm text-slate-700' 
                       : 'bg-white/60 backdrop-blur-sm'
                   }`}>
                     <p className={`leading-relaxed whitespace-pre-wrap text-[15px] ${
-                      message.sender === 'user' ? 'text-white' : 'text-slate-700'
+                      message.sender === 'user' ? 'text-slate-700' : 'text-slate-700'
                     }`}>
                       {message.text}
                     </p>
