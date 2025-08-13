@@ -126,9 +126,9 @@ const MessageList = ({ messages, therapist, isTyping }: MessageListProps) => {
                 </div>
                 <div className="bg-white/60 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-sm border border-white/30 min-w-[120px]">
                   <div className="flex items-center space-x-1.5">
-                    <div className="w-3.5 h-3.5 bg-slate-400 rounded-full animate-bounce"></div>
-                    <div className="w-3.5 h-3.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-3.5 h-3.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-3.5 h-3.5 bg-slate-600 border border-slate-400/50 shadow-sm rounded-full animate-bounce"></div>
+                    <div className="w-3.5 h-3.5 bg-slate-600 border border-slate-400/50 shadow-sm rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-3.5 h-3.5 bg-slate-600 border border-slate-400/50 shadow-sm rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>

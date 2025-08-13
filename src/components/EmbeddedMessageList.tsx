@@ -137,9 +137,9 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
                 </div>
                 <div className="bg-white/15 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/20 min-w-[120px]">
                   <div className="flex items-center space-x-1.5">
-                    <div className="w-3 h-3 bg-white/60 rounded-full animate-bounce"></div>
-                    <div className="w-3 h-3 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-3 h-3 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-3 h-3 bg-white border border-white/30 shadow-sm rounded-full animate-bounce"></div>
+                    <div className="w-3 h-3 bg-white border border-white/30 shadow-sm rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-3 h-3 bg-white border border-white/30 shadow-sm rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>
