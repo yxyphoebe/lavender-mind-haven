@@ -340,7 +340,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         sender: 'ai',
         timestamp: new Date(),
         hasTypingAnimation: true,
-        typingDelay: 500
+        typingDelay: 0
       };
 
       // Update messages with AI response
@@ -362,7 +362,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         sender: 'ai',
         timestamp: new Date(),
         hasTypingAnimation: true,
-        typingDelay: 500
+        typingDelay: 0
       };
 
       const finalMessages = [...newMessages, errorMessage];
