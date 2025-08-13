@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/hooks/useTherapists';
 import { useTavusVideo } from '@/hooks/useTavusVideo';
+import { trackNavigation } from '@/hooks/useUserCenterMessage';
 
 
 
@@ -88,6 +89,11 @@ const VideoChat = () => {
       handleStartCall();
     }
   }, [therapist, isConnecting, isInCall, roomUrl]);
+
+  // Track navigation for smart message system
+  useEffect(() => {
+    trackNavigation('/video-call');
+  }, []);
 
   // Preload therapist image for seamless transition
   useEffect(() => {

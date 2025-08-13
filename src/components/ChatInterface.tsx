@@ -11,6 +11,7 @@ import { useChatLogic } from '@/hooks/useChatLogic';
 import EmbeddedMessageList from './EmbeddedMessageList';
 import EmbeddedChatInput from './EmbeddedChatInput';
 import { useEffect } from 'react';
+import { trackNavigation } from '@/hooks/useUserCenterMessage';
 
 const ChatInterface = () => {
   const navigate = useNavigate();
@@ -47,6 +48,11 @@ const ChatInterface = () => {
       initializeChatWithContext(welcomePrompt);
     }
   }, [therapist, dailyMessage, welcomePrompt, initializeChatWithContext]);
+
+  // Track navigation for smart message system
+  useEffect(() => {
+    trackNavigation('/chat');
+  }, []);
 
   // Only show loading if we have no data at all
   if (!initialized || (!therapist && isLoading)) {

@@ -6,9 +6,10 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useWelcomePrompt } from '@/hooks/useWelcomePrompt';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/hooks/useAuth';
-import { useDailyMessage } from '@/hooks/useDailyMessage';
+import { useUserCenterMessage, trackNavigation } from '@/hooks/useUserCenterMessage';
 import TypingText from '@/components/TypingText';
 import BackgroundMusic from '@/components/BackgroundMusic';
+import { useEffect } from 'react';
 
 const UserCenter = () => {
   const navigate = useNavigate();
@@ -19,10 +20,16 @@ const UserCenter = () => {
   const { data: therapist, isLoading } = useTherapist(selectedTherapistId);
   const { welcomePrompt, isLoading: promptLoading } = useWelcomePrompt(selectedTherapistId);
 
-  // Only fetch daily messages when logged in and therapistId exists
-  const { dailyMessage, isLoading: dailyLoading } = useDailyMessage(
-    initialized && user ? selectedTherapistId : ''
+  // Smart message system based on navigation context
+  const { message: contextualMessage, isLoading: messageLoading, source, status } = useUserCenterMessage(
+    initialized && user ? selectedTherapistId : '',
+    therapist?.name
   );
+
+  // Track this route for navigation context
+  useEffect(() => {
+    trackNavigation('/user-center');
+  }, []);
 
   // Only show loading if we have no data at all
   if (!initialized || (!therapist && isLoading)) {
@@ -89,13 +96,17 @@ const UserCenter = () => {
             </Avatar>
           </div>
 
-          {/* Dialogue Bubble */}
+           {/* Dialogue Bubble */}
           <div className={`relative ${isMobile ? 'max-w-xs' : 'max-w-md'} transition-all duration-500`}>
             <div className={`bg-white/20 backdrop-blur-md rounded-2xl ${isMobile ? 'p-4' : 'p-6'} border border-white/30 shadow-lg`}>
-              {dailyMessage ? (
+              {status === 'generating' ? (
+                <div className={`text-white ${isMobile ? 'text-sm' : 'text-base'} leading-relaxed flex items-center space-x-2`}>
+                  <span>...</span>
+                </div>
+              ) : contextualMessage ? (
                 <TypingText
-                  text={dailyMessage}
-                  preDelay={700}
+                  text={contextualMessage}
+                  preDelay={source === 'session_summary' ? 300 : 700}
                   speed={30}
                   className={`text-white ${isMobile ? 'text-sm' : 'text-base'} leading-relaxed whitespace-pre-line`}
                   clickToSkip

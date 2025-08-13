@@ -16,9 +16,10 @@ import {
   ArrowLeft,
   Sparkles
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PersonaAvatar from './PersonaAvatar';
+import { trackNavigation } from '@/hooks/useUserCenterMessage';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -54,6 +55,11 @@ const Profile = () => {
     localStorage.clear();
     navigate('/auth');
   };
+
+  // Track navigation for smart message system
+  useEffect(() => {
+    trackNavigation('/profile');
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
