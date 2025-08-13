@@ -128,7 +128,14 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     
     const existingMessages = loadFromLocalStorage(currentUserId, selectedTherapistId);
     
-    if (existingMessages.length === 0) {
+    // Check if we need to reinitialize with new daily message
+    const shouldReinitialize = existingMessages.length === 0 || 
+      (existingMessages.length > 0 && existingMessages[0].text !== dailyMessage);
+    
+    if (shouldReinitialize) {
+      // Clear existing messages and start fresh
+      console.log('Initializing fresh chat with daily message');
+      
       // First message: exact daily message without animation
       const dailyMsg: Message = {
         id: 'daily-message',
@@ -155,6 +162,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         saveToLocalStorage(currentUserId, selectedTherapistId, finalMessages);
       }, 500);
     } else {
+      console.log('Loaded historical chat from local storage');
       setMessages(existingMessages);
     }
   };
