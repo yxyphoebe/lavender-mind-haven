@@ -8,7 +8,7 @@ interface Message {
   sender: 'user' | 'ai';
   timestamp: Date;
   hasTypingAnimation?: boolean;
-  typingDelay?: number;
+  preDelay?: number;
   attachments?: Array<{
     url: string;
     type: 'image' | 'video';
@@ -147,7 +147,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
           sender: 'ai',
           timestamp: new Date(),
           hasTypingAnimation: true,
-          typingDelay: 800
+          preDelay: 800
         };
         
         const finalMessages = [contextMsg, invitationMsg];
@@ -340,7 +340,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         sender: 'ai',
         timestamp: new Date(),
         hasTypingAnimation: true,
-        typingDelay: 0
+        preDelay: 0
       };
 
       // Update messages with AI response
@@ -362,7 +362,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         sender: 'ai',
         timestamp: new Date(),
         hasTypingAnimation: true,
-        typingDelay: 0
+        preDelay: 0
       };
 
       const finalMessages = [...newMessages, errorMessage];

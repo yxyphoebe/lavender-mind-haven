@@ -11,7 +11,7 @@ interface Message {
   sender: 'user' | 'ai';
   timestamp: Date;
   hasTypingAnimation?: boolean;
-  typingDelay?: number;
+  preDelay?: number;
   attachments?: Array<{
     url: string;
     type: 'image' | 'video';
@@ -84,7 +84,7 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
                     {message.hasTypingAnimation ? (
                       <TypingText
                         text={message.text}
-                        preDelay={message.typingDelay || 0}
+                        preDelay={message.preDelay || 0}
                         speed={35}
                         className="leading-relaxed whitespace-pre-wrap text-sm"
                         clickToSkip={false}
