@@ -76,7 +76,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: Deno.env.get('OPENAI_CHAT_MODEL') || 'gpt-5-mini',
+        model: Deno.env.get('OPENAI_CHAT_MODEL') || 'gpt-4o-mini',
         messages: messages,
         temperature: 0.7,
         max_tokens: 500,
