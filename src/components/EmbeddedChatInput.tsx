@@ -29,7 +29,7 @@ const EmbeddedChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping 
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       const scrollHeight = textareaRef.current.scrollHeight;
-      const maxHeight = isMobile ? 80 : 100; // Smaller max height for embedded
+      const maxHeight = isMobile ? 60 : 80; // Reduced max height for embedded
       textareaRef.current.style.height = Math.min(scrollHeight, maxHeight) + 'px';
     }
   }, [inputValue, isMobile]);
@@ -149,7 +149,7 @@ const EmbeddedChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping 
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="Type a message..."
-            className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm placeholder:text-white/60 px-0 py-1 resize-none min-h-[1.5rem] max-h-none overflow-y-auto text-white"
+            className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm placeholder:text-white/60 px-0 py-0.5 resize-none min-h-[1.25rem] max-h-none overflow-y-auto text-white"
             disabled={isTyping}
             style={{ height: 'auto' }}
           />

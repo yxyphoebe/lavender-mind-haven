@@ -30,7 +30,7 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       const scrollHeight = textareaRef.current.scrollHeight;
-      const maxHeight = isMobile ? 120 : 160; // 6 lines on mobile, 8 lines on desktop
+      const maxHeight = isMobile ? 100 : 120; // Reduced max height
       textareaRef.current.style.height = Math.min(scrollHeight, maxHeight) + 'px';
     }
   }, [inputValue, isMobile]);
@@ -151,7 +151,7 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Type a message..."
-              className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-slate-400 px-0 py-1 resize-none min-h-[2rem] max-h-none overflow-y-auto"
+              className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-slate-400 px-0 py-0.5 resize-none min-h-[1.5rem] max-h-none overflow-y-auto"
               disabled={isTyping}
               style={{ height: 'auto' }}
             />
