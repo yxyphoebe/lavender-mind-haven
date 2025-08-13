@@ -338,7 +338,9 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         id: (Date.now() + 1).toString(),
         text: aiResponse,
         sender: 'ai',
-        timestamp: new Date()
+        timestamp: new Date(),
+        hasTypingAnimation: true,
+        typingDelay: 500
       };
 
       // Update messages with AI response
@@ -358,7 +360,9 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
         id: (Date.now() + 1).toString(),
         text: "I'm experiencing some technical difficulties right now. Please try again in a moment.",
         sender: 'ai',
-        timestamp: new Date()
+        timestamp: new Date(),
+        hasTypingAnimation: true,
+        typingDelay: 500
       };
 
       const finalMessages = [...newMessages, errorMessage];
