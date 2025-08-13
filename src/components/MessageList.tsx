@@ -123,7 +123,6 @@ const MessageList = ({ messages, therapist, isTyping }: MessageListProps) => {
               <div className="flex-1 space-y-2">
                 <div className="flex items-center space-x-2">
                   <span className="text-sm font-medium text-slate-700">{therapist.name}</span>
-                  <span className="text-xs text-slate-400">typing...</span>
                 </div>
                 <div className="bg-white/60 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-sm border border-white/30">
                   <div className="flex items-center space-x-1">

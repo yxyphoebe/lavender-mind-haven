@@ -134,7 +134,6 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
               <div className="flex-1 space-y-1">
                 <div className="flex items-center space-x-2">
                   <span className="text-xs font-medium text-white/90">{therapist.name}</span>
-                  <span className="text-xs text-white/60">typing...</span>
                 </div>
                 <div className="bg-white/15 backdrop-blur-md rounded-2xl px-3 py-2 border border-white/20">
                   <div className="flex items-center space-x-1">
