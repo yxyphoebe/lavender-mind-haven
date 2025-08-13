@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User } from 'lucide-react';
 import MediaMessage from './MediaMessage';
+import TypingText from './TypingText';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Message {
@@ -9,6 +10,8 @@ interface Message {
   text: string;
   sender: 'user' | 'ai';
   timestamp: Date;
+  hasTypingAnimation?: boolean;
+  typingDelay?: number;
   attachments?: Array<{
     url: string;
     type: 'image' | 'video';
@@ -78,9 +81,19 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
                       ? 'bg-white/25 backdrop-blur-md text-white' 
                       : 'bg-white/15 backdrop-blur-md text-white'
                   }`}>
-                    <p className="leading-relaxed whitespace-pre-wrap text-sm">
-                      {message.text}
-                    </p>
+                    {message.hasTypingAnimation ? (
+                      <TypingText
+                        text={message.text}
+                        preDelay={message.typingDelay || 0}
+                        speed={35}
+                        className="leading-relaxed whitespace-pre-wrap text-sm"
+                        clickToSkip={false}
+                      />
+                    ) : (
+                      <p className="leading-relaxed whitespace-pre-wrap text-sm">
+                        {message.text}
+                      </p>
+                    )}
                   </div>
                 )}
 

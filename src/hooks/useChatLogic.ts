@@ -7,6 +7,8 @@ interface Message {
   text: string;
   sender: 'user' | 'ai';
   timestamp: Date;
+  hasTypingAnimation?: boolean;
+  typingDelay?: number;
   attachments?: Array<{
     url: string;
     type: 'image' | 'video';
@@ -127,35 +129,54 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     const existingMessages = loadFromLocalStorage(currentUserId, selectedTherapistId);
     
     if (existingMessages.length === 0) {
-      const initialMessages: Message[] = [
-        {
-          id: 'context',
-          text: contextMessage,
-          sender: 'ai',
-          timestamp: new Date()
-        },
-        {
+      // First show context message immediately
+      const contextMsg: Message = {
+        id: 'context',
+        text: contextMessage,
+        sender: 'ai',
+        timestamp: new Date()
+      };
+      
+      setMessages([contextMsg]);
+      
+      // Then add invitation with typing animation after a short delay
+      setTimeout(() => {
+        const invitationMsg: Message = {
           id: 'invitation',
           text: generateInvitationMessage(contextMessage),
           sender: 'ai',
-          timestamp: new Date()
-        }
-      ];
-      setMessages(initialMessages);
-      saveToLocalStorage(currentUserId, selectedTherapistId, initialMessages);
+          timestamp: new Date(),
+          hasTypingAnimation: true,
+          typingDelay: 800
+        };
+        
+        const finalMessages = [contextMsg, invitationMsg];
+        setMessages(finalMessages);
+        saveToLocalStorage(currentUserId, selectedTherapistId, finalMessages);
+      }, 800);
     } else {
       setMessages(existingMessages);
     }
   };
 
-  // Generate context-aware invitation message
+  // Generate natural, conversational invitation message
   const generateInvitationMessage = (contextMessage: string) => {
-    if (contextMessage.includes('daily') || contextMessage.includes('today') || contextMessage.includes('morning')) {
-      return "Would you like to talk about this?";
+    const invitations = [
+      "I'm curious to hear your thoughts on this...",
+      "What's been going through your mind?",
+      "How are things feeling for you right now?",
+      "I'd love to know what resonates with you here.",
+      "What's coming up for you as you think about this?",
+      "How does this land with you?"
+    ];
+    
+    // Pick invitation based on context or randomly for variety
+    if (contextMessage.includes('daily') || contextMessage.includes('today')) {
+      return Math.random() > 0.5 ? "What's been going through your mind?" : "How are things feeling for you right now?";
     } else if (contextMessage.includes('welcome') || contextMessage.includes('here for you')) {
-      return "What's on your mind today?";
+      return Math.random() > 0.5 ? "I'm curious to hear your thoughts on this..." : "What's coming up for you as you think about this?";
     } else {
-      return "How are you feeling right now?";
+      return invitations[Math.floor(Math.random() * invitations.length)];
     }
   };
 
