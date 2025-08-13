@@ -45,7 +45,8 @@ const ChatInterface = () => {
     }
   }, [therapist, dailyMessage, welcomePrompt, initializeChatWithContext]);
 
-  if (!initialized || isLoading || promptLoading || dailyLoading) {
+  // Only show loading if we have no data at all
+  if (!initialized || (!therapist && isLoading)) {
     return (
       <div className="h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">

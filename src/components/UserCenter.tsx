@@ -24,7 +24,8 @@ const UserCenter = () => {
     initialized && user ? selectedTherapistId : ''
   );
 
-  if (!initialized || isLoading || promptLoading || dailyLoading) {
+  // Only show loading if we have no data at all
+  if (!initialized || (!therapist && isLoading)) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-mindful-400" />

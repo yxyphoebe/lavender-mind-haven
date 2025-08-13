@@ -1,40 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 export const useWelcomePrompt = (therapistId: string) => {
-  const [welcomePrompt, setWelcomePrompt] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchWelcomePrompt = async () => {
+  const { data: welcomePrompt = '', isLoading } = useQuery({
+    queryKey: ['welcomePrompt', therapistId],
+    queryFn: async (): Promise<string> => {
       if (!therapistId) {
-        setIsLoading(false);
-        return;
+        return '';
       }
 
-      try {
-        const { data, error } = await supabase
-          .from('generation_prompts')
-          .select('prompt_text')
-          .eq('therapist_id', therapistId)
-          .eq('prompt_type', 'welcome')
-          .eq('active', true)
-          .single();
+      const { data, error } = await supabase
+        .from('generation_prompts')
+        .select('prompt_text')
+        .eq('therapist_id', therapistId)
+        .eq('prompt_type', 'welcome')
+        .eq('active', true)
+        .single();
 
-        if (error) {
-          console.error('Error fetching welcome prompt:', error);
-        } else if (data) {
-          setWelcomePrompt(data.prompt_text);
-        }
-      } catch (error) {
-        console.error('Failed to fetch welcome prompt:', error);
-      } finally {
-        setIsLoading(false);
+      if (error) {
+        console.error('Error fetching welcome prompt:', error);
+        return '';
       }
-    };
 
-    fetchWelcomePrompt();
-  }, [therapistId]);
+      return data?.prompt_text || '';
+    },
+    enabled: !!therapistId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
+  });
 
   return { welcomePrompt, isLoading };
 };
