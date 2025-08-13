@@ -3,7 +3,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User } from 'lucide-react';
 import MediaMessage from './MediaMessage';
 import TypingText from './TypingText';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Message {
   id: string;
@@ -39,7 +38,7 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
   }, [messages]);
 
   return (
-    <ScrollArea className="flex-1 h-full">
+    <div className="flex-1 overflow-y-auto h-full">
       <div className="px-4 py-4 space-y-4">
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
@@ -65,20 +64,11 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
               </div>
 
               {/* Message Content */}
-              <div className={`flex-1 min-w-0 space-y-1 ${message.sender === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
-                <div className={`flex items-center space-x-2 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                  <span className="text-xs font-medium text-white/90">
-                    {message.sender === 'ai' ? therapist.name : 'You'}
-                  </span>
-                  <span className="text-xs text-white/60">
-                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-                
+              <div className={`flex-1 min-w-0 ${message.sender === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
                 {message.text && (
                   <div className={`rounded-2xl px-3 py-2 border border-white/20 ${
                     message.sender === 'user' 
-                      ? 'bg-white/25 backdrop-blur-md text-white' 
+                      ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white' 
                       : 'bg-white/15 backdrop-blur-md text-white'
                   }`}>
                     {message.hasTypingAnimation ? (
@@ -131,10 +121,7 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
                   {therapist.name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex-1 space-y-1">
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs font-medium text-white/90">{therapist.name}</span>
-                </div>
+              <div className="flex-1">
                 <div className="bg-white/15 backdrop-blur-md rounded-2xl px-3 py-2 border border-white/20">
                   <div className="flex items-center space-x-1">
                     <div className="w-1.5 h-1.5 bg-white/60 rounded-full animate-bounce"></div>
@@ -148,7 +135,7 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
         )}
       </div>
       <div ref={messagesEndRef} />
-    </ScrollArea>
+    </div>
   );
 };
 

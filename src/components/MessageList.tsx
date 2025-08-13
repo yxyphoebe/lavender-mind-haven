@@ -62,20 +62,11 @@ const MessageList = ({ messages, therapist, isTyping }: MessageListProps) => {
               </div>
 
               {/* Message Content */}
-              <div className={`flex-1 min-w-0 space-y-2 ${message.sender === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
-                <div className={`flex items-center space-x-2 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                  <span className="text-sm font-medium text-slate-700">
-                    {message.sender === 'ai' ? therapist.name : 'You'}
-                  </span>
-                  <span className="text-xs text-slate-400">
-                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-                
+              <div className={`flex-1 min-w-0 ${message.sender === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
                 {message.text && (
                   <div className={`rounded-2xl px-4 py-3 shadow-sm border border-white/30 ${
                     message.sender === 'user' 
-                      ? 'bg-gradient-to-br from-blue-500/80 to-purple-500/80 text-white backdrop-blur-sm' 
+                      ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white' 
                       : 'bg-white/60 backdrop-blur-sm'
                   }`}>
                     <p className={`leading-relaxed whitespace-pre-wrap text-[15px] ${
@@ -120,10 +111,7 @@ const MessageList = ({ messages, therapist, isTyping }: MessageListProps) => {
                   {therapist.name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex-1 space-y-2">
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium text-slate-700">{therapist.name}</span>
-                </div>
+              <div className="flex-1">
                 <div className="bg-white/60 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-sm border border-white/30">
                   <div className="flex items-center space-x-1">
                     <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
