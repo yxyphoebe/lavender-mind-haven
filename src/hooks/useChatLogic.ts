@@ -136,31 +136,44 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
       // Clear existing messages and start fresh
       console.log('Initializing fresh chat with daily message');
       
-      // First message: exact daily message without animation
-      const dailyMsg: Message = {
-        id: 'daily-message',
-        text: dailyMessage,
-        sender: 'ai',
-        timestamp: new Date()
-      };
+      // Show typing dots immediately
+      setIsTyping(true);
       
-      setMessages([dailyMsg]);
-      
-      // Second message: follow-up with typing animation
+      // First message: daily message with typing animation
       setTimeout(() => {
-        const followUpMsg: Message = {
-          id: 'follow-up',
-          text: generateFollowUpMessage(dailyMessage),
+        const dailyMsg: Message = {
+          id: 'daily-message',
+          text: dailyMessage,
           sender: 'ai',
           timestamp: new Date(),
           hasTypingAnimation: true,
-          preDelay: 1000
+          preDelay: 500
         };
         
-        const finalMessages = [dailyMsg, followUpMsg];
-        setMessages(finalMessages);
-        saveToLocalStorage(currentUserId, selectedTherapistId, finalMessages);
-      }, 500);
+        setMessages([dailyMsg]);
+        setIsTyping(false);
+        
+        // Second message: follow-up with typing animation after a delay
+        setTimeout(() => {
+          setIsTyping(true);
+          
+          setTimeout(() => {
+            const followUpMsg: Message = {
+              id: 'follow-up',
+              text: generateFollowUpMessage(dailyMessage),
+              sender: 'ai',
+              timestamp: new Date(),
+              hasTypingAnimation: true,
+              preDelay: 500
+            };
+            
+            const finalMessages = [dailyMsg, followUpMsg];
+            setMessages(finalMessages);
+            setIsTyping(false);
+            saveToLocalStorage(currentUserId, selectedTherapistId, finalMessages);
+          }, 800);
+        }, 2000);
+      }, 800);
     } else {
       console.log('Loaded historical chat from local storage');
       setMessages(existingMessages);
