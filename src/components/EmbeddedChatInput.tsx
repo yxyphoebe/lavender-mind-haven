@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send, Plus, Video, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useIsMobile } from '@/hooks/use-mobile';
-import VoiceRecorder from './VoiceRecorder';
+
 
 interface MediaFile {
   file: File;
@@ -43,10 +43,6 @@ const EmbeddedChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping 
     }
   };
 
-  const handleVoiceTranscription = (text: string) => {
-    console.log('Voice transcription received:', text);
-    setInputValue(text);
-  };
 
   const handleMediaSelect = () => {
     const input = document.createElement('input');
@@ -94,7 +90,7 @@ const EmbeddedChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping 
   };
 
   return (
-    <div className="p-4">
+    <div className="p-3">
       {/* Media Files Preview */}
       {selectedMediaFiles.length > 0 && (
         <div className="mb-3">
@@ -144,7 +140,7 @@ const EmbeddedChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping 
       )}
       
       {/* Input Box */}
-      <div className="bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 p-3">
+      <div className="bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 p-2">
         {/* Textarea field */}
         <div className="mb-2">
           <Textarea
@@ -153,7 +149,7 @@ const EmbeddedChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping 
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="Type a message..."
-            className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm placeholder:text-white/60 px-0 py-1 resize-none min-h-[2rem] max-h-none overflow-y-auto text-white"
+            className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm placeholder:text-white/60 px-0 py-1 resize-none min-h-[1.5rem] max-h-none overflow-y-auto text-white"
             disabled={isTyping}
             style={{ height: 'auto' }}
           />
@@ -173,22 +169,16 @@ const EmbeddedChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping 
             <Plus className="w-4 h-4" />
           </Button>
           
-          {/* Voice and Send buttons */}
-          <div className="flex items-center space-x-2">
-            <VoiceRecorder 
-              onTranscriptionComplete={handleVoiceTranscription}
-              disabled={isTyping}
-            />
-            
-            <Button
-              onClick={() => onSendMessage()}
-              disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
-              size="sm"
-              className="bg-white/25 hover:bg-white/35 text-white rounded-full px-3 py-1.5 h-8 backdrop-blur-md border border-white/30 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              <Send className="w-3.5 h-3.5" />
-            </Button>
-          </div>
+          {/* Send button */}
+          <Button
+            onClick={() => onSendMessage()}
+            disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
+            size="sm"
+            variant="ghost"
+            className="text-white/80 hover:text-white rounded-full px-3 py-1.5 h-8 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          >
+            <Send className="w-3.5 h-3.5" />
+          </Button>
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@ interface TypingTextProps {
 
 const TypingText: React.FC<TypingTextProps> = ({
   text,
-  preDelay = 600,
+  preDelay = 0,
   speed = 30,
   className,
   onDone,
@@ -82,11 +82,7 @@ const TypingText: React.FC<TypingTextProps> = ({
       role={clickToSkip ? "button" : undefined}
       aria-label={clickToSkip ? "Skip typing" : undefined}
     >
-      {phase === "pre" ? (
-        <span className="opacity-80">typing...</span>
-      ) : (
-        <span>{display}</span>
-      )}
+      <span>{display}</span>
     </div>
   );
 };

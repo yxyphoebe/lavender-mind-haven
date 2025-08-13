@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send, Plus, Video, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useIsMobile } from '@/hooks/use-mobile';
-import VoiceRecorder from './VoiceRecorder';
+
 
 interface MediaFile {
   file: File;
@@ -44,10 +44,6 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
     }
   };
 
-  const handleVoiceTranscription = (text: string) => {
-    console.log('Voice transcription received:', text);
-    setInputValue(text);
-  };
 
   const handleMediaSelect = () => {
     const input = document.createElement('input');
@@ -95,7 +91,7 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
   };
 
   return (
-    <div className="relative z-10 bg-white/70 backdrop-blur-xl border-t border-white/30 px-6 py-6">
+    <div className="relative z-10 bg-white/70 backdrop-blur-xl border-t border-white/30 px-6 py-3">
       <div className="max-w-4xl mx-auto">
         {/* Media Files Preview */}
         {selectedMediaFiles.length > 0 && (
@@ -146,7 +142,7 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
         )}
         
         {/* Input Box */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 p-4">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 p-3">
           {/* Textarea field - First row */}
           <div className="mb-2">
             <Textarea
@@ -155,7 +151,7 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Type a message..."
-              className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-slate-400 px-0 py-2 resize-none min-h-[2.5rem] max-h-none overflow-y-auto"
+              className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-slate-400 px-0 py-1 resize-none min-h-[2rem] max-h-none overflow-y-auto"
               disabled={isTyping}
               style={{ height: 'auto' }}
             />
@@ -175,22 +171,16 @@ const ChatInput = ({ inputValue, setInputValue, onSendMessage, isTyping }: ChatI
               <Plus className="w-5 h-5" />
             </Button>
             
-            {/* Voice and Send buttons - Far right */}
-            <div className="flex items-center space-x-3">
-              <VoiceRecorder 
-                onTranscriptionComplete={handleVoiceTranscription}
-                disabled={isTyping}
-              />
-              
-              <Button
-                onClick={() => onSendMessage()}
-                disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
-                size="sm"
-                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-full px-4 py-2 h-9 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
+            {/* Send button - Far right */}
+            <Button
+              onClick={() => onSendMessage()}
+              disabled={(!inputValue.trim() && selectedMediaFiles.length === 0) || isTyping}
+              size="sm"
+              variant="ghost"
+              className="text-slate-500 hover:text-slate-700 rounded-full px-4 py-2 h-9 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            >
+              <Send className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </div>
