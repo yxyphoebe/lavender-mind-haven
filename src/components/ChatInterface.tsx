@@ -95,17 +95,6 @@ const ChatInterface = () => {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      {/* Profile Button - Top Right */}
-      <div className="absolute top-6 right-6 z-10">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate('/profile')}
-          className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 border border-white/30 transition-all duration-300"
-        >
-          <User className="w-5 h-5 text-white" />
-        </Button>
-      </div>
 
       {/* Chat Interface */}
       <div className="h-full flex flex-col">
