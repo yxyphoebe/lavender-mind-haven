@@ -8,7 +8,6 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/hooks/useAuth';
 import { useDailyMessage } from '@/hooks/useDailyMessage';
 import { useChatLogic } from '@/hooks/useChatLogic';
-import BackgroundMusic from '@/components/BackgroundMusic';
 import EmbeddedMessageList from './EmbeddedMessageList';
 import EmbeddedChatInput from './EmbeddedChatInput';
 import { useEffect } from 'react';
@@ -86,9 +85,6 @@ const ChatInterface = () => {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      {/* Background music player (autoplays, low volume, loops). If blocked, shows a small play button */}
-      <BackgroundMusic url={therapist.background_music_url || undefined} />
-
       {/* Profile Button - Top Right */}
       <div className="absolute top-6 right-6 z-10">
         <Button
