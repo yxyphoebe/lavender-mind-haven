@@ -1,6 +1,7 @@
 
 import { useRef, useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { User } from 'lucide-react';
 import MediaMessage from './MediaMessage';
 
@@ -36,7 +37,7 @@ const MessageList = ({ messages, therapist, isTyping }: MessageListProps) => {
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto relative z-10">
+    <ScrollArea className="flex-1 relative z-10">
       <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
@@ -121,7 +122,7 @@ const MessageList = ({ messages, therapist, isTyping }: MessageListProps) => {
         )}
       </div>
       <div ref={messagesEndRef} />
-    </div>
+    </ScrollArea>
   );
 };
 
