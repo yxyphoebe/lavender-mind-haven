@@ -123,60 +123,64 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
   }, [selectedTherapistId]);
 
   // Initialize chat with context when entering chat mode
-  const initializeChatWithContext = (contextMessage: string) => {
+  const initializeChatWithContext = (dailyMessage: string) => {
     if (!currentUserId) return;
     
     const existingMessages = loadFromLocalStorage(currentUserId, selectedTherapistId);
     
     if (existingMessages.length === 0) {
-      // First show context message immediately
-      const contextMsg: Message = {
-        id: 'context',
-        text: contextMessage,
+      // First message: exact daily message without animation
+      const dailyMsg: Message = {
+        id: 'daily-message',
+        text: dailyMessage,
         sender: 'ai',
         timestamp: new Date()
       };
       
-      setMessages([contextMsg]);
+      setMessages([dailyMsg]);
       
-      // Then add invitation with typing animation after a short delay
+      // Second message: follow-up with typing animation
       setTimeout(() => {
-        const invitationMsg: Message = {
-          id: 'invitation',
-          text: generateInvitationMessage(contextMessage),
+        const followUpMsg: Message = {
+          id: 'follow-up',
+          text: generateFollowUpMessage(dailyMessage),
           sender: 'ai',
           timestamp: new Date(),
           hasTypingAnimation: true,
-          preDelay: 800
+          preDelay: 1000
         };
         
-        const finalMessages = [contextMsg, invitationMsg];
+        const finalMessages = [dailyMsg, followUpMsg];
         setMessages(finalMessages);
         saveToLocalStorage(currentUserId, selectedTherapistId, finalMessages);
-      }, 800);
+      }, 500);
     } else {
       setMessages(existingMessages);
     }
   };
 
-  // Generate natural, conversational invitation message
-  const generateInvitationMessage = (contextMessage: string) => {
-    const invitations = [
+  // Generate follow-up message based on daily message content
+  const generateFollowUpMessage = (dailyMessage: string) => {
+    const followUps = [
       "I'm curious to hear your thoughts on this...",
-      "What's been going through your mind?",
+      "What's been going through your mind today?",
       "How are things feeling for you right now?",
       "I'd love to know what resonates with you here.",
       "What's coming up for you as you think about this?",
       "How does this land with you?"
     ];
     
-    // Pick invitation based on context or randomly for variety
-    if (contextMessage.includes('daily') || contextMessage.includes('today')) {
-      return Math.random() > 0.5 ? "What's been going through your mind?" : "How are things feeling for you right now?";
-    } else if (contextMessage.includes('welcome') || contextMessage.includes('here for you')) {
-      return Math.random() > 0.5 ? "I'm curious to hear your thoughts on this..." : "What's coming up for you as you think about this?";
+    // Generate contextual follow-up based on daily message content
+    const lowerMessage = dailyMessage.toLowerCase();
+    
+    if (lowerMessage.includes('stress') || lowerMessage.includes('pressure')) {
+      return "What's been going through your mind today?";
+    } else if (lowerMessage.includes('feeling') || lowerMessage.includes('emotion')) {
+      return "How are things feeling for you right now?";
+    } else if (lowerMessage.includes('reflect') || lowerMessage.includes('think')) {
+      return "I'm curious to hear your thoughts on this...";
     } else {
-      return invitations[Math.floor(Math.random() * invitations.length)];
+      return followUps[Math.floor(Math.random() * followUps.length)];
     }
   };
 

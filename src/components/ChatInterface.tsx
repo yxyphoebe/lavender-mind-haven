@@ -39,9 +39,12 @@ const ChatInterface = () => {
 
   // Initialize chat with context when component mounts
   useEffect(() => {
-    if (therapist && (dailyMessage || welcomePrompt)) {
-      const contextMessage = dailyMessage || welcomePrompt || "I'm here for you, ready to have a gentle conversation. 🌿";
-      initializeChatWithContext(contextMessage);
+    if (therapist && dailyMessage && initializeChatWithContext) {
+      // Use the exact daily message from UserCenter
+      initializeChatWithContext(dailyMessage);
+    } else if (therapist && welcomePrompt && initializeChatWithContext && !dailyMessage) {
+      // Fallback to welcome prompt only if no daily message
+      initializeChatWithContext(welcomePrompt);
     }
   }, [therapist, dailyMessage, welcomePrompt, initializeChatWithContext]);
 
