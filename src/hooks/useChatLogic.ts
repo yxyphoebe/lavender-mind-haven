@@ -262,16 +262,6 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     }
   };
 
-  // Get persona based on therapist name or default to nuva
-  const getPersona = (therapistName: string) => {
-    const name = therapistName.toLowerCase();
-    if (name.includes('nova')) return 'nova';
-    if (name.includes('sage')) return 'sage';
-    if (name.includes('lani')) return 'lani';
-    if (name.includes('aya')) return 'aya';
-    if (name.includes('elias')) return 'elias';
-    return 'nuva';
-  };
 
   const handleSendMessage = async (mediaUrls: string[] = []) => {
     if (!inputValue.trim() && mediaUrls.length === 0) return;
@@ -319,8 +309,6 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     try {
       console.log('Calling AI chat function...');
       
-      const persona = therapist ? getPersona(therapist.name) : 'nuva';
-      
       // Prepare chat history for AI context (only recent messages to avoid too much context)
       const recentMessages = messages.slice(-10);
       const chatHistory = recentMessages.map(msg => ({
@@ -331,7 +319,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
           message: currentInputValue,
-          persona: persona,
+          therapistData: therapist,
           attachments: attachments,
           chatHistory: chatHistory
         }
