@@ -91,7 +91,7 @@ const UserCenter = () => {
 
           {/* Dialogue Bubble */}
           <div className={`relative ${isMobile ? 'max-w-xs' : 'max-w-md'} transition-all duration-500`}>
-            <div className={`relative bg-white/20 backdrop-blur-md rounded-2xl ${isMobile ? 'p-4' : 'p-6'} border border-white/30 shadow-lg before:content-[''] before:absolute before:left-[-12px] before:top-8 md:before:top-10 before:w-0 before:h-0 before:border-t-[12px] before:border-t-transparent before:border-b-[12px] before:border-b-transparent before:border-r-[12px] before:border-r-white/20`}>
+            <div className={`bg-white/20 backdrop-blur-md rounded-2xl ${isMobile ? 'p-4' : 'p-6'} border border-white/30 shadow-lg`}>
               {dailyMessage ? (
                 <TypingText
                   text={dailyMessage}
