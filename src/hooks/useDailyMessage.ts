@@ -5,19 +5,19 @@ import { supabase } from '@/integrations/supabase/client';
 
 /**
  * useDailyMessage
- * 每次调用都会：
- * 1) 统计该 therapist 剩余 is_used = false 的条数
- * 2) 根据规则执行：
- *    - >=3: 直接随机抽取并设为已用
- *    - ==1 或 ==2: 先抽取并设为已用，然后后台触发生成 5 条
- *    - ==0: 不抽取，直接显示欢迎语，并在后台生成 5 条
- * 3) 返回抽取到的 message_text（若为 0 条，则返回 null 以便 UI 显示欢迎语）
+ * This hook does the following each time it's called:
+ * 1) Count remaining messages with is_used = false for the therapist
+ * 2) Execute based on rules:
+ *    - >=3: Randomly pick and mark as used
+ *    - ==1 or ==2: Pick and mark as used, then generate 5 new messages in background
+ *    - ==0: Don't pick anything, show welcome message, and generate 5 new messages in background
+ * 3) Return the picked message_text (if 0 messages, return null so UI shows welcome message)
  */
 export const useDailyMessage = (therapistId?: string | null) => {
   
   const [dailyMessage, setDailyMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // status 主要用于在 UI 层做提示（可选）
+  // status mainly used for UI hints (optional)
   const [status, setStatus] = useState<'idle' | 'replenishing' | 'generating'>('idle');
 
   const normalizedTherapistId = useMemo(() => (therapistId || '').trim(), [therapistId]);
@@ -56,7 +56,7 @@ export const useDailyMessage = (therapistId?: string | null) => {
           console.warn('[useDailyMessage] generate-daily-messages failed:', error.message || error.name || error);
         }
       } else {
-        // 背景触发：不等待结果
+        // Background trigger: don't wait for result
         void invokePromise
           .then(({ error }) => {
             if (error) console.warn('[useDailyMessage] background generate failed:', error.message || error);
@@ -100,22 +100,22 @@ export const useDailyMessage = (therapistId?: string | null) => {
         }
 
         if (remaining === 2 || remaining === 1) {
-          // 先抽取展示
+          // First pick and display
           const msg = await pickMessage();
           if (!isCancelled) setDailyMessage(msg);
 
-          // 再后台生成 5 条
+          // Then generate 5 messages in background
           setStatus('replenishing');
           await generateFive(false);
           setStatus('idle');
           return;
         }
 
-        // remaining === 0：直接使用欢迎语，后台生成
+        // remaining === 0: Use welcome message directly, generate in background
         setStatus('replenishing');
         await generateFive(false);
         setStatus('idle');
-        // 不抽取每日消息，保持 dailyMessage 为 null
+        // Don't pick daily message, keep dailyMessage as null
       } catch (e) {
         console.error('[useDailyMessage] unexpected error:', e);
         if (!isCancelled) setDailyMessage(null);

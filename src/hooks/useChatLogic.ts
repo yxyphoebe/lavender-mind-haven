@@ -120,6 +120,45 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     initializeChatHistory();
   }, [selectedTherapistId]);
 
+  // Initialize chat with context when entering chat mode
+  const initializeChatWithContext = (contextMessage: string) => {
+    if (!currentUserId) return;
+    
+    const existingMessages = loadFromLocalStorage(currentUserId, selectedTherapistId);
+    
+    if (existingMessages.length === 0) {
+      const initialMessages: Message[] = [
+        {
+          id: 'context',
+          text: contextMessage,
+          sender: 'ai',
+          timestamp: new Date()
+        },
+        {
+          id: 'invitation',
+          text: generateInvitationMessage(contextMessage),
+          sender: 'ai',
+          timestamp: new Date()
+        }
+      ];
+      setMessages(initialMessages);
+      saveToLocalStorage(currentUserId, selectedTherapistId, initialMessages);
+    } else {
+      setMessages(existingMessages);
+    }
+  };
+
+  // Generate context-aware invitation message
+  const generateInvitationMessage = (contextMessage: string) => {
+    if (contextMessage.includes('daily') || contextMessage.includes('today') || contextMessage.includes('morning')) {
+      return "Would you like to talk about this?";
+    } else if (contextMessage.includes('welcome') || contextMessage.includes('here for you')) {
+      return "What's on your mind today?";
+    } else {
+      return "How are you feeling right now?";
+    }
+  };
+
   // Load chat history from local storage for display only
   const loadChatHistory = async (userId: string) => {
     try {
@@ -330,6 +369,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
     setInputValue,
     isTyping,
     handleSendMessage,
-    clearChatHistory
+    clearChatHistory,
+    initializeChatWithContext
   };
 };

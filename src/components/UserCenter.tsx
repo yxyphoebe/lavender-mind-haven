@@ -25,7 +25,7 @@ const UserCenter = () => {
   const { data: therapist, isLoading } = useTherapist(selectedTherapistId);
   const { welcomePrompt, isLoading: promptLoading } = useWelcomePrompt(selectedTherapistId);
 
-  // 仅在已登录且 therapistId 存在时获取每日消息
+  // Only fetch daily messages when logged in and therapistId exists
   const { dailyMessage, isLoading: dailyLoading } = useDailyMessage(
     initialized && user ? selectedTherapistId : ''
   );
@@ -37,7 +37,8 @@ const UserCenter = () => {
     setInputValue,
     isTyping,
     handleSendMessage,
-    clearChatHistory
+    clearChatHistory,
+    initializeChatWithContext
   } = useChatLogic(selectedTherapistId, therapist);
 
   if (!initialized || isLoading || promptLoading || dailyLoading) {
@@ -119,7 +120,7 @@ const UserCenter = () => {
                   />
                 ) : (
                   <p className={`text-white ${isMobile ? 'text-sm' : 'text-base'} leading-relaxed whitespace-pre-line`}>
-                    {welcomePrompt || `我一直在这里，准备好陪你慢慢聊聊了。🌿`}
+                    {welcomePrompt || "I'm here for you, ready to have a gentle conversation. 🌿"}
                   </p>
                 )}
               </div>
@@ -130,7 +131,11 @@ const UserCenter = () => {
           <div className={`absolute top-[66%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex ${isMobile ? 'space-x-8' : 'space-x-10'} transition-all duration-500`}>
             {/* Chat Button */}
             <Button
-              onClick={() => setIsChatMode(true)}
+              onClick={() => {
+                const contextMessage = dailyMessage || welcomePrompt || "I'm here for you, ready to have a gentle conversation. 🌿";
+                initializeChatWithContext(contextMessage);
+                setIsChatMode(true);
+              }}
               className={`bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full ${isMobile ? 'w-20 h-20' : 'w-16 h-16'} flex flex-col items-center justify-center`}
               variant="ghost"
             >
