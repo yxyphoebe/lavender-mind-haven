@@ -39,8 +39,8 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
   }, [messages]);
 
   return (
-    <ScrollArea className="flex-1 h-full">
-      <div className="px-4 py-4 space-y-4">
+    <ScrollArea className="flex-1 h-full w-full">
+      <div className="px-4 py-4 space-y-4 min-h-full">
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
             <div className={`flex items-start max-w-[85%] ${message.sender === 'user' ? '' : 'space-x-3'}`}>
