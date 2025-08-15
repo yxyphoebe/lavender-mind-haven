@@ -105,20 +105,20 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
-      <div className="container mx-auto px-4 py-6 max-w-md">
+    <div className="min-h-screen zen-natural-texture">
+      <div className="container mx-auto px-6 py-8 max-w-md">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-12 relative z-10">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/user-center')}
-            className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 backdrop-blur-sm hover:from-blue-100 hover:to-purple-100 shadow-lg border border-blue-100"
+            className="w-12 h-12 rounded-xl zen-soft-glass border-0 zen-gentle-shadow"
           >
-            <ArrowLeft className="w-5 h-5 text-blue-600" />
+            <ArrowLeft className="w-5 h-5" style={{ color: 'hsl(var(--zen-stone))' }} />
           </Button>
           
-          <h1 className="font-display text-3xl font-bold text-neutral-800">
+          <h1 className="font-display text-3xl font-light tracking-wide" style={{ color: 'hsl(var(--zen-stone))' }}>
             Profile
           </h1>
           
@@ -126,11 +126,15 @@ const Profile = () => {
         </div>
 
         {/* 1. Improve Your Experience */}
-        <Card className="mb-4 bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-100 zen-shadow">
-          <CardContent className="p-4">
+        <Card className="mb-6 zen-soft-glass border-0 relative z-10">
+          <CardContent className="p-5">
             <Button
               onClick={() => navigate('/improvement-feedback')}
-              className="w-full h-12 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-medium transition-all duration-300 flex items-center justify-center space-x-2"
+              className="w-full h-12 border-0 zen-gentle-shadow font-light rounded-xl transition-all duration-300 flex items-center justify-center space-x-2"
+              style={{ 
+                background: `linear-gradient(135deg, hsl(var(--zen-tea)), hsl(var(--zen-almond)))`,
+                color: 'hsl(var(--zen-stone))'
+              }}
             >
               <TrendingUp className="w-5 h-5" />
               <span>Improve Your Experience</span>
@@ -140,11 +144,15 @@ const Profile = () => {
         </Card>
 
         {/* 2. Therapist */}
-        <Card className="mb-4 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 zen-shadow">
-          <CardContent className="p-4">
+        <Card className="mb-6 zen-soft-glass border-0 relative z-10">
+          <CardContent className="p-5">
             <Button
               onClick={() => navigate('/therapist-management')}
-              className="w-full h-12 bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white rounded-xl font-medium transition-all duration-300 flex items-center justify-center space-x-2"
+              className="w-full h-12 border-0 zen-gentle-shadow font-light rounded-xl transition-all duration-300 flex items-center justify-center space-x-2"
+              style={{ 
+                background: `linear-gradient(135deg, hsl(var(--zen-fog-blue)), hsl(var(--zen-bamboo)))`,
+                color: 'hsl(var(--zen-stone))'
+              }}
             >
               <Users className="w-5 h-5" />
               <span>Therapist</span>
@@ -154,19 +162,23 @@ const Profile = () => {
         </Card>
 
         {/* 3. Username/Nickname */}
-        <Card className="mb-4 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 zen-shadow">
-          <CardContent className="p-4">
+        <Card className="mb-6 zen-soft-glass border-0 relative z-10">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Edit className="w-5 h-5 text-amber-600" />
-                <span className="text-slate-700 font-medium">Username / Nickname</span>
+                <Edit className="w-5 h-5" style={{ color: 'hsl(var(--zen-stone))' }} />
+                <span className="text-stone-700 font-light">Username / Nickname</span>
               </div>
               {isEditingName ? (
                 <div className="flex items-center space-x-2">
                   <Input
                     value={tempName}
                     onChange={(e) => setTempName(e.target.value)}
-                    className="h-8 w-32 text-sm border-amber-200 rounded-lg focus:ring-amber-400 bg-white"
+                    className="h-8 w-32 text-sm border-0 zen-gentle-shadow rounded-lg font-light"
+                    style={{ 
+                      background: `hsl(var(--zen-mist))`,
+                      color: 'hsl(var(--zen-stone))'
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleNameSave();
                       if (e.key === 'Escape') handleNameCancel();
@@ -176,7 +188,11 @@ const Profile = () => {
                   <Button
                     size="sm"
                     onClick={handleNameSave}
-                    className="h-8 px-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs"
+                    className="h-8 px-3 border-0 zen-gentle-shadow rounded-lg text-xs font-light"
+                    style={{ 
+                      background: `hsl(var(--zen-bamboo))`,
+                      color: 'hsl(var(--zen-stone))'
+                    }}
                   >
                     Save
                   </Button>
@@ -184,7 +200,11 @@ const Profile = () => {
                     size="sm"
                     variant="outline"
                     onClick={handleNameCancel}
-                    className="h-8 px-3 border-amber-200 hover:bg-amber-50 text-amber-600 rounded-lg text-xs"
+                    className="h-8 px-3 border-0 zen-gentle-shadow rounded-lg text-xs font-light"
+                    style={{ 
+                      background: `hsl(var(--zen-mist))`,
+                      color: 'hsl(var(--zen-stone))'
+                    }}
                   >
                     Cancel
                   </Button>
@@ -194,7 +214,11 @@ const Profile = () => {
                   size="sm"
                   variant="outline"
                   onClick={handleNameEdit}
-                  className="h-9 px-4 border-amber-200 hover:bg-amber-50 text-amber-600 rounded-lg font-medium"
+                  className="h-9 px-4 border-0 zen-gentle-shadow rounded-lg font-light"
+                  style={{ 
+                    background: `hsl(var(--zen-mist))`,
+                    color: 'hsl(var(--zen-stone))'
+                  }}
                 >
                   {userInfo.name}
                 </Button>
@@ -204,30 +228,33 @@ const Profile = () => {
         </Card>
 
         {/* 4. Notification Settings */}
-        <Card className="mb-4 bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 zen-shadow">
-          <CardContent className="p-4">
+        <Card className="mb-6 zen-soft-glass border-0 relative z-10">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Bell className="w-5 h-5 text-purple-600" />
-                <span className="text-slate-700 font-medium">Notifications</span>
+                <Bell className="w-5 h-5" style={{ color: 'hsl(var(--zen-stone))' }} />
+                <span className="text-stone-700 font-light">Notifications</span>
               </div>
               <Switch
                 checked={notificationsEnabled}
                 onCheckedChange={handleNotificationToggle}
-                className="data-[state=checked]:bg-purple-500"
               />
             </div>
           </CardContent>
         </Card>
 
         {/* 5. Contact */}
-        <Card className="mb-4 bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100 zen-shadow">
-          <CardContent className="p-4">
+        <Card className="mb-6 zen-soft-glass border-0 relative z-10">
+          <CardContent className="p-5">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full h-12 border-blue-200 hover:bg-blue-50 bg-white rounded-xl font-medium text-blue-600 flex items-center justify-between"
+                  className="w-full h-12 border-0 zen-gentle-shadow rounded-xl font-light flex items-center justify-between"
+                  style={{ 
+                    background: `linear-gradient(135deg, hsl(var(--zen-fog-blue)), hsl(var(--zen-mist)))`,
+                    color: 'hsl(var(--zen-stone))'
+                  }}
                 >
                   <div className="flex items-center space-x-2">
                     <Mail className="w-5 h-5" />
@@ -236,12 +263,12 @@ const Profile = () => {
                   <ChevronDown className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-white border border-blue-100 shadow-lg">
-                <DropdownMenuItem onClick={handleEmailContact} className="cursor-pointer">
+              <DropdownMenuContent align="end" className="w-56 zen-soft-glass border-0">
+                <DropdownMenuItem onClick={handleEmailContact} className="cursor-pointer text-stone-700 hover:bg-white/50">
                   <Mail className="w-4 h-4 mr-2" />
                   Email
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleScheduleCall} className="cursor-pointer">
+                <DropdownMenuItem onClick={handleScheduleCall} className="cursor-pointer text-stone-700 hover:bg-white/50">
                   <Calendar className="w-4 h-4 mr-2" />
                   Schedule a call
                 </DropdownMenuItem>
@@ -251,13 +278,17 @@ const Profile = () => {
         </Card>
 
         {/* 6. Privacy & Terms */}
-        <Card className="mb-4 bg-gradient-to-br from-slate-50 to-gray-50 border border-slate-100 zen-shadow">
-          <CardContent className="p-4">
+        <Card className="mb-6 zen-soft-glass border-0 relative z-10">
+          <CardContent className="p-5">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full h-12 border-slate-200 hover:bg-slate-50 bg-white rounded-xl font-medium text-slate-600 flex items-center justify-between"
+                  className="w-full h-12 border-0 zen-gentle-shadow rounded-xl font-light flex items-center justify-between"
+                  style={{ 
+                    background: `linear-gradient(135deg, hsl(var(--zen-bamboo)), hsl(var(--zen-tea)))`,
+                    color: 'hsl(var(--zen-stone))'
+                  }}
                 >
                   <div className="flex items-center space-x-2">
                     <Shield className="w-5 h-5" />
@@ -266,12 +297,12 @@ const Profile = () => {
                   <ChevronDown className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-white border border-slate-100 shadow-lg">
-                <DropdownMenuItem onClick={handlePrivacyPolicy} className="cursor-pointer">
+              <DropdownMenuContent align="end" className="w-56 zen-soft-glass border-0">
+                <DropdownMenuItem onClick={handlePrivacyPolicy} className="cursor-pointer text-stone-700 hover:bg-white/50">
                   <FileText className="w-4 h-4 mr-2" />
                   Privacy Policy
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleTermsOfService} className="cursor-pointer">
+                <DropdownMenuItem onClick={handleTermsOfService} className="cursor-pointer text-stone-700 hover:bg-white/50">
                   <FileText className="w-4 h-4 mr-2" />
                   Terms of Service
                 </DropdownMenuItem>
@@ -281,12 +312,16 @@ const Profile = () => {
         </Card>
 
         {/* 7. Logout */}
-        <Card className="mb-6 bg-gradient-to-br from-rose-50 to-red-50 border border-red-200 zen-shadow">
-          <CardContent className="p-4">
+        <Card className="mb-8 zen-soft-glass border-0 relative z-10">
+          <CardContent className="p-5">
             <Button
               variant="outline"
               onClick={handleLogout}
-              className="w-full h-12 text-red-600 border-red-200 hover:bg-red-50 bg-white rounded-xl font-medium transition-all duration-300"
+              className="w-full h-12 border-0 zen-gentle-shadow rounded-xl font-light transition-all duration-300"
+              style={{ 
+                background: `linear-gradient(135deg, hsl(var(--zen-sand)), hsl(var(--zen-warm-gray)))`,
+                color: 'hsl(var(--zen-stone))'
+              }}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Logout
@@ -295,8 +330,8 @@ const Profile = () => {
         </Card>
 
         {/* App Version */}
-        <div className="text-center">
-          <p className="text-sm text-slate-500 font-light">
+        <div className="text-center relative z-10">
+          <p className="text-sm text-stone-400 font-light">
             Version 1.0.0 • Made with ❤️
           </p>
         </div>
