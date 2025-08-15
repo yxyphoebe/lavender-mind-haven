@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Play, Loader2, MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -23,6 +23,14 @@ export const VideoAvatar = ({
   const [hasStarted, setHasStarted] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Reset state when videoUrl changes (new therapist selected)
+  useEffect(() => {
+    setIsVideoLoading(true);
+    setHasVideoError(false);
+    setHasStarted(false);
+    setHasEnded(false);
+  }, [videoUrl]);
 
   const handleVideoLoad = () => {
     setIsVideoLoading(false);

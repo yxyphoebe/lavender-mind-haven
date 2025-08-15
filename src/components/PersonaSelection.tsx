@@ -225,6 +225,7 @@ const PersonaSelection = () => {
                 {/* Video/Avatar - Much Larger */}
                 <div className="relative mb-6 flex justify-center">
                   <VideoAvatar
+                    key={`perfect-match-${topMatch.id}`}
                     videoUrl={topMatch.intro_video_url}
                     imageUrl={topMatch.image_url}
                     name={topMatch.name}
@@ -305,6 +306,7 @@ const PersonaSelection = () => {
                   {/* Video/Avatar - Large */}
                   <div className="relative mb-6 flex justify-center">
                     <VideoAvatar
+                      key={`other-match-${otherMatches[currentOtherMatchIndex].id}`}
                       videoUrl={otherMatches[currentOtherMatchIndex].intro_video_url}
                       imageUrl={otherMatches[currentOtherMatchIndex].image_url}
                       name={otherMatches[currentOtherMatchIndex].name}
