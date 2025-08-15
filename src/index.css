@@ -45,17 +45,12 @@
     --sidebar-border: 262 50% 95%;
     --sidebar-ring: 262 83% 92%;
 
-    /* Zen color system - low saturation natural tones */
-    --zen-milk: 45 20% 96%;        /* 米白 */
-    --zen-warm-gray: 30 8% 90%;    /* 暖灰 */
-    --zen-mist: 210 15% 95%;       /* 雾白 */
-    --zen-tea: 35 15% 92%;         /* 白茶色 */
-    --zen-almond: 25 20% 90%;      /* 浅杏色 */
-    --zen-fog-blue: 210 20% 94%;   /* 雾蓝 */
-    --zen-bamboo: 120 10% 92%;     /* 竹青 */
-    --zen-sand: 40 8% 88%;         /* 沙灰 */
-    --zen-blush: 350 15% 93%;      /* 柔粉 */
-    --zen-stone: 20 10% 85%;       /* 温石 */
+    /* Zen color system - ultra-subtle natural tones */
+    --zen-base: 30 4% 96%;         /* 极浅暖白 */
+    --zen-soft: 30 3% 94%;         /* 柔和灰白 */
+    --zen-gentle: 30 2% 92%;       /* 温柔灰 */
+    --zen-accent: 30 5% 88%;       /* 微暖重点 */
+    --zen-text: 30 8% 70%;         /* 文字色 */
     
     /* Mindful color system - desaturated for zen */
     --mindful-50: 262 25% 96%;
@@ -116,15 +111,7 @@
 
   body {
     @apply bg-background text-foreground font-sans;
-    background: 
-      radial-gradient(circle at 20% 20%, hsla(45, 40%, 92%, 0.3) 0%, transparent 50%),
-      linear-gradient(135deg, 
-        hsl(var(--zen-milk)) 0%, 
-        hsl(var(--zen-warm-gray)) 25%, 
-        hsl(var(--zen-tea)) 50%, 
-        hsl(var(--zen-mist)) 75%, 
-        hsl(var(--zen-milk)) 100%
-      );
+    background: hsl(var(--zen-base));
     min-height: 100vh;
     /* Mobile-specific improvements */
     -webkit-font-smoothing: antialiased;
@@ -335,19 +322,12 @@
   }
 
   .zen-soft-glass {
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.04),
-      0 4px 16px rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    background: hsl(var(--zen-soft));
+    border: 1px solid hsl(var(--zen-gentle));
   }
 
   .zen-gentle-shadow {
-    box-shadow: 
-      0 4px 20px rgba(0, 0, 0, 0.03),
-      0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
   }
 
   .zen-warm-gradient {
