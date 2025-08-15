@@ -170,45 +170,21 @@ const Profile = () => {
                 <span className="font-light" style={{ color: 'hsl(var(--zen-text))' }}>Username</span>
               </div>
               {isEditingName ? (
-                <div className="flex items-center space-x-2">
-                  <Input
-                    value={tempName}
-                    onChange={(e) => setTempName(e.target.value)}
-                    className="h-8 w-32 text-sm border-0 zen-gentle-shadow rounded-lg font-light"
-                    style={{ 
-                      background: 'hsl(var(--zen-gentle))',
-                      color: 'hsl(var(--zen-text))'
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleNameSave();
-                      if (e.key === 'Escape') handleNameCancel();
-                    }}
-                    autoFocus
-                  />
-                  <Button
-                    size="sm"
-                    onClick={handleNameSave}
-                    className="h-8 px-3 border-0 zen-gentle-shadow rounded-lg text-xs font-light hover:bg-white/50"
-                    style={{ 
-                      background: 'hsl(var(--zen-accent))',
-                      color: 'hsl(var(--zen-text))'
-                    }}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleNameCancel}
-                    className="h-8 px-3 border-0 zen-gentle-shadow rounded-lg text-xs font-light hover:bg-white/50"
-                    style={{ 
-                      background: 'hsl(var(--zen-gentle))',
-                      color: 'hsl(var(--zen-text))'
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </div>
+                <Input
+                  value={tempName}
+                  onChange={(e) => setTempName(e.target.value)}
+                  className="h-8 w-32 text-sm border-0 zen-gentle-shadow rounded-lg font-light"
+                  style={{ 
+                    background: 'hsl(var(--zen-gentle))',
+                    color: 'hsl(var(--zen-text))'
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleNameSave();
+                    if (e.key === 'Escape') handleNameCancel();
+                  }}
+                  onBlur={handleNameSave}
+                  autoFocus
+                />
               ) : (
                 <Button
                   size="sm"
