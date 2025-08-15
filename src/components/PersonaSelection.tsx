@@ -171,7 +171,10 @@ const PersonaSelection = () => {
   }) || [];
 
   const topMatch = recommendedTherapists[0];
-  const otherMatches = recommendedTherapists.slice(1, 3);
+  // Show all therapists in Other Matches except the Perfect Match
+  const otherMatches = therapists?.filter(therapist => 
+    therapist.id !== topMatch?.id
+  ).sort((a, b) => a.name.localeCompare(b.name)) || [];
   
   // Debug logging for arrows
   console.log('Other matches length:', otherMatches.length);
