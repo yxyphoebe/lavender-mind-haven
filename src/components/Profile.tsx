@@ -3,12 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { 
   TrendingUp, 
   Users, 
@@ -37,6 +35,8 @@ const Profile = () => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [tempName, setTempName] = useState('');
+  const [isContactExpanded, setIsContactExpanded] = useState(false);
+  const [isPrivacyExpanded, setIsPrivacyExpanded] = useState(false);
   
   // User data state
   const [userInfo, setUserInfo] = useState({
@@ -214,8 +214,8 @@ const Profile = () => {
             <div className="h-px" style={{ background: 'hsl(var(--zen-gentle))' }} />
 
             {/* Contact */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            <Collapsible open={isContactExpanded} onOpenChange={setIsContactExpanded}>
+              <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
                   className="w-full h-12 justify-between font-light hover:bg-white/50"
@@ -225,26 +225,38 @@ const Profile = () => {
                     <Mail className="w-5 h-5" />
                     <span>Contact</span>
                   </div>
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isContactExpanded ? 'rotate-180' : ''}`} />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 zen-soft-glass border-0">
-                <DropdownMenuItem onClick={handleEmailContact} className="cursor-pointer hover:bg-white/50" style={{ color: 'hsl(var(--zen-text))' }}>
-                  <Mail className="w-4 h-4 mr-2" />
-                  Email
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleScheduleCall} className="cursor-pointer hover:bg-white/50" style={{ color: 'hsl(var(--zen-text))' }}>
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Schedule a call
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="overflow-hidden">
+                <div className="pt-2 space-y-1">
+                  <Button
+                    variant="ghost"
+                    onClick={handleEmailContact}
+                    className="w-full h-10 justify-start font-light hover:bg-white/50"
+                    style={{ color: 'hsl(var(--zen-text))' }}
+                  >
+                    <Mail className="w-4 h-4 mr-3 ml-8" />
+                    Email
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={handleScheduleCall}
+                    className="w-full h-10 justify-start font-light hover:bg-white/50"
+                    style={{ color: 'hsl(var(--zen-text))' }}
+                  >
+                    <Calendar className="w-4 h-4 mr-3 ml-8" />
+                    Schedule a call
+                  </Button>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
 
             <div className="h-px" style={{ background: 'hsl(var(--zen-gentle))' }} />
 
             {/* Privacy & Terms */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            <Collapsible open={isPrivacyExpanded} onOpenChange={setIsPrivacyExpanded}>
+              <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
                   className="w-full h-12 justify-between font-light hover:bg-white/50"
@@ -254,20 +266,32 @@ const Profile = () => {
                     <Shield className="w-5 h-5" />
                     <span>Privacy & Terms</span>
                   </div>
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isPrivacyExpanded ? 'rotate-180' : ''}`} />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 zen-soft-glass border-0">
-                <DropdownMenuItem onClick={handlePrivacyPolicy} className="cursor-pointer hover:bg-white/50" style={{ color: 'hsl(var(--zen-text))' }}>
-                  <FileText className="w-4 h-4 mr-2" />
-                  Privacy Policy
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleTermsOfService} className="cursor-pointer hover:bg-white/50" style={{ color: 'hsl(var(--zen-text))' }}>
-                  <FileText className="w-4 h-4 mr-2" />
-                  Terms of Service
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="overflow-hidden">
+                <div className="pt-2 space-y-1">
+                  <Button
+                    variant="ghost"
+                    onClick={handlePrivacyPolicy}
+                    className="w-full h-10 justify-start font-light hover:bg-white/50"
+                    style={{ color: 'hsl(var(--zen-text))' }}
+                  >
+                    <FileText className="w-4 h-4 mr-3 ml-8" />
+                    Privacy Policy
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={handleTermsOfService}
+                    className="w-full h-10 justify-start font-light hover:bg-white/50"
+                    style={{ color: 'hsl(var(--zen-text))' }}
+                  >
+                    <FileText className="w-4 h-4 mr-3 ml-8" />
+                    Terms of Service
+                  </Button>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
         </div>
 
