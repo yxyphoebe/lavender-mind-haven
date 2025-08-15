@@ -160,10 +160,15 @@ const Profile = () => {
         <div className="mb-4 zen-soft-glass rounded-xl zen-gentle-shadow">
           <div className="p-4 space-y-4">
             {/* Username */}
-            <div className="flex items-center justify-between">
+            <Button
+              variant="ghost"
+              onClick={handleNameEdit}
+              className="w-full h-12 justify-between font-light hover:bg-white/50"
+              style={{ color: 'hsl(var(--zen-text))' }}
+            >
               <div className="flex items-center space-x-3">
-                <Edit className="w-5 h-5" style={{ color: 'hsl(var(--zen-text))' }} />
-                <span className="font-light" style={{ color: 'hsl(var(--zen-text))' }}>Username</span>
+                <Edit className="w-5 h-5" />
+                <span className="font-light">Username</span>
               </div>
               {isEditingName ? (
                 <Input
@@ -180,27 +185,17 @@ const Profile = () => {
                   }}
                   onBlur={handleNameSave}
                   autoFocus
+                  onClick={(e) => e.stopPropagation()}
                 />
               ) : (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={handleNameEdit}
-                  className="h-9 px-4 border-0 zen-gentle-shadow rounded-lg font-light hover:bg-white/50"
-                  style={{ 
-                    background: 'hsl(var(--zen-gentle))',
-                    color: 'hsl(var(--zen-text))'
-                  }}
-                >
-                  {userInfo.name}
-                </Button>
+                <span className="font-light">{userInfo.name}</span>
               )}
-            </div>
+            </Button>
 
             <div className="h-px" style={{ background: 'hsl(var(--zen-gentle))' }} />
 
             {/* Notifications */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between h-12 hover:bg-white/50 rounded-lg px-3 -mx-3">
               <div className="flex items-center space-x-3">
                 <Bell className="w-5 h-5" style={{ color: 'hsl(var(--zen-text))' }} />
                 <span className="font-light" style={{ color: 'hsl(var(--zen-text))' }}>Notifications</span>
