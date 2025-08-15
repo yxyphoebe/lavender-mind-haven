@@ -320,6 +320,7 @@ export type Database = {
       }
       therapists: {
         Row: {
+          active: boolean
           age_range: string
           background_image_url: string | null
           background_music_url: string | null
@@ -334,6 +335,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          active?: boolean
           age_range: string
           background_image_url?: string | null
           background_music_url?: string | null
@@ -348,6 +350,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          active?: boolean
           age_range?: string
           background_image_url?: string | null
           background_music_url?: string | null

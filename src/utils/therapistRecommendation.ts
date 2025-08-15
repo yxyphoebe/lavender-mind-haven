@@ -7,34 +7,34 @@ interface TherapistScores {
   [therapistName: string]: number;
 }
 
-// Scoring mappings based on user answers
+// Scoring mappings based on user answers - updated to only include active therapists
 const SCORING_MAPPINGS: { [questionId: number]: ScoreMapping } = {
   0: { // Q1: How do you usually process it?
-    'talk-emotions': ['Lani', 'Leo'],
-    'logical-thinking': ['Jade', 'Camille'],
+    'talk-emotions': ['Julie'],
+    'logical-thinking': ['Camille'],
     'hold-until-break': ['Elena', 'Sage'],
-    'understanding-without-explaining': ['Sage', 'Elias']
+    'understanding-without-explaining': ['Sage']
   },
   1: { // Q2: Which of these do you relate to most?
     'emotionally-overwhelmed': ['Sage', 'Elena'],
-    'stuck-decisions': ['Jade', 'Camille'],
-    'breakup-identity': ['Lani', 'Sage'],
-    'quiet-emptiness': ['Elias', 'Camille'],
+    'stuck-decisions': ['Camille'],
+    'breakup-identity': ['Sage'],
+    'quiet-emptiness': ['Camille'],
     'need-non-judgmental': ['Elena', 'Sage']
   },
   2: { // Q3: What kind of support would feel most comforting?
     'warm-motherly': ['Elena', 'Sage'],
     'calm-grounded': ['Sage', 'Camille'],
-    'positive-uplifting': ['Lani', 'Leo'],
-    'thoughtful-explorer': ['Leo', 'Camille'],
-    'clear-insightful': ['Jade', 'Elias']
+    'positive-uplifting': ['Julie'],
+    'thoughtful-explorer': ['Camille'],
+    'clear-insightful': ['Julie']
   },
   3: { // Q4: Choose a vibe
     'cozy-tea': ['Elena', 'Sage'],
-    'clean-desk': ['Jade', 'Camille'],
-    'sunny-walk': ['Lani', 'Leo'],
-    'candlelit-journal': ['Leo', 'Camille'],
-    'wise-conversation': ['Elias', 'Sage']
+    'clean-desk': ['Camille'],
+    'sunny-walk': ['Julie'],
+    'candlelit-journal': ['Camille'],
+    'wise-conversation': ['Sage']
   }
 };
 
@@ -49,15 +49,12 @@ export const calculateTherapistRecommendations = (
 ): TherapistRecommendation[] => {
   console.log('Calculating recommendations for answers:', answers);
   
-  // Initialize scores for all therapists
+  // Initialize scores for active therapists only
   const therapistScores: TherapistScores = {
     'Sage': 0,
-    'Lani': 0,
-    'Jade': 0,
-    'Elena': 0,
     'Camille': 0,
-    'Leo': 0,
-    'Elias': 0
+    'Elena': 0,
+    'Julie': 0
   };
 
   // Calculate scores based on user answers

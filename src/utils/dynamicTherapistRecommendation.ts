@@ -11,14 +11,12 @@ interface TherapistScores {
 }
 
 // Therapist priority order for tie-breaking (lower number = higher priority)
+// Only include active therapists
 const THERAPIST_PRIORITY: { [name: string]: number } = {
   'Sage': 1,
   'Camille': 2,
   'Elena': 3,
-  'Jade': 4,
-  'Leo': 5,
-  'Lani': 6,
-  'Elias': 7
+  'Julie': 4
 };
 
 export const calculateTherapistRecommendationsFromDB = async (

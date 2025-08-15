@@ -12,6 +12,7 @@ export const useTherapists = () => {
       const { data, error } = await supabase
         .from('therapists')
         .select('*')
+        .eq('active', true)
         .order('name');
 
       if (error) {
@@ -35,6 +36,7 @@ export const useTherapist = (id: string) => {
         .from('therapists')
         .select('*')
         .eq('id', id)
+        .eq('active', true)
         .maybeSingle();
 
       if (error) {
