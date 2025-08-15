@@ -124,7 +124,13 @@ const UserCenter = () => {
         <div className={`absolute top-[66%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex ${isMobile ? 'space-x-8' : 'space-x-10'} transition-all duration-500`}>
           {/* Chat Button */}
           <Button
-            onClick={() => navigate('/chat')}
+            onClick={() => {
+              // Trigger background music on mobile
+              if ((window as any).__backgroundMusicPlay) {
+                (window as any).__backgroundMusicPlay();
+              }
+              navigate('/chat');
+            }}
             className={`bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full ${isMobile ? 'w-20 h-20' : 'w-16 h-16'} flex flex-col items-center justify-center`}
             variant="ghost"
           >
@@ -134,7 +140,13 @@ const UserCenter = () => {
           
           {/* Video Button */}
           <Button
-            onClick={() => navigate('/video-call')}
+            onClick={() => {
+              // Trigger background music on mobile
+              if ((window as any).__backgroundMusicPlay) {
+                (window as any).__backgroundMusicPlay();
+              }
+              navigate('/video-call');
+            }}
             className={`bg-white/20 backdrop-blur-md hover:bg-white/30 hover:scale-105 transition-all duration-300 border border-white/30 rounded-full ${isMobile ? 'w-20 h-20' : 'w-16 h-16'} flex flex-col items-center justify-center`}
             variant="ghost"
           >
