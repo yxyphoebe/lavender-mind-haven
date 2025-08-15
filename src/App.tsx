@@ -30,7 +30,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
-          <Route path="/persona-selection" element={<PersonaSelection />} />
+          <Route path="/selection" element={<PersonaSelection />} />
           <Route path="/chat" element={<ChatInterface />} />
           <Route path="/video-call" element={<VideoChat />} />
           <Route path="/growth" element={<GrowthTimeline />} />

@@ -45,7 +45,7 @@ const UserCenter = () => {
       <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex items-center justify-center">
         <div className="text-center">
           <p className="text-lg text-neutral-600 mb-4">Please select a therapist first</p>
-          <Button onClick={() => navigate('/persona-selection')}>
+          <Button onClick={() => navigate('/selection')}>
             Choose Therapist
           </Button>
         </div>

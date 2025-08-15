@@ -75,7 +75,7 @@ const ChatInterface = () => {
           </div>
           <p className="text-lg text-neutral-700 mb-6 font-light">Please select a therapist to start the conversation</p>
           <Button 
-            onClick={() => navigate('/persona-selection')} 
+            onClick={() => navigate('/selection')} 
             className="bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white border-0 rounded-full px-8 py-3 zen-shadow transition-all duration-300 hover:scale-105"
           >
             Select Therapist
