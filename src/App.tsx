@@ -15,6 +15,8 @@ import UserCenter from "./components/UserCenter";
 import VideoChat from "./components/VideoChat";
 import Profile from "./components/Profile";
 import TherapistManager from "./components/TherapistManager";
+import ImprovementFeedback from "./components/ImprovementFeedback";
+import TherapistManagement from "./components/TherapistManagement";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,8 @@ const App = () => (
           <Route path="/user-center" element={<UserCenter />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/therapist-manager" element={<TherapistManager />} />
+          <Route path="/improvement-feedback" element={<ImprovementFeedback />} />
+          <Route path="/therapist-management" element={<TherapistManagement />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -375,6 +375,7 @@ export type Database = {
           language: string | null
           last_active: string | null
           name: string
+          notifications_enabled: boolean
           onboarding_completed: boolean | null
           personality_type: string | null
           phone: string | null
@@ -390,6 +391,7 @@ export type Database = {
           language?: string | null
           last_active?: string | null
           name: string
+          notifications_enabled?: boolean
           onboarding_completed?: boolean | null
           personality_type?: string | null
           phone?: string | null
@@ -405,6 +407,7 @@ export type Database = {
           language?: string | null
           last_active?: string | null
           name?: string
+          notifications_enabled?: boolean
           onboarding_completed?: boolean | null
           personality_type?: string | null
           phone?: string | null
