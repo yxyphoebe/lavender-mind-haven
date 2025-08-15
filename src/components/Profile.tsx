@@ -195,7 +195,7 @@ const Profile = () => {
             <div className="h-px" style={{ background: 'hsl(var(--zen-gentle))' }} />
 
             {/* Notifications */}
-            <div className="flex items-center justify-between h-12 rounded-lg hover:bg-white/50 font-light">
+            <div className="flex items-center justify-between h-12 px-3 rounded-lg hover:bg-white/50 font-light">
               <div className="flex items-center space-x-3">
                 <Bell className="w-5 h-5" style={{ color: 'hsl(var(--zen-text))' }} />
                 <span className="font-light" style={{ color: 'hsl(var(--zen-text))' }}>Notifications</span>
