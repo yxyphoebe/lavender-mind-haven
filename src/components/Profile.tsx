@@ -231,7 +231,7 @@ const Profile = () => {
                     className="w-full h-10 justify-start font-light hover:bg-white/50"
                     style={{ color: 'hsl(var(--zen-text))' }}
                   >
-                    <Mail className="w-4 h-4 mr-3 ml-8" />
+                    <Mail className="w-4 h-4 mr-3" />
                     Email
                   </Button>
                   <Button
@@ -240,7 +240,7 @@ const Profile = () => {
                     className="w-full h-10 justify-start font-light hover:bg-white/50"
                     style={{ color: 'hsl(var(--zen-text))' }}
                   >
-                    <Calendar className="w-4 h-4 mr-3 ml-8" />
+                    <Calendar className="w-4 h-4 mr-3" />
                     Schedule a call
                   </Button>
                 </div>
@@ -272,7 +272,7 @@ const Profile = () => {
                     className="w-full h-10 justify-start font-light hover:bg-white/50"
                     style={{ color: 'hsl(var(--zen-text))' }}
                   >
-                    <FileText className="w-4 h-4 mr-3 ml-8" />
+                    <FileText className="w-4 h-4 mr-3" />
                     Privacy Policy
                   </Button>
                   <Button
@@ -281,7 +281,7 @@ const Profile = () => {
                     className="w-full h-10 justify-start font-light hover:bg-white/50"
                     style={{ color: 'hsl(var(--zen-text))' }}
                   >
-                    <FileText className="w-4 h-4 mr-3 ml-8" />
+                    <FileText className="w-4 h-4 mr-3" />
                     Terms of Service
                   </Button>
                 </div>
