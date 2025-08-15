@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
+import { Switch } from '@/components/ui/switch';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +15,7 @@ import {
   Mail, 
   Phone,
   Calendar,
-  
+  Bell,
   Shield,
   LogOut,
   Edit,
@@ -35,7 +35,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isEditingName, setIsEditingName] = useState(false);
-  
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [tempName, setTempName] = useState('');
   
   // User data state
@@ -69,6 +69,15 @@ const Profile = () => {
     setIsEditingName(false);
   };
 
+  const handleNotificationToggle = async (enabled: boolean) => {
+    setNotificationsEnabled(enabled);
+    
+    // TODO: Save to Supabase
+    toast({
+      title: enabled ? "Notifications enabled" : "Notifications disabled",
+      description: `You will ${enabled ? 'receive' : 'not receive'} notifications.`,
+    });
+  };
 
   const handleLogout = () => {
     localStorage.clear();
@@ -110,6 +119,9 @@ const Profile = () => {
             <ArrowLeft className="w-5 h-5" style={{ color: 'hsl(var(--zen-text))' }} />
           </Button>
           
+          <h1 className="font-display text-3xl font-light tracking-wide" style={{ color: 'hsl(var(--zen-text))' }}>
+            Profile
+          </h1>
           
           <div className="w-12 h-12" /> {/* Spacer */}
         </div>
@@ -187,6 +199,20 @@ const Profile = () => {
                   {userInfo.name}
                 </Button>
               )}
+            </div>
+
+            <div className="h-px" style={{ background: 'hsl(var(--zen-gentle))' }} />
+
+            {/* Notifications */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Bell className="w-5 h-5" style={{ color: 'hsl(var(--zen-text))' }} />
+                <span className="font-light" style={{ color: 'hsl(var(--zen-text))' }}>Notifications</span>
+              </div>
+              <Switch
+                checked={notificationsEnabled}
+                onCheckedChange={handleNotificationToggle}
+              />
             </div>
 
             <div className="h-px" style={{ background: 'hsl(var(--zen-gentle))' }} />
