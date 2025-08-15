@@ -127,12 +127,15 @@ const Profile = () => {
         </div>
 
         {/* 1. Improve Your Experience */}
-        <div className="mb-4 zen-soft-glass rounded-xl p-4 zen-gentle-shadow">
+        <div className="mb-4 zen-warm-glass rounded-xl p-4 zen-gentle-shadow">
           <Button
             onClick={() => navigate('/improvement-feedback')}
             variant="ghost"
-            className="w-full h-12 font-light rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 hover:bg-white/50"
-            style={{ color: 'hsl(var(--zen-text))' }}
+            className="w-full h-12 font-light rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-[1.01]"
+            style={{ 
+              color: 'hsl(var(--zen-text))',
+              background: 'transparent'
+            }}
           >
             <TrendingUp className="w-5 h-5" />
             <span>Improve Your Experience</span>
@@ -141,12 +144,15 @@ const Profile = () => {
         </div>
 
         {/* 2. Therapist */}
-        <div className="mb-4 zen-soft-glass rounded-xl p-4 zen-gentle-shadow">
+        <div className="mb-4 zen-warm-glass rounded-xl p-4 zen-gentle-shadow">
           <Button
             onClick={() => navigate('/therapist-management')}
             variant="ghost"
-            className="w-full h-12 font-light rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 hover:bg-white/50"
-            style={{ color: 'hsl(var(--zen-text))' }}
+            className="w-full h-12 font-light rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-[1.01]"
+            style={{ 
+              color: 'hsl(var(--zen-text))',
+              background: 'transparent'
+            }}
           >
             <Users className="w-5 h-5" />
             <span>Therapist</span>

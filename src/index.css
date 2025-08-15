@@ -45,12 +45,14 @@
     --sidebar-border: 262 50% 95%;
     --sidebar-ring: 262 83% 92%;
 
-    /* Zen color system - ultra-subtle natural tones */
-    --zen-base: 30 4% 96%;         /* 极浅暖白 */
-    --zen-soft: 30 3% 94%;         /* 柔和灰白 */
-    --zen-gentle: 30 2% 92%;       /* 温柔灰 */
-    --zen-accent: 30 5% 88%;       /* 微暖重点 */
-    --zen-text: 30 8% 70%;         /* 文字色 */
+    /* Zen color system - Natural warm tones */
+    --zen-base: 35 15% 97%;        /* Warm milk white background */
+    --zen-soft: 30 12% 96%;        /* Light beige for settings card */
+    --zen-warm: 25 20% 95%;        /* Almond tone for main cards */
+    --zen-cool: 220 15% 94%;       /* Soft blue-grey for contrast */
+    --zen-accent: 250 25% 85%;     /* Gentle lavender for highlights */
+    --zen-text: 25 15% 45%;        /* Warmer dark grey for text */
+    --zen-muted: 30 10% 65%;       /* Muted warm grey for secondary text */
     
     /* Mindful color system - desaturated for zen */
     --mindful-50: 262 25% 96%;
@@ -323,11 +325,16 @@
 
   .zen-soft-glass {
     background: hsl(var(--zen-soft));
-    border: 1px solid hsl(var(--zen-gentle));
+    border: 1px solid hsl(var(--zen-cool) / 0.3);
+  }
+
+  .zen-warm-glass {
+    background: hsl(var(--zen-warm));
+    border: 1px solid hsl(var(--zen-accent) / 0.2);
   }
 
   .zen-gentle-shadow {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 8px hsl(var(--zen-accent) / 0.08);
   }
 
   .zen-warm-gradient {
