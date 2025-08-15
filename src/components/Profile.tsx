@@ -106,79 +106,66 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="min-h-screen" style={{ background: 'hsl(var(--zen-base))' }}>
+    <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-6 py-8 max-w-md">
         {/* Header */}
-        <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/home')}
-            className="w-12 h-12 rounded-xl zen-soft-glass border-0 zen-gentle-shadow"
+            className="w-10 h-10 rounded-xl bg-white shadow-sm border-0 hover:bg-purple-50 text-gray-600"
           >
-            <ArrowLeft className="w-5 h-5" style={{ color: 'hsl(var(--zen-text))' }} />
+            <ArrowLeft className="w-5 h-5" />
           </Button>
           
-          <div className="w-12 h-12" /> {/* Spacer */}
+          <div className="w-10 h-10" /> {/* Spacer */}
         </div>
 
         {/* 1. Improve Your Experience */}
-        <div className="mb-4 zen-warm-glass rounded-xl p-4 zen-gentle-shadow">
+        <div className="mb-4 bg-white rounded-2xl p-5 shadow-sm">
           <Button
             onClick={() => navigate('/feedback')}
             variant="ghost"
-            className="w-full h-12 font-light rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-[1.01]"
-            style={{ 
-              color: 'hsl(var(--zen-text))',
-              background: 'transparent'
-            }}
+            className="w-full h-14 font-medium rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 hover:bg-purple-50 text-gray-700"
           >
-            <TrendingUp className="w-5 h-5" />
+            <TrendingUp className="w-5 h-5 text-purple-600" />
             <span>Improve Your Experience</span>
-            <ExternalLink className="w-4 h-4" />
+            <ExternalLink className="w-4 h-4 text-gray-400" />
           </Button>
         </div>
 
         {/* 2. Therapist */}
-        <div className="mb-4 zen-warm-glass rounded-xl p-4 zen-gentle-shadow">
+        <div className="mb-4 bg-white rounded-2xl p-5 shadow-sm">
           <Button
             onClick={() => navigate('/therapist')}
             variant="ghost"
-            className="w-full h-12 font-light rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-[1.01]"
-            style={{ 
-              color: 'hsl(var(--zen-text))',
-              background: 'transparent'
-            }}
+            className="w-full h-14 font-medium rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 hover:bg-purple-50 text-gray-700"
           >
-            <Users className="w-5 h-5" />
+            <Users className="w-5 h-5 text-purple-600" />
             <span>Therapist</span>
-            <ExternalLink className="w-4 h-4" />
+            <ExternalLink className="w-4 h-4 text-gray-400" />
           </Button>
         </div>
 
         {/* 3. Settings - Combined Card */}
-        <div className="mb-4 zen-soft-glass rounded-xl zen-gentle-shadow">
-          <div className="p-4 space-y-4">
+        <div className="mb-4 bg-white rounded-2xl shadow-sm">
+          <div className="p-5 space-y-4">
             {/* Username */}
             <Button
               variant="ghost"
               onClick={handleNameEdit}
-              className="w-full h-12 justify-between font-light hover:bg-white/50"
-              style={{ color: 'hsl(var(--zen-text))' }}
+              className="w-full h-12 justify-between font-medium hover:bg-purple-50 text-gray-700 rounded-xl"
             >
               <div className="flex items-center space-x-3">
-                <Edit className="w-5 h-5" />
-                <span className="font-light">Username</span>
+                <Edit className="w-5 h-5 text-purple-600" />
+                <span>Username</span>
               </div>
               {isEditingName ? (
                 <Input
                   value={tempName}
                   onChange={(e) => setTempName(e.target.value)}
-                  className="h-8 w-32 text-sm border-0 zen-gentle-shadow rounded-lg font-light"
-                  style={{ 
-                    background: 'hsl(var(--zen-gentle))',
-                    color: 'hsl(var(--zen-text))'
-                  }}
+                  className="h-8 w-32 text-sm border border-gray-200 rounded-lg bg-gray-50"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleNameSave();
                     if (e.key === 'Escape') handleNameCancel();
@@ -188,17 +175,17 @@ const Profile = () => {
                   onClick={(e) => e.stopPropagation()}
                 />
               ) : (
-                <span className="font-light">{userInfo.name}</span>
+                <span className="text-gray-600">{userInfo.name}</span>
               )}
             </Button>
 
-            <div className="h-px" style={{ background: 'hsl(var(--zen-gentle))' }} />
+            <div className="h-px bg-gray-100" />
 
             {/* Notifications */}
-            <div className="flex items-center justify-between h-12 px-3 rounded-lg hover:bg-white/50 font-light">
+            <div className="flex items-center justify-between h-12 px-3 rounded-xl hover:bg-purple-50">
               <div className="flex items-center space-x-3">
-                <Bell className="w-5 h-5" style={{ color: 'hsl(var(--zen-text))' }} />
-                <span className="font-light" style={{ color: 'hsl(var(--zen-text))' }}>Notifications</span>
+                <Bell className="w-5 h-5 text-purple-600" />
+                <span className="font-medium text-gray-700">Notifications</span>
               </div>
               <Switch
                 checked={notificationsEnabled}
@@ -206,21 +193,20 @@ const Profile = () => {
               />
             </div>
 
-            <div className="h-px" style={{ background: 'hsl(var(--zen-gentle))' }} />
+            <div className="h-px bg-gray-100" />
 
             {/* Contact */}
             <Collapsible open={isContactExpanded} onOpenChange={setIsContactExpanded}>
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full h-12 justify-between font-light hover:bg-white/50"
-                  style={{ color: 'hsl(var(--zen-text))' }}
+                  className="w-full h-12 justify-between font-medium hover:bg-purple-50 text-gray-700 rounded-xl"
                 >
                   <div className="flex items-center space-x-3">
-                    <Mail className="w-5 h-5" />
-                    <span className="font-light">Contact</span>
+                    <Mail className="w-5 h-5 text-purple-600" />
+                    <span>Contact</span>
                   </div>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isContactExpanded ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isContactExpanded ? 'rotate-180' : ''}`} />
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent className="overflow-hidden">
@@ -228,40 +214,37 @@ const Profile = () => {
                   <Button
                     variant="ghost"
                     onClick={handleEmailContact}
-                    className="w-full h-10 justify-start font-light hover:bg-white/50"
-                    style={{ color: 'hsl(var(--zen-text))' }}
+                    className="w-full h-10 justify-start font-medium hover:bg-purple-50 text-gray-600 rounded-lg"
                   >
-                    <Mail className="w-4 h-4 mr-3" />
+                    <Mail className="w-4 h-4 mr-3 text-purple-500" />
                     Email
                   </Button>
                   <Button
                     variant="ghost"
                     onClick={handleScheduleCall}
-                    className="w-full h-10 justify-start font-light hover:bg-white/50"
-                    style={{ color: 'hsl(var(--zen-text))' }}
+                    className="w-full h-10 justify-start font-medium hover:bg-purple-50 text-gray-600 rounded-lg"
                   >
-                    <Calendar className="w-4 h-4 mr-3" />
+                    <Calendar className="w-4 h-4 mr-3 text-purple-500" />
                     Schedule a call
                   </Button>
                 </div>
               </CollapsibleContent>
             </Collapsible>
 
-            <div className="h-px" style={{ background: 'hsl(var(--zen-gentle))' }} />
+            <div className="h-px bg-gray-100" />
 
             {/* Privacy & Terms */}
             <Collapsible open={isPrivacyExpanded} onOpenChange={setIsPrivacyExpanded}>
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full h-12 justify-between font-light hover:bg-white/50"
-                  style={{ color: 'hsl(var(--zen-text))' }}
+                  className="w-full h-12 justify-between font-medium hover:bg-purple-50 text-gray-700 rounded-xl"
                 >
                   <div className="flex items-center space-x-3">
-                    <Shield className="w-5 h-5" />
-                    <span className="font-light">Privacy & Terms</span>
+                    <Shield className="w-5 h-5 text-purple-600" />
+                    <span>Privacy & Terms</span>
                   </div>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isPrivacyExpanded ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isPrivacyExpanded ? 'rotate-180' : ''}`} />
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent className="overflow-hidden">
@@ -269,19 +252,17 @@ const Profile = () => {
                   <Button
                     variant="ghost"
                     onClick={handlePrivacyPolicy}
-                    className="w-full h-10 justify-start font-light hover:bg-white/50"
-                    style={{ color: 'hsl(var(--zen-text))' }}
+                    className="w-full h-10 justify-start font-medium hover:bg-purple-50 text-gray-600 rounded-lg"
                   >
-                    <FileText className="w-4 h-4 mr-3" />
+                    <FileText className="w-4 h-4 mr-3 text-purple-500" />
                     Privacy Policy
                   </Button>
                   <Button
                     variant="ghost"
                     onClick={handleTermsOfService}
-                    className="w-full h-10 justify-start font-light hover:bg-white/50"
-                    style={{ color: 'hsl(var(--zen-text))' }}
+                    className="w-full h-10 justify-start font-medium hover:bg-purple-50 text-gray-600 rounded-lg"
                   >
-                    <FileText className="w-4 h-4 mr-3" />
+                    <FileText className="w-4 h-4 mr-3 text-purple-500" />
                     Terms of Service
                   </Button>
                 </div>
@@ -291,12 +272,11 @@ const Profile = () => {
         </div>
 
         {/* 4. Logout */}
-        <div className="mb-8 zen-soft-glass rounded-xl p-4 zen-gentle-shadow">
+        <div className="mb-8 bg-white rounded-2xl p-5 shadow-sm">
           <Button
             variant="ghost"
             onClick={handleLogout}
-            className="w-full h-12 font-light transition-all duration-300 hover:bg-white/50"
-            style={{ color: 'hsl(var(--zen-text))' }}
+            className="w-full h-12 font-medium transition-all duration-300 hover:bg-red-50 text-red-600 rounded-xl"
           >
             <LogOut className="w-4 h-4 mr-2" />
             Logout
@@ -305,7 +285,7 @@ const Profile = () => {
 
         {/* App Version */}
         <div className="text-center">
-          <p className="text-sm font-light" style={{ color: 'hsl(var(--zen-text) / 0.6)' }}>
+          <p className="text-sm text-gray-400">
             Version 1.0.0 • Made with ❤️
           </p>
         </div>
