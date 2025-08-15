@@ -53,10 +53,7 @@ export function useAuth(): AuthState & AuthMethods {
             || 'friend';
           // no toast on sign-in
         } else if (event === 'SIGNED_OUT') {
-          toast({
-            title: "Signed out",
-            description: "You have been signed out.",
-          });
+          // Silent sign out - no notification needed
         } else if (event === 'TOKEN_REFRESHED') {
           console.log('Token refreshed successfully');
         }
@@ -122,10 +119,7 @@ export function useAuth(): AuthState & AuthMethods {
           variant: "destructive",
         });
       } else {
-        toast({
-          title: "Sign up successful",
-          description: "Please check your email to verify your account.",
-        });
+        // Silent success - user will be redirected automatically
       }
 
       return { error };
@@ -205,10 +199,7 @@ export function useAuth(): AuthState & AuthMethods {
           variant: "destructive",
         });
       } else {
-        toast({
-          title: "Password reset email sent",
-          description: "Please check your inbox to reset your password.",
-        });
+        // Silent success - user will receive email
       }
 
       return { error };

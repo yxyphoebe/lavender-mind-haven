@@ -74,11 +74,6 @@ const OnboardingPage = () => {
           localStorage.setItem('onboardingAnswers', JSON.stringify(finalAnswers));
           localStorage.setItem('therapistRecommendations', JSON.stringify(recommendations));
           
-          toast({
-            title: "Onboarding Complete!",
-            description: "Your preferences have been saved successfully",
-          });
-          
           navigate('/persona-selection');
         } catch (error) {
           console.error('Error completing onboarding:', error);

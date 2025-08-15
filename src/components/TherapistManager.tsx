@@ -81,10 +81,7 @@ const TherapistManager = () => {
         .select('name');
 
       if (existingTherapists && existingTherapists.length > 0) {
-        toast({
-          title: "Therapists already exist",
-          description: "Database already contains therapist data",
-        });
+        // Silent check - therapists already exist
         return;
       }
 
@@ -94,11 +91,6 @@ const TherapistManager = () => {
         .insert(therapistData);
 
       if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Therapists have been added to the database",
-      });
 
       // Refresh the list
       fetchTherapists();
