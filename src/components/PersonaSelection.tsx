@@ -24,6 +24,11 @@ const PersonaSelection = () => {
 
   // Load recommendations on component mount
   useEffect(() => {
+    // Clear old cache first
+    localStorage.removeItem('therapistRecommendations');
+    localStorage.removeItem('selectedTherapistId');
+    console.log('Cleared therapist cache to show latest data');
+    
     const savedRecommendations = localStorage.getItem('therapistRecommendations');
     if (savedRecommendations) {
       try {
