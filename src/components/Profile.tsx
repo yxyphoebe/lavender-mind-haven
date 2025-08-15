@@ -110,9 +110,6 @@ const Profile = () => {
             <ArrowLeft className="w-5 h-5" style={{ color: 'hsl(var(--zen-text))' }} />
           </Button>
           
-          <h1 className="font-display text-3xl font-light tracking-wide" style={{ color: 'hsl(var(--zen-text))' }}>
-            Profile
-          </h1>
           
           <div className="w-12 h-12" /> {/* Spacer */}
         </div>
