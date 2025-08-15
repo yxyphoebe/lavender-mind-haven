@@ -129,7 +129,7 @@ const Profile = () => {
         {/* 1. Improve Your Experience */}
         <div className="mb-4 zen-warm-glass rounded-xl p-4 zen-gentle-shadow">
           <Button
-            onClick={() => navigate('/improvement-feedback')}
+            onClick={() => navigate('/feedback')}
             variant="ghost"
             className="w-full h-12 font-light rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-[1.01]"
             style={{ 

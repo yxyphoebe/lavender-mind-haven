@@ -37,7 +37,7 @@ const App = () => (
           <Route path="/user-center" element={<UserCenter />} />
           <Route path="/profile" element={<Profile />} />
           
-          <Route path="/improvement-feedback" element={<ImprovementFeedback />} />
+          <Route path="/feedback" element={<ImprovementFeedback />} />
           <Route path="/therapist-management" element={<TherapistManagement />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
