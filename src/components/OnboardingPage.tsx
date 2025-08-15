@@ -50,16 +50,21 @@ const OnboardingPage = () => {
       } else {
         // Complete onboarding
         try {
-          const { data: { user } } = await supabase.auth.getUser();
+          // Check if we're in test mode (auth was bypassed)
+          const isTestMode = localStorage.getItem('testMode') === 'true';
           
-          if (!user) {
-            toast({
-              title: "Authentication Required",
-              description: "Please log in to complete onboarding",
-              variant: "destructive",
-            });
-            navigate('/auth');
-            return;
+          if (!isTestMode) {
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (!user) {
+              toast({
+                title: "Authentication Required",
+                description: "Please log in to complete onboarding",
+                variant: "destructive",
+              });
+              navigate('/auth');
+              return;
+            }
           }
 
           const finalAnswers = { ...answers, [currentStep]: [optionValue] };
