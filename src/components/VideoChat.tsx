@@ -72,13 +72,13 @@ const VideoChat = () => {
 
   const handleRatingClose = () => {
     setShowRating(false);
-    navigate('/user-center');
+      navigate('/home');
   };
 
   // Redirect if no therapist is selected
   useEffect(() => {
     if (!selectedTherapistId) {
-      navigate('/user-center');
+      navigate('/home');
     }
   }, [selectedTherapistId, navigate]);
 

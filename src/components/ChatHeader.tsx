@@ -21,7 +21,7 @@ const ChatHeader = ({ therapist }: ChatHeaderProps) => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate('/user-center')}
+            onClick={() => navigate('/home')}
             className="hover:bg-white/50 rounded-full transition-all duration-300"
           >
             <ArrowLeft className="w-5 h-5 text-slate-600" />

@@ -105,7 +105,7 @@ const ChatInterface = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate('/user-center')}
+              onClick={() => navigate('/home')}
               className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 border border-white/30 transition-all duration-300"
             >
               <ArrowLeft className="w-4 h-4 text-white" />

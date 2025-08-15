@@ -49,7 +49,7 @@ const PersonaSelection = () => {
     localStorage.setItem('selectedTherapistId', therapistId);
     
     // Navigate immediately
-    navigate('/user-center');
+    navigate('/home');
     
     // Check and generate daily messages in background (no await)
     checkAndGenerateDailyMessages(therapistId);

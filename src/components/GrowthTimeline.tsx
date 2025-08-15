@@ -90,7 +90,7 @@ const GrowthTimeline = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate('/user-center')}
+              onClick={() => navigate('/home')}
               className="hover:bg-violet-100 rounded-xl h-8 w-8 sm:h-10 sm:w-10"
             >
               <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />

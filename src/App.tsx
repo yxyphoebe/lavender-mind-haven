@@ -34,7 +34,7 @@ const App = () => (
           <Route path="/chat" element={<ChatInterface />} />
           <Route path="/video-call" element={<VideoChat />} />
           <Route path="/growth" element={<GrowthTimeline />} />
-          <Route path="/user-center" element={<UserCenter />} />
+          <Route path="/home" element={<UserCenter />} />
           <Route path="/profile" element={<Profile />} />
           
           <Route path="/feedback" element={<ImprovementFeedback />} />

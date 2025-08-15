@@ -28,7 +28,7 @@ const UserCenter = () => {
 
   // Track this route for navigation context
   useEffect(() => {
-    trackNavigation('/user-center');
+    trackNavigation('/home');
   }, []);
 
   // Only show loading if we have no data at all

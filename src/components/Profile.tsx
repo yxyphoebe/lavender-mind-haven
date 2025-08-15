@@ -113,7 +113,7 @@ const Profile = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate('/user-center')}
+            onClick={() => navigate('/home')}
             className="w-12 h-12 rounded-xl zen-soft-glass border-0 zen-gentle-shadow"
           >
             <ArrowLeft className="w-5 h-5" style={{ color: 'hsl(var(--zen-text))' }} />
