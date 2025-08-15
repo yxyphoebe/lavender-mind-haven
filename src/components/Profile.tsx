@@ -223,7 +223,7 @@ const Profile = () => {
                 >
                   <div className="flex items-center space-x-3">
                     <Mail className="w-5 h-5" />
-                    <span>Contact</span>
+                    <span className="font-light">Contact</span>
                   </div>
                   <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isContactExpanded ? 'rotate-180' : ''}`} />
                 </Button>
@@ -264,7 +264,7 @@ const Profile = () => {
                 >
                   <div className="flex items-center space-x-3">
                     <Shield className="w-5 h-5" />
-                    <span>Privacy & Terms</span>
+                    <span className="font-light">Privacy & Terms</span>
                   </div>
                   <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isPrivacyExpanded ? 'rotate-180' : ''}`} />
                 </Button>
