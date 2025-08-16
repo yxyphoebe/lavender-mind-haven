@@ -25,7 +25,7 @@ const TherapistManagement = () => {
 
   const handleSelectTherapist = (therapistId: string) => {
     localStorage.setItem('selectedTherapistId', therapistId);
-    navigate('/profile');
+    navigate('/home');
   };
 
   // Swipe detection
