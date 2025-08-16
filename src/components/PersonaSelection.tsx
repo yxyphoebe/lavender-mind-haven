@@ -286,12 +286,21 @@ const PersonaSelection = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 safe-area-top safe-area-bottom">
       <div className="max-w-md mx-auto flex flex-col min-h-screen">
+        {/* Header with back button */}
+        <div className="flex items-center justify-between pt-16 px-6 mb-8">
+          <Button
+            onClick={() => setShowMoreMatches(false)}
+            variant="ghost"
+            className="p-2 h-auto hover:bg-mindful-100/60"
+          >
+            <ArrowLeft className="w-5 h-5 text-neutral-600" />
+          </Button>
+          <h2 className="text-2xl font-bold text-neutral-800">More Who Might Feel Right</h2>
+          <div className="w-9"></div> {/* Spacer for centering */}
+        </div>
+
         {/* Main Content */}
-        <div className="flex-1 flex flex-col justify-start pt-16 px-6">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-neutral-800 mb-2">More Who Might Feel Right</h2>
-            <p className="text-lg text-neutral-600 mb-6">Swipe to explore your options</p>
-          </div>
+        <div className="flex-1 flex flex-col justify-start px-6">
 
           {/* Current Therapist Display - Swipeable */}
           {otherMatches[currentOtherMatchIndex] && (
@@ -355,16 +364,6 @@ const PersonaSelection = () => {
           )}
 
 
-          {/* Go Back Option */}
-          <div className="text-center">
-            <Button
-              onClick={() => setShowMoreMatches(false)}
-              variant="outline"
-              className="border-mindful-300 text-mindful-700 hover:bg-mindful-50"
-            >
-              Actually, go back to my perfect match
-            </Button>
-          </div>
         </div>
       </div>
     </div>
