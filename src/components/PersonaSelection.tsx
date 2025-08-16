@@ -287,16 +287,15 @@ const PersonaSelection = () => {
     <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 safe-area-top safe-area-bottom">
       <div className="max-w-md mx-auto flex flex-col min-h-screen">
         {/* Header with back button */}
-        <div className="flex items-center justify-between pt-16 px-6 mb-8">
+        <div className="pt-16 px-6 mb-8">
           <Button
             onClick={() => setShowMoreMatches(false)}
             variant="ghost"
-            className="p-2 h-auto hover:bg-mindful-100/60"
+            className="p-2 h-auto hover:bg-mindful-100/60 mb-4"
           >
             <ArrowLeft className="w-5 h-5 text-neutral-600" />
           </Button>
-          <h2 className="text-2xl font-bold text-neutral-800">More Who Might Feel Right</h2>
-          <div className="w-9"></div> {/* Spacer for centering */}
+          <h2 className="text-2xl font-bold text-neutral-800 text-center">Find Your Energy</h2>
         </div>
 
         {/* Main Content */}
