@@ -113,7 +113,7 @@ const TherapistManagement = () => {
     <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 safe-area-top safe-area-bottom">
       <div className="max-w-md mx-auto flex flex-col min-h-screen">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-16 pb-8">
+        <div className="flex items-center justify-start px-6 pt-8 pb-4">
           <Button
             variant="ghost"
             size="icon"
@@ -122,19 +122,12 @@ const TherapistManagement = () => {
           >
             <ArrowLeft className="w-5 h-5 text-mindful-600" />
           </Button>
-          
-          <h1 className="font-display text-2xl font-bold text-neutral-800">
-            Choose Therapist
-          </h1>
-          
-          <div className="w-12 h-12" /> {/* Spacer */}
         </div>
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col justify-start px-6">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-neutral-800 mb-2">Explore Other Therapists</h2>
-            <p className="text-lg text-neutral-600 mb-6">Swipe to find someone new</p>
+            <h2 className="text-2xl font-bold text-neutral-800 mb-6">Find Your Therapist</h2>
           </div>
 
           {/* Current Therapist Display - Swipeable */}
@@ -210,16 +203,6 @@ const TherapistManagement = () => {
             </div>
           )}
 
-          {/* Go Back Option */}
-          <div className="text-center">
-            <Button
-              onClick={() => navigate('/profile')}
-              variant="outline"
-              className="border-mindful-300 text-mindful-700 hover:bg-mindful-50"
-            >
-              Back to Profile
-            </Button>
-          </div>
         </div>
       </div>
     </div>
