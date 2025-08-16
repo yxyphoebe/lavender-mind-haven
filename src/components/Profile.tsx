@@ -120,7 +120,7 @@ const Profile = () => {
             className="w-full h-14 font-medium rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 hover:bg-purple-400/30 text-purple-900 bg-transparent border-0"
           >
             <TrendingUp className="w-5 h-5 text-purple-800" />
-            <span>Improve Your Experience</span>
+            <span>Help Us Improve</span>
             <ExternalLink className="w-4 h-4 text-purple-700" />
           </Button>
         </div>
@@ -133,7 +133,7 @@ const Profile = () => {
             className="w-full h-14 font-medium rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 hover:bg-purple-400/30 text-purple-900 bg-transparent border-0"
           >
             <Users className="w-5 h-5 text-purple-800" />
-            <span>Therapist</span>
+            <span>Meet a New Energy</span>
             <ExternalLink className="w-4 h-4 text-purple-700" />
           </Button>
         </div>
