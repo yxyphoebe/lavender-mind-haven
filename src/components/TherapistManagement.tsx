@@ -139,7 +139,7 @@ const TherapistManagement = () => {
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
               >
-                <div className="animate-gentle-float">
+                <div>
                   {/* Video/Avatar - Large */}
                   <div className="relative mb-6 flex justify-center">
                     <VideoAvatar
