@@ -27,11 +27,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trackNavigation } from '@/hooks/useUserCenterMessage';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [isEditingName, setIsEditingName] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [tempName, setTempName] = useState('');
@@ -57,10 +55,6 @@ const Profile = () => {
       setIsEditingName(false);
       
       // TODO: Save to Supabase
-      toast({
-        title: "Name updated",
-        description: "Your name has been successfully updated.",
-      });
     }
   };
 
@@ -73,10 +67,6 @@ const Profile = () => {
     setNotificationsEnabled(enabled);
     
     // TODO: Save to Supabase
-    toast({
-      title: enabled ? "Notifications enabled" : "Notifications disabled",
-      description: `You will ${enabled ? 'receive' : 'not receive'} notifications.`,
-    });
   };
 
   const handleLogout = () => {
