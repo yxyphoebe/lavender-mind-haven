@@ -127,7 +127,7 @@ const TherapistManagement = () => {
         {/* Main Content */}
         <div className="flex-1 flex flex-col justify-start px-6">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-neutral-800 mb-6">Find Your Therapist</h2>
+            <h2 className="text-2xl font-bold text-neutral-800 mb-6 whitespace-nowrap">Find Your Energy</h2>
           </div>
 
           {/* Current Therapist Display - Swipeable */}
