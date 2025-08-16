@@ -221,7 +221,7 @@ const PersonaSelection = () => {
 
             {/* Perfect Match Card */}
             {topMatch && (
-              <div className="text-center mb-8 animate-gentle-float">
+              <div className="text-center mb-8">
                 {/* Video/Avatar - Much Larger */}
                 <div className="relative mb-6 flex justify-center">
                   <VideoAvatar
@@ -298,7 +298,7 @@ const PersonaSelection = () => {
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
               >
-                <div className="animate-gentle-float">
+                <div>
                   {/* Video/Avatar - Large */}
                   <div className="relative mb-6 flex justify-center">
                     <VideoAvatar
