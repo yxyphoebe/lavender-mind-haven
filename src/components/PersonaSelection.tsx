@@ -234,21 +234,9 @@ const PersonaSelection = () => {
                 </div>
 
                 {/* Name */}
-                <h2 className="font-display text-3xl font-bold text-neutral-800 mb-3">
+                <h2 className="font-display text-3xl font-bold text-neutral-800 mb-6">
                   {topMatch.name}
                 </h2>
-
-                {/* Keywords - Reduced */}
-                <div className="flex flex-wrap justify-center gap-2 mb-4">
-                  {getKeywords(topMatch.style).slice(0, 2).map((keyword, index) => (
-                    <span 
-                      key={index}
-                      className="px-4 py-2 bg-gradient-to-r from-mindful-100 to-enso-100 text-mindful-700 rounded-full text-base font-medium"
-                    >
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
 
                 {/* Begin Button */}
                 <Button
