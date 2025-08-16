@@ -123,28 +123,28 @@ const Profile = () => {
         </div>
 
         {/* 1. Improve Your Experience */}
-        <div className="mb-4 bg-white rounded-2xl p-5 shadow-sm">
+        <div className="mb-4 bg-gradient-to-br from-purple-200 to-purple-300 rounded-3xl p-5 shadow-none">
           <Button
             onClick={() => navigate('/feedback')}
             variant="ghost"
-            className="w-full h-14 font-medium rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 hover:bg-purple-50 text-gray-700"
+            className="w-full h-14 font-medium rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 hover:bg-purple-400/30 text-purple-900 bg-transparent border-0"
           >
-            <TrendingUp className="w-5 h-5 text-purple-600" />
+            <TrendingUp className="w-5 h-5 text-purple-800" />
             <span>Improve Your Experience</span>
-            <ExternalLink className="w-4 h-4 text-gray-400" />
+            <ExternalLink className="w-4 h-4 text-purple-700" />
           </Button>
         </div>
 
         {/* 2. Therapist */}
-        <div className="mb-4 bg-white rounded-2xl p-5 shadow-sm">
+        <div className="mb-4 bg-gradient-to-br from-purple-200 to-purple-300 rounded-3xl p-5 shadow-none">
           <Button
             onClick={() => navigate('/therapist')}
             variant="ghost"
-            className="w-full h-14 font-medium rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 hover:bg-purple-50 text-gray-700"
+            className="w-full h-14 font-medium rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 hover:bg-purple-400/30 text-purple-900 bg-transparent border-0"
           >
-            <Users className="w-5 h-5 text-purple-600" />
+            <Users className="w-5 h-5 text-purple-800" />
             <span>Therapist</span>
-            <ExternalLink className="w-4 h-4 text-gray-400" />
+            <ExternalLink className="w-4 h-4 text-purple-700" />
           </Button>
         </div>
 
