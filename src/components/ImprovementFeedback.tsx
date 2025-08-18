@@ -1,40 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, MessageCircle, Calendar } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFeedbackChatLogic } from '@/hooks/useFeedbackChatLogic';
-import FeedbackMessageList from '@/components/FeedbackMessageList';
-import FeedbackChatInput from '@/components/FeedbackChatInput';
+import SimpleFeedbackChat from '@/components/SimpleFeedbackChat';
 
 const ImprovementFeedback = () => {
   const navigate = useNavigate();
-  const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Assistant feedback chat functionality
-  const {
-    messages,
-    inputValue,
-    isTyping,
-    setInputValue,
-    handleSendMessage,
-    initializeChatWithContext
-  } = useFeedbackChatLogic();
 
-  useEffect(() => {
-    initializeChatWithContext("Hello! I'm here to help you share feedback about your experience with the app. Feel free to tell me about anything you like, any suggestions you have, or any concerns you'd like to discuss.");
-  }, [initializeChatWithContext]);
-
-  const handleSubmitFeedback = async () => {
-    setIsSubmitting(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsSubmitting(false);
-    setFeedback('');
-    // Show success message or navigate
-  };
 
   const handleScheduleCall = () => {
     // Open external scheduling link
@@ -66,30 +40,8 @@ const ImprovementFeedback = () => {
               Chat with Assistant
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-0">
-            <div className="h-96 flex flex-col">
-              {/* Messages */}
-              <div className="flex-1 overflow-hidden">
-                <FeedbackMessageList
-                  messages={messages}
-                  therapist={{
-                    name: 'Assistant',
-                    image_url: undefined
-                  }}
-                  isTyping={isTyping}
-                />
-              </div>
-              
-              {/* Input */}
-              <div className="border-t border-gray-100 p-4">
-                <FeedbackChatInput
-                  inputValue={inputValue}
-                  setInputValue={setInputValue}
-                  onSendMessage={handleSendMessage}
-                  isTyping={isTyping}
-                />
-              </div>
-            </div>
+          <CardContent className="p-4">
+            <SimpleFeedbackChat />
           </CardContent>
         </Card>
 
