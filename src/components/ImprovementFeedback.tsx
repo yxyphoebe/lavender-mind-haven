@@ -24,7 +24,11 @@ const ImprovementFeedback = () => {
   } = useFeedbackChatLogic();
 
   useEffect(() => {
-    initializeChatWithContext("Hello! I'm here to help you share feedback about your experience with the app. Feel free to tell me about anything you like, any suggestions you have, or any concerns you'd like to discuss.");
+    const timer = setTimeout(() => {
+      initializeChatWithContext("Hello! I'm here to help you share feedback about your experience with the app. Feel free to tell me about anything you like, any suggestions you have, or any concerns you'd like to discuss.");
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [initializeChatWithContext]);
 
   const handleSubmitFeedback = async () => {

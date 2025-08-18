@@ -94,31 +94,37 @@ export const useFeedbackChatLogic = () => {
     };
 
     getCurrentUser();
-  }, [loadFromLocalStorage]);
+  }, []);
 
   const initializeChatWithContext = useCallback((initialMessage: string) => {
-    if (!userId) return;
+    const initChat = () => {
+      if (!userId) return;
 
-    const stored = loadFromLocalStorage(userId);
-    if (stored && stored.messages.length > 0) {
-      setMessages(stored.messages);
-      setFeedbackId(stored.feedbackId || null);
-    } else {
-      const welcomeMessage: Message = {
-        id: `ai-${Date.now()}`,
-        text: initialMessage,
-        sender: 'ai',
-        timestamp: new Date()
-      };
+      const stored = loadFromLocalStorage(userId);
+      if (stored && stored.messages.length > 0) {
+        setMessages(stored.messages);
+        setFeedbackId(stored.feedbackId || null);
+      } else {
+        const welcomeMessage: Message = {
+          id: `ai-${Date.now()}`,
+          text: initialMessage,
+          sender: 'ai',
+          timestamp: new Date()
+        };
 
-      setMessages([welcomeMessage]);
-      
-      const newData: LocalFeedbackData = {
-        messages: [welcomeMessage],
-        feedbackId: null
-      };
-      
-      saveToLocalStorage(newData, userId);
+        setMessages([welcomeMessage]);
+        
+        const newData: LocalFeedbackData = {
+          messages: [welcomeMessage],
+          feedbackId: null
+        };
+        
+        saveToLocalStorage(newData, userId);
+      }
+    };
+
+    if (userId) {
+      initChat();
     }
   }, [userId, loadFromLocalStorage, saveToLocalStorage]);
 
