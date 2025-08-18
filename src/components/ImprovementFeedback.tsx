@@ -38,7 +38,7 @@ const ImprovementFeedback = () => {
 
   const handleScheduleCall = () => {
     // Open external scheduling link
-    window.open('https://calendly.com/your-team/consultation', '_blank');
+    window.open('https://calendly.com/hello-mindfulai/chat-with-mindful-ai', '_blank');
   };
 
   return (
