@@ -197,6 +197,9 @@ export const useFeedbackChatLogic = () => {
     saveToLocalStorage(localData, userId);
 
     try {
+      console.log('Sending message to AI:', inputValue);
+      console.log('Attachments:', attachments);
+      
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
           message: inputValue,
@@ -205,7 +208,10 @@ export const useFeedbackChatLogic = () => {
             background_story: 'I am a helpful assistant designed to collect and process user feedback about the application. I listen carefully to user concerns, suggestions, and experiences to help improve the service.',
             style: 'I am empathetic, professional, and focused on understanding user needs. I ask clarifying questions when needed and provide helpful responses while maintaining a supportive tone.'
           },
-          attachments: attachments || []
+          attachments: attachments?.map(url => ({
+            url,
+            type: url.includes('.mp4') || url.includes('.mov') ? 'video' : 'image'
+          })) || []
         }
       });
 
@@ -214,9 +220,11 @@ export const useFeedbackChatLogic = () => {
         throw error;
       }
 
+      console.log('AI response data:', data);
+
       const aiMessage: Message = {
         id: `ai-${Date.now()}`,
-        text: data.message || 'I apologize, but I encountered an error. Please try again.',
+        text: data.response || data.message || 'I apologize, but I encountered an error. Please try again.',
         sender: 'ai',
         timestamp: new Date()
       };
