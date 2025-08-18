@@ -2,13 +2,45 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, MessageCircle, Calendar } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTherapists } from '@/hooks/useTherapists';
+import { useChatLogic } from '@/hooks/useChatLogic';
+import EmbeddedMessageList from '@/components/EmbeddedMessageList';
+import EmbeddedChatInput from '@/components/EmbeddedChatInput';
 
 const ImprovementFeedback = () => {
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Assistant chat functionality
+  const { data: therapists } = useTherapists();
+  const [assistantTherapist, setAssistantTherapist] = useState(null);
+  
+  const {
+    messages,
+    inputValue,
+    isTyping,
+    setInputValue,
+    handleSendMessage,
+    initializeChatWithContext
+  } = useChatLogic(assistantTherapist?.id || '', assistantTherapist);
+
+  useEffect(() => {
+    if (therapists) {
+      const assistant = therapists.find(t => t.name === 'Assistant');
+      if (assistant) {
+        setAssistantTherapist(assistant);
+      }
+    }
+  }, [therapists]);
+
+  useEffect(() => {
+    if (assistantTherapist) {
+      initializeChatWithContext("Hello! I'm here to help you share feedback about your experience with the app. Feel free to tell me about anything you like, any suggestions you have, or any concerns you'd like to discuss.");
+    }
+  }, [assistantTherapist, initializeChatWithContext]);
 
   const handleSubmitFeedback = async () => {
     setIsSubmitting(true);
@@ -41,33 +73,38 @@ const ImprovementFeedback = () => {
           <div className="w-10 h-10" /> {/* Spacer */}
         </div>
 
-        {/* AI Chat Feedback */}
+        {/* AI Assistant Chat */}
         <Card className="mb-4 bg-white rounded-2xl shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="font-display text-lg font-bold text-slate-800 flex items-center">
               <MessageCircle className="w-5 h-5 mr-2 text-blue-500" />
-              Share Your Feedback
+              Chat with Assistant
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-slate-600 text-sm">
-              Our AI assistant is here to help us understand your experience better. Share any thoughts, suggestions, or concerns.
-            </p>
-            
-            <Textarea
-              placeholder="Tell us about your experience with the app, what you like, what could be improved..."
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-              className="min-h-32 border-gray-200 rounded-xl focus:ring-blue-400 bg-white resize-none"
-            />
-            
-            <Button
-              onClick={handleSubmitFeedback}
-              disabled={!feedback.trim() || isSubmitting}
-              className="w-full h-12 bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white rounded-xl font-medium transition-all duration-300"
-            >
-              {isSubmitting ? 'Sending...' : 'Send Feedback'}
-            </Button>
+          <CardContent className="p-0">
+            <div className="h-96 flex flex-col">
+              {/* Messages */}
+              <div className="flex-1 overflow-hidden">
+                <EmbeddedMessageList
+                  messages={messages}
+                  therapist={{
+                    name: assistantTherapist?.name || 'Assistant',
+                    image_url: assistantTherapist?.image_url
+                  }}
+                  isTyping={isTyping}
+                />
+              </div>
+              
+              {/* Input */}
+              <div className="border-t border-gray-100 p-4">
+                <EmbeddedChatInput
+                  inputValue={inputValue}
+                  setInputValue={setInputValue}
+                  onSendMessage={handleSendMessage}
+                  isTyping={isTyping}
+                />
+              </div>
+            </div>
           </CardContent>
         </Card>
 
