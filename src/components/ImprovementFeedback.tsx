@@ -5,8 +5,8 @@ import { ArrowLeft, MessageCircle, Calendar } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFeedbackChatLogic } from '@/hooks/useFeedbackChatLogic';
-import EmbeddedMessageList from '@/components/EmbeddedMessageList';
-import EmbeddedChatInput from '@/components/EmbeddedChatInput';
+import FeedbackMessageList from '@/components/FeedbackMessageList';
+import FeedbackChatInput from '@/components/FeedbackChatInput';
 
 const ImprovementFeedback = () => {
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ const ImprovementFeedback = () => {
             <div className="h-96 flex flex-col">
               {/* Messages */}
               <div className="flex-1 overflow-hidden">
-                <EmbeddedMessageList
+                <FeedbackMessageList
                   messages={messages}
                   therapist={{
                     name: 'Assistant',
@@ -82,7 +82,7 @@ const ImprovementFeedback = () => {
               
               {/* Input */}
               <div className="border-t border-gray-100 p-4">
-                <EmbeddedChatInput
+                <FeedbackChatInput
                   inputValue={inputValue}
                   setInputValue={setInputValue}
                   onSendMessage={handleSendMessage}
