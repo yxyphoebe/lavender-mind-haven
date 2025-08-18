@@ -89,21 +89,63 @@ export const useFeedbackChatLogic = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUserId(user.id);
-        loadChatHistory(user.id);
+        // Don't load chat history here, it will be handled by the initialization effect
       }
     };
 
     getCurrentUser();
-  }, [loadFromLocalStorage]);
+  }, []);
+
+  // Add a new effect to handle initialization when userId is available
+  const [pendingInitMessage, setPendingInitMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (userId && pendingInitMessage) {
+      console.log('Initializing chat with userId:', userId);
+      const stored = loadFromLocalStorage(userId);
+      if (stored && stored.messages.length > 0) {
+        console.log('Loading existing chat history:', stored.messages);
+        setMessages(stored.messages);
+        setFeedbackId(stored.feedbackId || null);
+      } else {
+        console.log('Creating welcome message:', pendingInitMessage);
+        const welcomeMessage: Message = {
+          id: `ai-${Date.now()}`,
+          text: pendingInitMessage,
+          sender: 'ai',
+          timestamp: new Date()
+        };
+
+        setMessages([welcomeMessage]);
+        
+        const newData: LocalFeedbackData = {
+          messages: [welcomeMessage],
+          feedbackId: null
+        };
+        
+        saveToLocalStorage(newData, userId);
+      }
+      setPendingInitMessage(null);
+    }
+  }, [userId, pendingInitMessage, loadFromLocalStorage, saveToLocalStorage]);
 
   const initializeChatWithContext = useCallback((initialMessage: string) => {
-    if (!userId) return;
+    console.log('initializeChatWithContext called with userId:', userId);
+    if (!userId) {
+      // Store the message to initialize when userId becomes available
+      console.log('No userId yet, storing pending message:', initialMessage);
+      setPendingInitMessage(initialMessage);
+      return;
+    }
 
+    // If userId is available, initialize immediately
     const stored = loadFromLocalStorage(userId);
     if (stored && stored.messages.length > 0) {
+      console.log('Loading existing chat history:', stored.messages);
       setMessages(stored.messages);
       setFeedbackId(stored.feedbackId || null);
     } else {
+      console.log('Creating welcome message:', initialMessage);
       const welcomeMessage: Message = {
         id: `ai-${Date.now()}`,
         text: initialMessage,
