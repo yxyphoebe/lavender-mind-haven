@@ -47,19 +47,33 @@ export const useFeedbackChatLogic = () => {
   const loadFromLocalStorage = useCallback((currentUserId: string): LocalFeedbackData | null => {
     if (!currentUserId) return null;
     
-    const stored = localStorage.getItem(`feedback_chat_${currentUserId}`);
-    if (!stored) return null;
-    
-    const parsed = JSON.parse(stored);
-    return {
-      ...parsed,
-      messages: parsed.messages.map((msg: any) => ({
-        ...msg,
-        timestamp: msg.timestamp && typeof msg.timestamp === 'object' && msg.timestamp.value 
-          ? new Date(msg.timestamp.value.value || msg.timestamp.value.iso)
-          : new Date(msg.timestamp)
-      }))
-    };
+    try {
+      const stored = localStorage.getItem(`feedback_chat_${currentUserId}`);
+      if (!stored) return null;
+      
+      const parsed = JSON.parse(stored);
+      
+      // Clean up corrupted data - if messages have complex timestamp objects, clear the data
+      if (parsed.messages && parsed.messages.some((msg: any) => 
+        msg.timestamp && typeof msg.timestamp === 'object' && 'value' in msg.timestamp
+      )) {
+        console.log('Clearing corrupted localStorage data');
+        localStorage.removeItem(`feedback_chat_${currentUserId}`);
+        return null;
+      }
+      
+      return {
+        ...parsed,
+        messages: parsed.messages.map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }))
+      };
+    } catch (error) {
+      console.error('Error loading from localStorage, clearing data:', error);
+      localStorage.removeItem(`feedback_chat_${currentUserId}`);
+      return null;
+    }
   }, []);
 
   const createNewFeedbackSession = async (currentUserId: string): Promise<string | null> => {
