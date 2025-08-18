@@ -64,7 +64,7 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
                         alt={therapist.name}
                         className="object-cover"
                       />
-                      <AvatarFallback className="bg-white/20 text-white text-xs backdrop-blur-sm">
+                      <AvatarFallback className="bg-slate-200 text-slate-700 text-xs">
                         {therapist.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
@@ -74,10 +74,10 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
                 {/* Message Content */}
                 <div className={`flex-1 min-w-0 ${message.sender === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
                   {message.text && (
-                    <div className={`rounded-2xl px-3 py-2 border border-white/20 ${
+                    <div className={`rounded-2xl px-3 py-2 border ${
                       message.sender === 'user' 
-                        ? 'bg-slate-200/60 backdrop-blur-sm text-slate-700' 
-                        : 'bg-white/15 backdrop-blur-md text-white'
+                        ? 'bg-slate-200/60 backdrop-blur-sm text-slate-700 border-slate-300/50' 
+                        : 'bg-slate-100/90 backdrop-blur-sm text-slate-700 border-slate-200'
                     }`}>
                       {message.hasTypingAnimation ? (
                         <TypingText
@@ -125,16 +125,16 @@ const EmbeddedMessageList = ({ messages, therapist, isTyping }: EmbeddedMessageL
                     alt={therapist.name}
                     className="object-cover"
                   />
-                  <AvatarFallback className="bg-white/20 text-white text-xs backdrop-blur-sm">
+                  <AvatarFallback className="bg-slate-200 text-slate-700 text-xs">
                     {therapist.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
-                  <div className="bg-white/15 backdrop-blur-md rounded-2xl px-3 py-2 border border-white/20">
+                  <div className="bg-slate-100/90 backdrop-blur-sm rounded-2xl px-3 py-2 border border-slate-200">
                     <div className="flex items-center space-x-1">
-                      <div className="w-1.5 h-1.5 bg-white/60 rounded-full animate-bounce"></div>
-                      <div className="w-1.5 h-1.5 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-1.5 h-1.5 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+                      <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
                   </div>
                 </div>

@@ -86,10 +86,14 @@ export const useFeedbackChatLogic = () => {
 
   useEffect(() => {
     const getCurrentUser = async () => {
+      console.log('Getting current user...');
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
+        console.log('User found:', user.id);
         setUserId(user.id);
         loadChatHistory(user.id);
+      } else {
+        console.log('No user found');
       }
     };
 
@@ -97,14 +101,23 @@ export const useFeedbackChatLogic = () => {
   }, []);
 
   const initializeChatWithContext = useCallback((initialMessage: string) => {
+    console.log('Initializing chat with context, userId:', userId);
+    
     const initChat = () => {
-      if (!userId) return;
+      if (!userId) {
+        console.log('No userId available for chat initialization');
+        return;
+      }
 
+      console.log('Loading chat history for user:', userId);
       const stored = loadFromLocalStorage(userId);
+      
       if (stored && stored.messages.length > 0) {
+        console.log('Found existing messages:', stored.messages.length);
         setMessages(stored.messages);
         setFeedbackId(stored.feedbackId || null);
       } else {
+        console.log('Creating new welcome message');
         const welcomeMessage: Message = {
           id: `ai-${Date.now()}`,
           text: initialMessage,
@@ -120,11 +133,14 @@ export const useFeedbackChatLogic = () => {
         };
         
         saveToLocalStorage(newData, userId);
+        console.log('Welcome message created and saved');
       }
     };
 
     if (userId) {
       initChat();
+    } else {
+      console.log('Waiting for userId to be available...');
     }
   }, [userId, loadFromLocalStorage, saveToLocalStorage]);
 
