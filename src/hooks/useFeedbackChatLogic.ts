@@ -55,7 +55,9 @@ export const useFeedbackChatLogic = () => {
       ...parsed,
       messages: parsed.messages.map((msg: any) => ({
         ...msg,
-        timestamp: new Date(msg.timestamp)
+        timestamp: msg.timestamp && typeof msg.timestamp === 'object' && msg.timestamp.value 
+          ? new Date(msg.timestamp.value.value || msg.timestamp.value.iso)
+          : new Date(msg.timestamp)
       }))
     };
   }, []);
