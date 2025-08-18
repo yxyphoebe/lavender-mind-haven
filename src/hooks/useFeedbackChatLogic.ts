@@ -143,7 +143,7 @@ export const useFeedbackChatLogic = () => {
       }
       setPendingInitMessage(null);
     }
-  }, [userId, pendingInitMessage, loadFromLocalStorage, saveToLocalStorage]);
+  }, [userId, pendingInitMessage]);
 
   const initializeChatWithContext = useCallback((initialMessage: string) => {
     console.log('initializeChatWithContext called with userId:', userId);
