@@ -131,6 +131,39 @@ export type Database = {
         }
         Relationships: []
       }
+      feedbacks: {
+        Row: {
+          conversation: Json | null
+          created_at: string
+          feedback_category: string | null
+          id: string
+          resolved: boolean
+          session_summary: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation?: Json | null
+          created_at?: string
+          feedback_category?: string | null
+          id?: string
+          resolved?: boolean
+          session_summary?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conversation?: Json | null
+          created_at?: string
+          feedback_category?: string | null
+          id?: string
+          resolved?: boolean
+          session_summary?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       generation_prompts: {
         Row: {
           active: boolean

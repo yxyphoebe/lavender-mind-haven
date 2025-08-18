@@ -4,8 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, MessageCircle, Calendar } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTherapists } from '@/hooks/useTherapists';
-import { useChatLogic } from '@/hooks/useChatLogic';
+import { useFeedbackChatLogic } from '@/hooks/useFeedbackChatLogic';
 import EmbeddedMessageList from '@/components/EmbeddedMessageList';
 import EmbeddedChatInput from '@/components/EmbeddedChatInput';
 
@@ -14,10 +13,7 @@ const ImprovementFeedback = () => {
   const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Assistant chat functionality
-  const { data: therapists } = useTherapists();
-  const [assistantTherapist, setAssistantTherapist] = useState(null);
-  
+  // Assistant feedback chat functionality
   const {
     messages,
     inputValue,
@@ -25,22 +21,11 @@ const ImprovementFeedback = () => {
     setInputValue,
     handleSendMessage,
     initializeChatWithContext
-  } = useChatLogic(assistantTherapist?.id || '', assistantTherapist);
+  } = useFeedbackChatLogic();
 
   useEffect(() => {
-    if (therapists) {
-      const assistant = therapists.find(t => t.name === 'Assistant');
-      if (assistant) {
-        setAssistantTherapist(assistant);
-      }
-    }
-  }, [therapists]);
-
-  useEffect(() => {
-    if (assistantTherapist) {
-      initializeChatWithContext("Hello! I'm here to help you share feedback about your experience with the app. Feel free to tell me about anything you like, any suggestions you have, or any concerns you'd like to discuss.");
-    }
-  }, [assistantTherapist, initializeChatWithContext]);
+    initializeChatWithContext("Hello! I'm here to help you share feedback about your experience with the app. Feel free to tell me about anything you like, any suggestions you have, or any concerns you'd like to discuss.");
+  }, [initializeChatWithContext]);
 
   const handleSubmitFeedback = async () => {
     setIsSubmitting(true);
@@ -88,8 +73,8 @@ const ImprovementFeedback = () => {
                 <EmbeddedMessageList
                   messages={messages}
                   therapist={{
-                    name: assistantTherapist?.name || 'Assistant',
-                    image_url: assistantTherapist?.image_url
+                    name: 'Assistant',
+                    image_url: undefined
                   }}
                   isTyping={isTyping}
                 />
