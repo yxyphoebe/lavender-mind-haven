@@ -24,12 +24,7 @@ const ImprovementFeedback = () => {
   } = useFeedbackChatLogic();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('ImprovementFeedback: Initializing chat with welcome message');
-      initializeChatWithContext("Hello! I'm here to help you share feedback about your experience with the app. Feel free to tell me about anything you like, any suggestions you have, or any concerns you'd like to discuss.");
-    }, 500);
-    
-    return () => clearTimeout(timer);
+    initializeChatWithContext("Hello! I'm here to help you share feedback about your experience with the app. Feel free to tell me about anything you like, any suggestions you have, or any concerns you'd like to discuss.");
   }, [initializeChatWithContext]);
 
   const handleSubmitFeedback = async () => {
@@ -43,7 +38,7 @@ const ImprovementFeedback = () => {
 
   const handleScheduleCall = () => {
     // Open external scheduling link
-    window.open('https://calendly.com/hello-mindfulai/chat-with-mindful-ai', '_blank');
+    window.open('https://calendly.com/your-team/consultation', '_blank');
   };
 
   return (
