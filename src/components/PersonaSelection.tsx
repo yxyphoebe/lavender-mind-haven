@@ -45,14 +45,41 @@ const PersonaSelection = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleContinue = (therapistId: string) => {
-    localStorage.setItem('selectedTherapistId', therapistId);
-    
-    // Navigate immediately
-    navigate('/home');
-    
-    // Check and generate daily messages in background (no await)
-    checkAndGenerateDailyMessages(therapistId);
+  const handleContinue = async (therapistId: string) => {
+    // Find the selected therapist
+    const selectedTherapist = therapists?.find(t => t.id === therapistId);
+    if (!selectedTherapist) return;
+
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Update user with both therapist_id and therapist_name
+      const { error } = await supabase
+        .from('users')
+        .update({ 
+          selected_therapist_id: selectedTherapist.id,
+          therapist_name: selectedTherapist.name,
+          onboarding_completed: true 
+        })
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('Error updating user:', error);
+        return;
+      }
+
+      localStorage.setItem('selectedTherapistId', therapistId);
+      
+      // Navigate immediately
+      navigate('/home');
+      
+      // Check and generate daily messages in background (no await)
+      checkAndGenerateDailyMessages(therapistId);
+    } catch (error) {
+      console.error('Error in handleContinue:', error);
+    }
   };
 
   const checkAndGenerateDailyMessages = async (therapistId: string) => {

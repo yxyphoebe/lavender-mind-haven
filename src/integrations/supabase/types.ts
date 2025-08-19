@@ -437,7 +437,6 @@ export type Database = {
       }
       users: {
         Row: {
-          avatar_choice: string | null
           created_at: string | null
           email: string | null
           id: string
@@ -446,14 +445,12 @@ export type Database = {
           name: string
           notifications_enabled: boolean
           onboarding_completed: boolean | null
-          personality_type: string | null
           phone: string | null
-          preferred_language: string | null
           selected_therapist_id: string | null
+          therapist_name: string | null
           timezone: string | null
         }
         Insert: {
-          avatar_choice?: string | null
           created_at?: string | null
           email?: string | null
           id?: string
@@ -462,14 +459,12 @@ export type Database = {
           name: string
           notifications_enabled?: boolean
           onboarding_completed?: boolean | null
-          personality_type?: string | null
           phone?: string | null
-          preferred_language?: string | null
           selected_therapist_id?: string | null
+          therapist_name?: string | null
           timezone?: string | null
         }
         Update: {
-          avatar_choice?: string | null
           created_at?: string | null
           email?: string | null
           id?: string
@@ -478,10 +473,9 @@ export type Database = {
           name?: string
           notifications_enabled?: boolean
           onboarding_completed?: boolean | null
-          personality_type?: string | null
           phone?: string | null
-          preferred_language?: string | null
           selected_therapist_id?: string | null
+          therapist_name?: string | null
           timezone?: string | null
         }
         Relationships: [
