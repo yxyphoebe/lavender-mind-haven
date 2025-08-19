@@ -56,7 +56,7 @@ const ImprovementFeedback = () => {
       {/* Thank You Message - Fixed Bottom */}
       <div className="fixed bottom-0 left-0 right-0 bg-gray-50 py-4 text-center">
         <p className="text-slate-400 text-xs">
-          ✨ Your feedback makes the app better for everyone. Thank you!
+          ✨ Thanks for being part of the journey.
         </p>
       </div>
     </div>
