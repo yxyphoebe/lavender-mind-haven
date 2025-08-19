@@ -27,21 +27,27 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trackNavigation } from '@/hooks/useUserCenterMessage';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 const Profile = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  
   const [isEditingName, setIsEditingName] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [tempName, setTempName] = useState('');
   const [isContactExpanded, setIsContactExpanded] = useState(false);
   const [isPrivacyExpanded, setIsPrivacyExpanded] = useState(false);
+  const [loading, setLoading] = useState(true);
   
   // User data state
   const [userInfo, setUserInfo] = useState({
-    name: 'Sarah Chen',
-    email: 'sarah.chen@email.com',
-    phone: '+1 (555) 123-4567',
-    joinDate: '2024-01-15'
+    name: '',
+    email: '',
+    phone: '',
+    joinDate: ''
   });
 
   const handleNameEdit = () => {
@@ -50,11 +56,37 @@ const Profile = () => {
   };
 
   const handleNameSave = async () => {
-    if (tempName.trim()) {
+    if (!user || !tempName.trim()) return;
+
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ name: tempName.trim() })
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('Error updating name:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update name",
+          variant: "destructive"
+        });
+        return;
+      }
+
       setUserInfo({ ...userInfo, name: tempName.trim() });
       setIsEditingName(false);
-      
-      // TODO: Save to Supabase
+      toast({
+        title: "Success",
+        description: "Name updated successfully"
+      });
+    } catch (error) {
+      console.error('Error updating name:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update name",
+        variant: "destructive"
+      });
     }
   };
 
@@ -64,9 +96,37 @@ const Profile = () => {
   };
 
   const handleNotificationToggle = async (enabled: boolean) => {
-    setNotificationsEnabled(enabled);
-    
-    // TODO: Save to Supabase
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ notifications_enabled: enabled })
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('Error updating notifications:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update notification settings",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      setNotificationsEnabled(enabled);
+      toast({
+        title: "Success",
+        description: "Notification settings updated"
+      });
+    } catch (error) {
+      console.error('Error updating notifications:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update notification settings",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleLogout = () => {
@@ -90,10 +150,58 @@ const Profile = () => {
     window.open('/terms-of-service', '_blank');
   };
 
-  // Track navigation for smart message system
+  // Fetch user data from Supabase
   useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('name, email, phone, notifications_enabled, created_at')
+          .eq('id', user.id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching user data:', error);
+          toast({
+            title: "Error",
+            description: "Failed to load user data",
+            variant: "destructive"
+          });
+          return;
+        }
+
+        if (data) {
+          setUserInfo({
+            name: data.name || '',
+            email: data.email || user.email || '',
+            phone: data.phone || '',
+            joinDate: data.created_at ? new Date(data.created_at).toLocaleDateString() : ''
+          });
+          setNotificationsEnabled(data.notifications_enabled ?? true);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
     trackNavigation('/profile');
-  }, []);
+  }, [user, toast]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
