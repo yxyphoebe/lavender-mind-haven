@@ -11,7 +11,7 @@ export const useSimpleFeedbackChat = () => {
   const [messages, setMessages] = useState<SimpleMessage[]>([
     {
       id: '1',
-      text: "Hello! I'm here to help you share feedback about your experience with the app. Feel free to tell me about anything you like, any suggestions you have, or any concerns you'd like to discuss.",
+      text: "Hi, I'm here to listen 👋 Share any thoughts or suggestions about your experience.",
       sender: 'ai'
     }
   ]);

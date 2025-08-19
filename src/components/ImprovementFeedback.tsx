@@ -32,13 +32,6 @@ const ImprovementFeedback = () => {
         <div className="w-10 h-10" /> {/* Spacer */}
         </div>
 
-        {/* Welcome Message */}
-        <div className="mb-6 text-center">
-          <p className="text-slate-700 text-base leading-relaxed">
-            Hi, I'm here to listen 👋 Share any thoughts or suggestions about your experience.
-          </p>
-        </div>
-
         {/* Direct Chat Component */}
         <div className="mb-6">
           <SimpleFeedbackChat />
