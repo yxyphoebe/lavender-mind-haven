@@ -33,12 +33,12 @@ const ImprovementFeedback = () => {
         </div>
 
         {/* Direct Chat Component */}
-        <div className="mb-6">
+        <div className="mb-12">
           <SimpleFeedbackChat />
         </div>
 
         {/* Lightweight Schedule Call Option */}
-        <div className="mb-8 text-center">
+        <div className="mb-8 text-center mt-8">
           <Button
             onClick={handleScheduleCall}
             variant="outline"
