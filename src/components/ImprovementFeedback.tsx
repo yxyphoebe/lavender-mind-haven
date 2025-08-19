@@ -20,9 +20,9 @@ const ImprovementFeedback = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 relative">
-      <div className="container mx-auto px-6 pt-2 pb-20 max-w-md">
+      <div className="container mx-auto px-6 pt-1 pb-20 max-w-md">
         {/* Header */}
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-1">
           <Button
             variant="ghost"
             size="icon"
@@ -36,7 +36,7 @@ const ImprovementFeedback = () => {
         </div>
 
         {/* Assistant Avatar - Positioned at the very top */}
-        <div className="flex justify-center mb-3">
+        <div className="flex justify-center mb-2">
           <Avatar className="w-20 h-20 shadow-lg border-2 border-white">
             <AvatarImage 
               src={feedbackAssistant?.image_url} 
