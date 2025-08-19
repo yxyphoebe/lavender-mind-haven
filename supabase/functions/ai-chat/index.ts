@@ -16,14 +16,19 @@ serve(async (req) => {
   }
 
   try {
-    const { message, therapistData, attachments } = await req.json();
+    const { message, therapistData, assistantData, attachments } = await req.json();
 
-    console.log('Received request:', { message, therapistData: therapistData?.name, attachments });
+    console.log('Received request:', { message, therapistData: therapistData?.name, assistantData: assistantData?.name, attachments });
 
-    // Create system prompt from therapist's background story and style
+    // Create system prompt from assistant or therapist data
     let systemPrompt = "";
     
-    if (therapistData?.background_story) {
+    // Handle assistant data (new format)
+    if (assistantData?.system_prompt) {
+      systemPrompt = assistantData.system_prompt;
+    }
+    // Handle therapist data (existing format for backwards compatibility)
+    else if (therapistData?.background_story) {
       systemPrompt = therapistData.background_story;
     } else {
       systemPrompt = "You are a compassionate therapist and emotional support companion.";

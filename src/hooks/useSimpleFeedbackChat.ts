@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useFeedbackAssistant } from './useAssistants';
 
 interface SimpleMessage {
   id: string;
@@ -8,6 +9,8 @@ interface SimpleMessage {
 }
 
 export const useSimpleFeedbackChat = () => {
+  const { data: assistant } = useFeedbackAssistant();
+  
   const [messages, setMessages] = useState<SimpleMessage[]>([
     {
       id: '1',
@@ -35,7 +38,10 @@ export const useSimpleFeedbackChat = () => {
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
           message: userMessage.text,
-          therapistData: 'Assistant',
+          assistantData: assistant || { 
+            name: 'Assistant', 
+            system_prompt: 'You are a helpful assistant designed to gather user feedback and provide support.' 
+          },
           attachments: []
         }
       });

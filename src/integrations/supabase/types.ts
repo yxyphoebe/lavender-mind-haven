@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      assistants: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          name: string
+          personality: string | null
+          role: string
+          system_prompt: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name: string
+          personality?: string | null
+          role: string
+          system_prompt?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name?: string
+          personality?: string | null
+          role?: string
+          system_prompt?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       chats: {
         Row: {
           attachments: Json | null
