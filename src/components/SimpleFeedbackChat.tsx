@@ -26,7 +26,7 @@ const SimpleFeedbackChat = () => {
   };
 
   return (
-    <div className="h-96 flex flex-col bg-white rounded-2xl shadow-sm border">
+    <div className="h-[67vh] flex flex-col bg-white rounded-2xl shadow-sm border">
       {/* Messages */}
       <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
         <div className="space-y-4">
