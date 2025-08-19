@@ -68,7 +68,7 @@ const SimpleFeedbackChat = () => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Share your feedback..."
+            placeholder="Type your feedback here…"
             className="flex-1 min-h-[40px] max-h-[120px] resize-none border-gray-200 focus:border-mindful-400"
             disabled={isTyping}
           />

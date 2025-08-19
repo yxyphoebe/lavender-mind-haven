@@ -29,44 +29,42 @@ const ImprovementFeedback = () => {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           
-          <div className="w-10 h-10" /> {/* Spacer */}
+        <div className="w-10 h-10" /> {/* Spacer */}
+        </div>
+
+        {/* Welcome Message */}
+        <div className="mb-6 text-center">
+          <p className="text-slate-700 text-base leading-relaxed">
+            Hi, I'm here to listen 👋 Share any thoughts or suggestions about your experience.
+          </p>
         </div>
 
         {/* Direct Chat Component */}
-        <div className="mb-4">
+        <div className="mb-6">
           <SimpleFeedbackChat />
         </div>
 
-        {/* Schedule Call */}
-        <Card className="mb-4 bg-white rounded-2xl shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-display text-lg font-bold text-slate-800 flex items-center">
-              <Calendar className="w-5 h-5 mr-2 text-emerald-500" />
-              Schedule a Call
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-slate-600 text-sm mb-4">
-              Want to discuss your experience personally? Schedule a call with our team for more detailed feedback and suggestions.
-            </p>
-            
-            <Button
-              onClick={handleScheduleCall}
-              className="w-full h-12 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-medium transition-all duration-300"
-            >
-              Schedule Call
-            </Button>
-          </CardContent>
-        </Card>
+        {/* Lightweight Schedule Call Option */}
+        <div className="mb-8 text-center">
+          <p className="text-slate-500 text-sm mb-2">
+            Prefer a real conversation? →
+          </p>
+          <Button
+            onClick={handleScheduleCall}
+            variant="outline"
+            size="sm"
+            className="text-slate-600 border-slate-300 hover:bg-slate-50"
+          >
+            Schedule a Call
+          </Button>
+        </div>
 
-        {/* Additional Information */}
-        <Card className="bg-white rounded-2xl shadow-sm">
-          <CardContent className="p-4">
-            <p className="text-amber-800 text-sm font-medium">
-              💡 Your feedback helps us improve the app for everyone. Thank you for taking the time to share your thoughts!
-            </p>
-          </CardContent>
-        </Card>
+        {/* Thank You Message - Bottom */}
+        <div className="text-center">
+          <p className="text-slate-400 text-xs">
+            ✨ Your feedback makes the app better for everyone. Thank you!
+          </p>
+        </div>
       </div>
     </div>
   );
