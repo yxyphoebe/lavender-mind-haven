@@ -321,7 +321,7 @@ export const useChatLogic = (selectedTherapistId: string, therapist: any) => {
           message: currentInputValue,
           therapistData: therapist,
           attachments: attachments,
-          chatHistory: chatHistory
+          conversationHistory: chatHistory
         }
       });
 
