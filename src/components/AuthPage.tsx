@@ -63,7 +63,7 @@ const AuthPage = () => {
 
       {/* Main Content - Centered */}
       <div className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-md text-center space-y-8">
+        <div className="w-full max-w-md text-center space-y-16">
           {/* Branding */}
           <div className="space-y-4">
             <h1 className="text-5xl font-bold text-white mb-2">
