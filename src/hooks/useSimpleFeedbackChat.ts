@@ -77,6 +77,14 @@ export const useSimpleFeedbackChat = () => {
     setIsTyping(true);
 
     try {
+      // Convert message history to OpenAI format, excluding loading messages
+      const conversationHistory = messages
+        .filter(msg => !msg.isLoading)
+        .map(msg => ({
+          role: msg.sender === 'user' ? 'user' : 'assistant',
+          content: msg.text
+        }));
+
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
           message: userMessage.text,
@@ -84,7 +92,8 @@ export const useSimpleFeedbackChat = () => {
             name: 'Assistant', 
             system_prompt: 'You are a helpful assistant designed to gather user feedback and provide support.' 
           },
-          attachments: []
+          attachments: [],
+          conversationHistory
         }
       });
 
@@ -110,7 +119,7 @@ export const useSimpleFeedbackChat = () => {
     } finally {
       setIsTyping(false);
     }
-  }, [inputValue, isTyping, assistant]);
+  }, [inputValue, isTyping, assistant, messages]);
 
   // Fetch initial greeting when assistant is available
   useEffect(() => {

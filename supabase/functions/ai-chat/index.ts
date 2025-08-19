@@ -16,9 +16,9 @@ serve(async (req) => {
   }
 
   try {
-    const { message, therapistData, assistantData, attachments } = await req.json();
+    const { message, therapistData, assistantData, attachments, conversationHistory = [] } = await req.json();
 
-    console.log('Received request:', { message, therapistData: therapistData?.name, assistantData: assistantData?.name, attachments });
+    console.log('Received request:', { message, therapistData: therapistData?.name, assistantData: assistantData?.name, attachments, historyLength: conversationHistory.length });
 
     // Handle initial greeting request
     const isInitialGreeting = message === '__INITIAL_GREETING__';
@@ -44,6 +44,11 @@ serve(async (req) => {
     const messages = [
       { role: 'system', content: systemPrompt }
     ];
+
+    // Add conversation history if available
+    if (conversationHistory && conversationHistory.length > 0) {
+      messages.push(...conversationHistory);
+    }
 
     // If there are attachments, build messages with images
     if (attachments && attachments.length > 0) {
