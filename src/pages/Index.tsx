@@ -4,79 +4,18 @@ import { Button } from '@/components/ui/button';
 import { Flower2, Sparkles, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MindfulLogo from '@/components/MindfulLogo';
+import VideoSplashScreen from '@/components/VideoSplashScreen';
 
 const Index = () => {
-  const [showLaunchAnimation, setShowLaunchAnimation] = useState(true);
-  const [animationPhase, setAnimationPhase] = useState(0);
+  const [showVideoSplash, setShowVideoSplash] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const timer1 = setTimeout(() => setAnimationPhase(1), 500);
-    const timer2 = setTimeout(() => setAnimationPhase(2), 1500);
-    const timer3 = setTimeout(() => setAnimationPhase(3), 3000);
-    const timer4 = setTimeout(() => setShowLaunchAnimation(false), 4500);
+  const handleVideoEnd = () => {
+    setShowVideoSplash(false);
+  };
 
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-      clearTimeout(timer4);
-    };
-  }, []);
-
-  if (showLaunchAnimation) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 overflow-hidden">
-        <div className="text-center px-6 relative">
-          {/* Main text animation */}
-          <div className={`transition-all duration-1000 ${animationPhase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="flex items-center justify-center mb-4">
-              <MindfulLogo size="lg" className="mr-4" />
-            </div>
-            <h1 className="mindful-title mb-4 leading-tight">
-              MINDFUL AI
-            </h1>
-            <p className={`text-lg md:text-xl text-slate-600 font-light transition-all duration-1000 delay-300 ${animationPhase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              your personal space to heal and grow
-            </p>
-          </div>
-
-          {/* Flower blooming animation */}
-          <div className={`mt-12 flex justify-center transition-all duration-2000 ${animationPhase >= 2 ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="relative">
-              {/* Rock/crack base */}
-              <div className="w-32 h-8 bg-gradient-to-r from-gray-300 to-gray-400 rounded-full opacity-60"></div>
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-8 bg-gray-500 opacity-40"></div>
-              
-              {/* Blooming flower */}
-              <div className={`absolute -top-8 left-1/2 transform -translate-x-1/2 transition-all duration-2000 ${animationPhase >= 2 ? 'animate-bloom' : 'scale-0 opacity-0'}`}>
-                <Flower2 className="w-16 h-16 text-purple-400 bloom-shadow" />
-                
-                {/* Sparkles around flower */}
-                <div className={`absolute -top-2 -left-2 transition-all duration-1000 delay-1000 ${animationPhase >= 3 ? 'animate-gentle-float opacity-60' : 'opacity-0'}`}>
-                  <Sparkles className="w-4 h-4 text-purple-400" />
-                </div>
-                <div className={`absolute -top-1 -right-3 transition-all duration-1000 delay-1200 ${animationPhase >= 3 ? 'animate-gentle-float opacity-60' : 'opacity-0'}`}>
-                  <Sparkles className="w-3 h-3 text-blue-400" />
-                </div>
-                <div className={`absolute -bottom-1 -left-3 transition-all duration-1000 delay-1400 ${animationPhase >= 3 ? 'animate-gentle-float opacity-60' : 'opacity-0'}`}>
-                  <Sparkles className="w-3 h-3 text-sky-400" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Healing message */}
-          <div className={`mt-16 transition-all duration-1000 delay-2000 ${animationPhase >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <div className="flex items-center justify-center space-x-2 text-slate-500">
-              <Heart className="w-4 h-4 fill-current" />
-              <span className="text-sm font-light italic">Finding strength in gentle moments</span>
-              <Heart className="w-4 h-4 fill-current" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  if (showVideoSplash) {
+    return <VideoSplashScreen onVideoEnd={handleVideoEnd} />;
   }
 
   return (
