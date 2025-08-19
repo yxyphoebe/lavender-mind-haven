@@ -37,12 +37,13 @@ const ImprovementFeedback = () => {
 
         {/* Assistant Avatar - Positioned at the very top */}
         <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-10">
-          <Avatar className="w-20 h-20 shadow-lg border-2 border-white rounded-full">
+          <Avatar className="w-20 h-20 shadow-lg border-2 border-white">
             <AvatarImage 
               src={feedbackAssistant?.image_url} 
-              alt={feedbackAssistant?.name || 'Assistant'} 
+              alt={feedbackAssistant?.name || 'Assistant'}
+              className="object-cover w-full h-full rounded-full"
             />
-            <AvatarFallback className="bg-purple-100 text-purple-600 text-lg font-medium">
+            <AvatarFallback className="bg-purple-100 text-purple-600 text-lg font-medium rounded-full">
               {feedbackAssistant?.name?.[0] || 'A'}
             </AvatarFallback>
           </Avatar>
