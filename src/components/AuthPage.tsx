@@ -5,7 +5,6 @@ import { Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import MindfulLogo from '@/components/MindfulLogo';
 
 const AuthPage = () => {
   const [authEnabled, setAuthEnabled] = useState(false);
@@ -47,51 +46,40 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-400 to-pink-400 flex items-center justify-center p-6 relative">
-      <div className="w-full max-w-md">
-        {/* Dev Switch - positioned at top right */}
-        <div className="absolute top-6 right-6 flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
-          <Settings className="w-4 h-4 text-white/80" />
-          <span className="text-sm text-white/80">Test</span>
-          <Switch 
-            checked={authEnabled} 
-            onCheckedChange={setAuthEnabled}
-            className="data-[state=checked]:bg-white/30"
-          />
-          <span className="text-sm font-medium text-white">
-            {authEnabled ? 'Live' : 'Test'}
-          </span>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-mindful-600 via-mindful-400 to-enso-400 flex flex-col relative">
+      {/* Dev Switch - positioned at top right */}
+      <div className="absolute top-6 right-6 flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
+        <Settings className="w-4 h-4 text-white/80" />
+        <span className="text-sm text-white/80">Test</span>
+        <Switch 
+          checked={authEnabled} 
+          onCheckedChange={setAuthEnabled}
+          className="data-[state=checked]:bg-white/30"
+        />
+        <span className="text-sm font-medium text-white">
+          {authEnabled ? 'Live' : 'Test'}
+        </span>
+      </div>
 
-        {/* Main Content */}
-        <div className="text-center space-y-8">
-          {/* Logo and Branding */}
-          <div className="flex flex-col items-center space-y-4">
-            <MindfulLogo size="xl" className="text-white" />
-            <div>
-              <h1 className="text-5xl font-bold text-white mb-2">
-                Mindful AI
-              </h1>
-              <p className="text-white/80 text-lg font-light">
-                Your journey begins here
-              </p>
-            </div>
+      {/* Main Content - Centered */}
+      <div className="flex-1 flex items-center justify-center p-6">
+        <div className="w-full max-w-md text-center space-y-8">
+          {/* Branding */}
+          <div className="space-y-4">
+            <h1 className="text-5xl font-bold text-white mb-2">
+              Mindful AI
+            </h1>
+            <p className="text-white/80 text-lg font-light">
+              Your journey begins here
+            </p>
           </div>
-
-          {/* Test Mode Indicator */}
-          {!authEnabled && (
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 text-white/90 text-sm border border-white/20">
-              <span className="w-2 h-2 bg-white/60 rounded-full mr-2"></span>
-              Test Mode - Skip Authentication
-            </div>
-          )}
 
           {/* Social Login Buttons */}
           <div className="space-y-4 w-full max-w-sm mx-auto">
             {/* Apple Sign In */}
             <Button 
               onClick={() => handleSocialAuth('apple')}
-              className="w-full h-14 bg-black hover:bg-gray-900 text-white rounded-2xl text-base font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="w-full h-14 bg-gray-900 hover:bg-black text-white rounded-2xl text-base font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
               disabled={isSubmitting}
             >
               <div className="flex items-center justify-center space-x-3">
@@ -105,7 +93,7 @@ const AuthPage = () => {
             {/* Google Sign In */}
             <Button 
               onClick={() => handleSocialAuth('google')}
-              className="w-full h-14 bg-white hover:bg-gray-50 text-gray-900 rounded-2xl text-base font-medium transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-200"
+              className="w-full h-14 bg-white/95 hover:bg-white text-mindful-700 rounded-2xl text-base font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
               disabled={isSubmitting}
             >
               <div className="flex items-center justify-center space-x-3">
@@ -119,15 +107,15 @@ const AuthPage = () => {
               </div>
             </Button>
           </div>
-
-          {/* Footer Links */}
-          <div className="text-center text-sm text-white/70 mt-8">
-            By continuing, you agree to our{' '}
-            <a href="/terms" className="text-white underline hover:text-white/80">Terms of Service</a>
-            {' '}and{' '}
-            <a href="/privacy" className="text-white underline hover:text-white/80">Privacy Policy</a>
-          </div>
         </div>
+      </div>
+
+      {/* Footer Links - Fixed at bottom */}
+      <div className="text-center text-sm text-white/70 p-6">
+        By continuing, you agree to our{' '}
+        <a href="/terms" className="text-white underline hover:text-white/80">Terms of Service</a>
+        {' '}and{' '}
+        <a href="/privacy" className="text-white underline hover:text-white/80">Privacy Policy</a>
       </div>
     </div>
   );
