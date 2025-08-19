@@ -11,7 +11,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   const handleVideoEnd = () => {
-    setShowVideoSplash(false);
+    navigate('/auth');
   };
 
   if (showVideoSplash) {
