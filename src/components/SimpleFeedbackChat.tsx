@@ -3,6 +3,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send } from 'lucide-react';
 import { useSimpleFeedbackChat } from '@/hooks/useSimpleFeedbackChat';
+import TypingText from '@/components/TypingText';
 import { useEffect, useRef } from 'react';
 
 const SimpleFeedbackChat = () => {
@@ -42,7 +43,22 @@ const SimpleFeedbackChat = () => {
                     : 'bg-gray-100 text-gray-800'
                 }`}
               >
-                <p className="text-sm">{message.text}</p>
+                {message.isLoading ? (
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                ) : message.hasTypingAnimation && message.sender === 'ai' ? (
+                  <TypingText 
+                    text={message.text} 
+                    className="text-sm" 
+                    speed={30} 
+                    preDelay={200}
+                  />
+                ) : (
+                  <p className="text-sm">{message.text}</p>
+                )}
               </div>
             </div>
           ))}

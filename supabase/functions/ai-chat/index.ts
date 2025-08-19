@@ -20,6 +20,9 @@ serve(async (req) => {
 
     console.log('Received request:', { message, therapistData: therapistData?.name, assistantData: assistantData?.name, attachments });
 
+    // Handle initial greeting request
+    const isInitialGreeting = message === '__INITIAL_GREETING__';
+
     // Create system prompt from assistant or therapist data
     let systemPrompt = "";
     
@@ -64,7 +67,10 @@ serve(async (req) => {
       messages.push({ role: 'user', content });
     } else {
       // Text message only
-      messages.push({ role: 'user', content: message });
+      const userContent = isInitialGreeting 
+        ? "Please provide your initial greeting to start the conversation."
+        : message;
+      messages.push({ role: 'user', content: userContent });
     }
 
     console.log('Sending to OpenAI:', messages);
