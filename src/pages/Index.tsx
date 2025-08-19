@@ -3,19 +3,36 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Flower2, Sparkles, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { useSmartRedirect } from '@/hooks/useSmartRedirect';
 import MindfulLogo from '@/components/MindfulLogo';
 import VideoSplashScreen from '@/components/VideoSplashScreen';
 
 const Index = () => {
   const [showVideoSplash, setShowVideoSplash] = useState(true);
   const navigate = useNavigate();
+  const { user, initialized } = useAuth();
+  const { checkAndRedirect } = useSmartRedirect();
+
+  // Skip video splash for authenticated users
+  useEffect(() => {
+    if (initialized && user) {
+      setShowVideoSplash(false);
+      checkAndRedirect();
+    }
+  }, [user, initialized, checkAndRedirect]);
 
   const handleVideoEnd = () => {
     navigate('/auth');
   };
 
-  if (showVideoSplash) {
+  if (showVideoSplash && (!initialized || !user)) {
     return <VideoSplashScreen onVideoEnd={handleVideoEnd} />;
+  }
+
+  // Don't render landing page for authenticated users - they'll be redirected
+  if (user) {
+    return null;
   }
 
   return (

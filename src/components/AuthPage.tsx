@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useSmartRedirect } from '@/hooks/useSmartRedirect';
 
 const AuthPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const navigate = useNavigate();
   const { signInWithOAuth, user } = useAuth();
+  const { checkAndRedirect } = useSmartRedirect();
 
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      navigate('/onboarding');
+      checkAndRedirect();
     }
-  }, [user, navigate]);
+  }, [user, checkAndRedirect]);
 
   const handleSocialAuth = async (provider: 'google' | 'apple') => {
     try {
