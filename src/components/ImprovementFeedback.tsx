@@ -32,18 +32,10 @@ const ImprovementFeedback = () => {
           <div className="w-10 h-10" /> {/* Spacer */}
         </div>
 
-        {/* AI Assistant Chat */}
-        <Card className="mb-4 bg-white rounded-2xl shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-display text-lg font-bold text-slate-800 flex items-center">
-              <MessageCircle className="w-5 h-5 mr-2 text-blue-500" />
-              Chat with Assistant
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-4">
-            <SimpleFeedbackChat />
-          </CardContent>
-        </Card>
+        {/* Direct Chat Component */}
+        <div className="mb-4">
+          <SimpleFeedbackChat />
+        </div>
 
         {/* Schedule Call */}
         <Card className="mb-4 bg-white rounded-2xl shadow-sm">
