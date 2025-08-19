@@ -36,7 +36,7 @@ const ImprovementFeedback = () => {
         </div>
 
         {/* Assistant Avatar - Positioned at the very top */}
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-10">
           <Avatar className="w-16 h-16 shadow-lg border-2 border-white">
             <AvatarImage 
               src={feedbackAssistant?.image_url} 
