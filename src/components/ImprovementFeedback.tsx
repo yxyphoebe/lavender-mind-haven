@@ -4,10 +4,13 @@ import { ArrowLeft, MessageCircle, Calendar } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SimpleFeedbackChat from '@/components/SimpleFeedbackChat';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { useFeedbackAssistant } from '@/hooks/useAssistants';
 
 const ImprovementFeedback = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: feedbackAssistant } = useFeedbackAssistant();
 
 
   const handleScheduleCall = () => {
@@ -30,6 +33,19 @@ const ImprovementFeedback = () => {
           </Button>
           
         <div className="w-10 h-10" /> {/* Spacer */}
+        </div>
+
+        {/* Assistant Avatar */}
+        <div className="flex justify-center mb-6">
+          <Avatar className="w-16 h-16">
+            <AvatarImage 
+              src={feedbackAssistant?.image_url} 
+              alt={feedbackAssistant?.name || 'Assistant'} 
+            />
+            <AvatarFallback className="bg-purple-100 text-purple-600 text-lg font-medium">
+              {feedbackAssistant?.name?.[0] || 'A'}
+            </AvatarFallback>
+          </Avatar>
         </div>
 
         {/* Direct Chat Component */}

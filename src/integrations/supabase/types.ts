@@ -19,6 +19,7 @@ export type Database = {
           active: boolean
           created_at: string
           id: string
+          image_url: string | null
           name: string
           personality: string | null
           role: string
@@ -29,6 +30,7 @@ export type Database = {
           active?: boolean
           created_at?: string
           id?: string
+          image_url?: string | null
           name: string
           personality?: string | null
           role: string
@@ -39,6 +41,7 @@ export type Database = {
           active?: boolean
           created_at?: string
           id?: string
+          image_url?: string | null
           name?: string
           personality?: string | null
           role?: string
