@@ -1,42 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
 
 const AuthPage = () => {
-  const [authEnabled, setAuthEnabled] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const navigate = useNavigate();
-  const { signInWithOAuth, user, loading: authLoading } = useAuth();
-  const { toast } = useToast();
+  const { signInWithOAuth, user } = useAuth();
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user && authEnabled) {
+    if (user) {
       navigate('/onboarding');
     }
-  }, [user, authEnabled, navigate]);
+  }, [user, navigate]);
 
   const handleSocialAuth = async (provider: 'google' | 'apple') => {
-    if (!authEnabled) {
-      // Skip authentication for testing
-      setIsSubmitting(true);
-      setTimeout(() => {
-        setIsSubmitting(false);
-        navigate('/onboarding');
-      }, 800);
-      return;
-    }
-
     try {
       setIsSubmitting(true);
       const { error } = await signInWithOAuth(provider);
       if (!error) {
-        // OAuth will redirect automatically
+        // OAuth will redirect automatically - no need to navigate manually
       }
     } catch (error) {
       console.error('Social auth error:', error);
@@ -47,19 +32,6 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-mindful-600 via-mindful-400 to-enso-400 flex flex-col relative">
-      {/* Dev Switch - positioned at top right */}
-      <div className="absolute top-6 right-6 flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
-        <Settings className="w-4 h-4 text-white/80" />
-        <span className="text-sm text-white/80">Test</span>
-        <Switch 
-          checked={authEnabled} 
-          onCheckedChange={setAuthEnabled}
-          className="data-[state=checked]:bg-white/30"
-        />
-        <span className="text-sm font-medium text-white">
-          {authEnabled ? 'Live' : 'Test'}
-        </span>
-      </div>
 
       {/* Top Content - Branding */}
       <div className="flex-1 flex items-center justify-center">
