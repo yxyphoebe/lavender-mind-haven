@@ -40,7 +40,7 @@ const ImprovementFeedback = () => {
         {/* Lightweight Schedule Call Option */}
         <div className="mb-8 text-center">
           <p className="text-slate-500 text-sm mb-2">
-            Prefer a real conversation? →
+            Would you like to chat with our team about your experience?
           </p>
           <Button
             onClick={handleScheduleCall}
