@@ -39,17 +39,17 @@ const ImprovementFeedback = () => {
 
         {/* Lightweight Schedule Call Option */}
         <div className="mb-8 text-center">
-          <p className="text-slate-500 text-sm mb-2">
-            Would you like to chat with our team about your experience?
-          </p>
           <Button
             onClick={handleScheduleCall}
             variant="outline"
-            size="sm"
-            className="text-slate-600 border-purple-200 bg-purple-50 hover:bg-purple-100"
+            size="default"
+            className="text-slate-600 border-purple-200 bg-purple-50 hover:bg-purple-100 mb-3"
           >
             Schedule a Call
           </Button>
+          <p className="text-slate-500 text-sm">
+            Would you like to chat with our team about your experience?
+          </p>
         </div>
       </div>
 
