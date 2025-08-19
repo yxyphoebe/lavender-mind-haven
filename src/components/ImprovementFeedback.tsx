@@ -46,7 +46,7 @@ const ImprovementFeedback = () => {
             onClick={handleScheduleCall}
             variant="outline"
             size="sm"
-            className="text-purple-600 border-purple-200 bg-purple-50 hover:bg-purple-100 hover:border-purple-300 px-4 py-2"
+            className="text-slate-600 border-purple-200 bg-purple-50 hover:bg-purple-100"
           >
             Schedule a Call
           </Button>
