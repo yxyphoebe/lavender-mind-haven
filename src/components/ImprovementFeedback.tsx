@@ -16,8 +16,8 @@ const ImprovementFeedback = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-6 py-8 max-w-md">
+    <div className="min-h-screen bg-gray-50 relative">
+      <div className="container mx-auto px-6 py-8 max-w-md pb-20">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Button
@@ -51,13 +51,13 @@ const ImprovementFeedback = () => {
             Schedule a Call
           </Button>
         </div>
+      </div>
 
-        {/* Thank You Message - Bottom */}
-        <div className="text-center">
-          <p className="text-slate-400 text-xs">
-            ✨ Your feedback makes the app better for everyone. Thank you!
-          </p>
-        </div>
+      {/* Thank You Message - Fixed Bottom */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-50 py-4 text-center">
+        <p className="text-slate-400 text-xs">
+          ✨ Your feedback makes the app better for everyone. Thank you!
+        </p>
       </div>
     </div>
   );
