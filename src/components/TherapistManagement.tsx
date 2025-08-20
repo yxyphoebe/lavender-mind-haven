@@ -6,13 +6,16 @@ import { useTherapists } from '@/hooks/useTherapists';
 import { VideoAvatar } from '@/components/VideoAvatar';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 const TherapistManagement = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, initialized } = useAuth();
+  const { toast } = useToast();
   const { data: therapists, isLoading, error } = useTherapists();
   const [currentTherapistIndex, setCurrentTherapistIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   
   // Touch/swipe handling
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -27,38 +30,75 @@ const TherapistManagement = () => {
   ) || [];
 
   const handleSelectTherapist = async (therapistId: string) => {
-    if (!therapistId) return;
+    // Validation checks
+    if (!therapistId || isUpdating) return;
     
-    // Find the selected therapist to get their name
+    if (!initialized || !user) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to select a therapist.",
+        variant: "destructive",
+      });
+      navigate('/auth');
+      return;
+    }
+    
+    // Find and validate the selected therapist
     const selectedTherapist = availableTherapists.find(t => t.id === therapistId);
-    if (!selectedTherapist) return;
+    if (!selectedTherapist) {
+      toast({
+        title: "Invalid selection",
+        description: "The selected therapist is not available.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUpdating(true);
     
     try {
-      // Update database
+      console.log('Updating therapist selection for user:', user.id, 'to therapist:', therapistId);
+      
+      // Update database first (consistent with PersonaSelection)
       const { error } = await supabase
         .from('users')
         .update({ 
           selected_therapist_id: therapistId,
-          therapist_name: selectedTherapist.name 
+          therapist_name: selectedTherapist.name,
+          onboarding_completed: true // Ensure onboarding is marked complete
         })
-        .eq('id', user?.id);
+        .eq('id', user.id);
 
       if (error) {
-        console.error('Error updating therapist selection:', error);
-        // Still update localStorage as fallback
-        localStorage.setItem('selectedTherapistId', therapistId);
-        navigate('/home');
+        console.error('Database update error:', error);
+        toast({
+          title: "Update failed",
+          description: "Failed to save your therapist selection. Please try again.",
+          variant: "destructive",
+        });
         return;
       }
 
-      // Update localStorage for immediate use
+      // Update localStorage only after successful database update
       localStorage.setItem('selectedTherapistId', therapistId);
+      
+      toast({
+        title: "Therapist updated",
+        description: `You've selected ${selectedTherapist.name} as your therapist.`,
+      });
+      
+      console.log('Therapist selection updated successfully');
       navigate('/home');
+      
     } catch (error) {
-      console.error('Error selecting therapist:', error);
-      // Fallback to localStorage only
-      localStorage.setItem('selectedTherapistId', therapistId);
-      navigate('/home');
+      console.error('Unexpected error selecting therapist:', error);
+      toast({
+        title: "Something went wrong",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -91,14 +131,14 @@ const TherapistManagement = () => {
   };
 
   const handleNextTherapist = () => {
-    if (isTransitioning) return;
+    if (isTransitioning || isUpdating) return;
     setIsTransitioning(true);
     setCurrentTherapistIndex(prev => prev < availableTherapists.length - 1 ? prev + 1 : 0);
     setTimeout(() => setIsTransitioning(false), 400);
   };
 
   const handlePrevTherapist = () => {
-    if (isTransitioning) return;
+    if (isTransitioning || isUpdating) return;
     setIsTransitioning(true);
     setCurrentTherapistIndex(prev => prev > 0 ? prev - 1 : availableTherapists.length - 1);
     setTimeout(() => setIsTransitioning(false), 400);
@@ -191,9 +231,17 @@ const TherapistManagement = () => {
                   {/* Choose Button */}
                   <Button
                     onClick={() => handleSelectTherapist(availableTherapists[currentTherapistIndex].id)}
-                    className="w-full max-w-sm bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-6"
+                    disabled={isUpdating}
+                    className="w-full max-w-sm bg-gradient-to-r from-mindful-400 to-enso-500 hover:from-mindful-500 hover:to-enso-600 text-white py-4 text-lg font-medium rounded-xl hover:scale-105 transition-all duration-300 bloom-shadow mb-6 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    Begin with {availableTherapists[currentTherapistIndex].name}
+                    {isUpdating ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Updating...
+                      </>
+                    ) : (
+                      `Begin with ${availableTherapists[currentTherapistIndex].name}`
+                    )}
                   </Button>
 
                   {/* Navigation arrows below button */}

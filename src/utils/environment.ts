@@ -23,7 +23,7 @@ export const isLovableTestEnvironment = (): boolean => {
  * Mock user data for "py" user in test environment
  */
 export const getMockTestUser = () => ({
-  id: 'e5145042-25e5-46f0-9113-483ac08026d6', // py user ID from database
+  id: '03ea3053-1b96-4239-afaf-40bb8188ebaa', // Corrected py user ID from database
   email: 'yxyphoebe@gmail.com',
   name: 'py',
   onboarding_completed: true,
