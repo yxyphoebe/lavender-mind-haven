@@ -1,31 +1,43 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from './useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
-export const useSelectedTherapist = () => {
-  // Try to use global context first
-  try {
-    const { useTherapistContext } = require('@/contexts/TherapistContext');
-    return useTherapistContext();
-  } catch (error) {
-    // Fall back to local state management if context is not available
-    console.debug('Using local therapist state management');
-  }
+interface TherapistContextType {
+  selectedTherapistId: string;
+  isLoading: boolean;
+  updateSelectedTherapist: (therapistId: string, showToast?: boolean) => Promise<boolean>;
+  refreshSelectedTherapist: () => Promise<void>;
+}
 
+const TherapistContext = createContext<TherapistContextType | undefined>(undefined);
+
+export const useTherapistContext = () => {
+  const context = useContext(TherapistContext);
+  if (!context) {
+    throw new Error('useTherapistContext must be used within a TherapistProvider');
+  }
+  return context;
+};
+
+interface TherapistProviderProps {
+  children: ReactNode;
+}
+
+export const TherapistProvider: React.FC<TherapistProviderProps> = ({ children }) => {
   const { user, initialized } = useAuth();
   const { toast } = useToast();
   const [selectedTherapistId, setSelectedTherapistId] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
 
-  const updateSelectedTherapist = useCallback(async (therapistId: string, showToast = true) => {
+  const updateSelectedTherapist = async (therapistId: string, showToast = true): Promise<boolean> => {
     if (!user) {
       console.error('No user found when updating selected therapist');
       return false;
     }
 
     try {
-      // Update database first
+      // Update database
       const { error } = await supabase
         .from('users')
         .update({ selected_therapist_id: therapistId })
@@ -43,13 +55,13 @@ export const useSelectedTherapist = () => {
         return false;
       }
 
-      // Update local state and localStorage immediately after successful DB update
+      // Update local state and localStorage immediately
       setSelectedTherapistId(therapistId);
       localStorage.setItem('selectedTherapistId', therapistId);
 
       if (showToast) {
         toast({
-          title: "Success", 
+          title: "Success",
           description: "Therapist selection saved"
         });
       }
@@ -66,10 +78,9 @@ export const useSelectedTherapist = () => {
       }
       return false;
     }
-  }, [user, toast]);
+  };
 
-  // Force refresh function
-  const refreshSelectedTherapist = useCallback(async () => {
+  const refreshSelectedTherapist = async (): Promise<void> => {
     if (!user) return;
     
     try {
@@ -87,7 +98,7 @@ export const useSelectedTherapist = () => {
     } catch (error) {
       console.error('Error refreshing selected therapist:', error);
     }
-  }, [user]);
+  };
 
   // Load selected therapist from database on mount
   useEffect(() => {
@@ -98,7 +109,7 @@ export const useSelectedTherapist = () => {
       }
 
       try {
-        // Always fetch from database first to ensure consistency
+        // Always fetch from database first
         const { data, error } = await supabase
           .from('users')
           .select('selected_therapist_id')
@@ -107,18 +118,18 @@ export const useSelectedTherapist = () => {
 
         if (error) {
           console.error('Error loading selected therapist from database:', error);
-          // Fallback to localStorage only on error
+          // Fallback to localStorage
           const localStorageId = localStorage.getItem('selectedTherapistId') || '';
           setSelectedTherapistId(localStorageId);
         } else {
           const dbTherapistId = data?.selected_therapist_id || '';
           setSelectedTherapistId(dbTherapistId);
-          // Sync localStorage with database value
+          // Sync localStorage with database
           localStorage.setItem('selectedTherapistId', dbTherapistId);
         }
       } catch (error) {
         console.error('Error loading selected therapist:', error);
-        // Fallback to localStorage on exception
+        // Fallback to localStorage
         const localStorageId = localStorage.getItem('selectedTherapistId') || '';
         setSelectedTherapistId(localStorageId);
       } finally {
@@ -129,10 +140,16 @@ export const useSelectedTherapist = () => {
     loadSelectedTherapist();
   }, [user, initialized]);
 
-  return {
+  const value: TherapistContextType = {
     selectedTherapistId,
+    isLoading,
     updateSelectedTherapist,
     refreshSelectedTherapist,
-    isLoading
   };
+
+  return (
+    <TherapistContext.Provider value={value}>
+      {children}
+    </TherapistContext.Provider>
+  );
 };

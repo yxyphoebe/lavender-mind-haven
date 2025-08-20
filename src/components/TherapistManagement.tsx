@@ -17,7 +17,7 @@ const TherapistManagement = () => {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
   // Get selected therapist using the hook
-  const { selectedTherapistId: currentTherapistId, updateSelectedTherapist } = useSelectedTherapist();
+  const { selectedTherapistId: currentTherapistId, updateSelectedTherapist, refreshSelectedTherapist } = useSelectedTherapist();
   
   // Filter out the current therapist from available options
   const availableTherapists = therapists?.filter(therapist => 
@@ -27,7 +27,12 @@ const TherapistManagement = () => {
   const handleSelectTherapist = async (therapistId: string) => {
     const success = await updateSelectedTherapist(therapistId);
     if (success) {
-      navigate('/home');
+      // Force refresh to ensure data consistency
+      await refreshSelectedTherapist();
+      // Small delay to ensure database has processed the update
+      setTimeout(() => {
+        navigate('/home');
+      }, 100);
     }
   };
 
