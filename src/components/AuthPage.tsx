@@ -12,7 +12,13 @@ const AuthPage = () => {
   // Check if we're in development environment
   const isDevelopment = window.location.hostname === 'localhost' || 
                        window.location.hostname.includes('127.0.0.1') ||
-                       window.location.hostname.includes('.local');
+                       window.location.hostname.includes('.local') ||
+                       window.location.hostname.includes('lovable.dev') ||
+                       window.location.hostname.includes('sandbox.lovable.dev');
+  
+  // Debug: Log environment detection
+  console.log('Current hostname:', window.location.hostname);
+  console.log('Is development:', isDevelopment);
 
   // Redirect if already logged in
   useEffect(() => {
