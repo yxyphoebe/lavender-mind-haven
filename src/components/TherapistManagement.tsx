@@ -7,6 +7,7 @@ import { VideoAvatar } from '@/components/VideoAvatar';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { isLovableTestEnvironment } from '@/utils/environment';
 
 const TherapistManagement = () => {
   const navigate = useNavigate();
@@ -59,7 +60,25 @@ const TherapistManagement = () => {
     try {
       console.log('Updating therapist selection for user:', user.id, 'to therapist:', therapistId);
       
-      // Update database first (consistent with PersonaSelection)
+      // Handle test environment
+      if (isLovableTestEnvironment()) {
+        // Update localStorage directly in test environment
+        localStorage.setItem('selectedTherapistId', therapistId);
+        
+        toast({
+          title: "Therapist selected!",
+          description: `You've selected ${selectedTherapist.name} as your therapist.`,
+        });
+        
+        setTimeout(() => {
+          navigate('/home');
+        }, 1500);
+        
+        setIsUpdating(false);
+        return;
+      }
+      
+      // Production environment - Update database first (consistent with PersonaSelection)
       const { error } = await supabase
         .from('users')
         .update({ 

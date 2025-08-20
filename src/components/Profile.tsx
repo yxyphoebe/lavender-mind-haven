@@ -29,6 +29,7 @@ import { trackNavigation } from '@/hooks/useUserCenterMessage';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { isLovableTestEnvironment, getMockTestUser } from '@/utils/environment';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -58,6 +59,18 @@ const Profile = () => {
   const handleNameSave = async () => {
     if (!user || !tempName.trim()) return;
 
+    // Handle test environment
+    if (isLovableTestEnvironment()) {
+      setUserInfo({ ...userInfo, name: tempName.trim() });
+      setIsEditingName(false);
+      toast({
+        title: "Success",
+        description: "Name updated successfully"
+      });
+      return;
+    }
+
+    // Production environment
     try {
       const { error } = await supabase
         .from('users')
@@ -98,6 +111,17 @@ const Profile = () => {
   const handleNotificationToggle = async (enabled: boolean) => {
     if (!user) return;
 
+    // Handle test environment
+    if (isLovableTestEnvironment()) {
+      setNotificationsEnabled(enabled);
+      toast({
+        title: "Success",
+        description: "Notification settings updated"
+      });
+      return;
+    }
+
+    // Production environment
     try {
       const { error } = await supabase
         .from('users')
@@ -150,11 +174,26 @@ const Profile = () => {
     window.open('/terms-of-service', '_blank');
   };
 
-  // Fetch user data from Supabase
+  // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) return;
       
+      // Handle test environment with mock data
+      if (isLovableTestEnvironment()) {
+        const mockUser = getMockTestUser();
+        setUserInfo({
+          name: mockUser.name,
+          email: mockUser.email,
+          phone: '',
+          joinDate: new Date(mockUser.created_at).toLocaleDateString()
+        });
+        setNotificationsEnabled(true);
+        setLoading(false);
+        return;
+      }
+      
+      // Production environment - fetch from Supabase
       try {
         const { data, error } = await supabase
           .from('users')
