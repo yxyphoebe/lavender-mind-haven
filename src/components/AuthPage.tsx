@@ -6,8 +6,13 @@ import { useSmartRedirect } from '@/hooks/useSmartRedirect';
 const AuthPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { signInWithOAuth, user } = useAuth();
+  const { signInWithOAuth, signInAsTestUser, user } = useAuth();
   const { checkAndRedirect } = useSmartRedirect();
+
+  // Check if we're in development environment
+  const isDevelopment = window.location.hostname === 'localhost' || 
+                       window.location.hostname.includes('127.0.0.1') ||
+                       window.location.hostname.includes('.local');
 
   // Redirect if already logged in
   useEffect(() => {
@@ -30,8 +35,42 @@ const AuthPage = () => {
     }
   };
 
+  const handleTestMode = async () => {
+    try {
+      setIsSubmitting(true);
+      const { error } = await signInAsTestUser();
+      if (!error) {
+        // Test mode will redirect automatically via useSmartRedirect
+      }
+    } catch (error) {
+      console.error('Test mode error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-mindful-600 via-mindful-400 to-enso-400 flex flex-col relative">
+      
+      {/* Test Mode Button - Only in Development */}
+      {isDevelopment && (
+        <div className="absolute top-4 right-4 z-10">
+          <Button
+            onClick={handleTestMode}
+            className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-4 py-2 rounded-lg shadow-lg border-2 border-yellow-300"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                <span>TEST MODE</span>
+              </div>
+            ) : (
+              '🧪 DEV TEST MODE'
+            )}
+          </Button>
+        </div>
+      )}
 
       {/* Top Content - Branding */}
       <div className="flex-1 flex items-center justify-center">
