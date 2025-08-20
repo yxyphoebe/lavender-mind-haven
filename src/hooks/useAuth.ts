@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { isLovableTestEnvironment, getMockTestUser, getMockTestSession } from '@/utils/environment';
 
 interface AuthState {
   user: User | null;
@@ -30,6 +31,23 @@ export function useAuth(): AuthState & AuthMethods {
   useEffect(() => {
     let mounted = true;
 
+    // In Lovable test environment, use mock test user
+    if (isLovableTestEnvironment()) {
+      if (mounted) {
+        const mockUser = getMockTestUser() as any;
+        const mockSession = getMockTestSession() as any;
+        
+        setState({
+          user: mockUser,
+          session: mockSession,
+          loading: false,
+          initialized: true,
+        });
+      }
+      return () => { mounted = false; };
+    }
+
+    // Production environment - use real Supabase auth
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -97,6 +115,25 @@ export function useAuth(): AuthState & AuthMethods {
   }, [toast]);
 
   const signUp = useCallback(async (email: string, password: string, name?: string) => {
+    // In test environment, automatically use test user
+    if (isLovableTestEnvironment()) {
+      const mockUser = getMockTestUser() as any;
+      const mockSession = getMockTestSession() as any;
+      
+      setState({
+        user: mockUser,
+        session: mockSession,
+        loading: false,
+        initialized: true,
+      });
+      
+      toast({
+        title: "测试环境",
+        description: "自动登录成功",
+      });
+      return { error: null };
+    }
+
     setState(prev => ({ ...prev, loading: true }));
     
     try {
@@ -137,6 +174,25 @@ export function useAuth(): AuthState & AuthMethods {
   }, [toast]);
 
   const signIn = useCallback(async (email: string, password: string) => {
+    // In test environment, automatically use test user
+    if (isLovableTestEnvironment()) {
+      const mockUser = getMockTestUser() as any;
+      const mockSession = getMockTestSession() as any;
+      
+      setState({
+        user: mockUser,
+        session: mockSession,
+        loading: false,
+        initialized: true,
+      });
+      
+      toast({
+        title: "测试环境",
+        description: "自动登录成功",
+      });
+      return { error: null };
+    }
+
     setState(prev => ({ ...prev, loading: true }));
     
     try {
@@ -168,6 +224,22 @@ export function useAuth(): AuthState & AuthMethods {
   }, [toast]);
 
   const signOut = useCallback(async () => {
+    // In test environment, just clear state
+    if (isLovableTestEnvironment()) {
+      setState({
+        user: null,
+        session: null,
+        loading: false,
+        initialized: true,
+      });
+      
+      toast({
+        title: "测试环境",
+        description: "已退出登录",
+      });
+      return { error: null };
+    }
+
     setState(prev => ({ ...prev, loading: true }));
     
     try {
@@ -187,6 +259,15 @@ export function useAuth(): AuthState & AuthMethods {
   }, [toast]);
 
   const resetPassword = useCallback(async (email: string) => {
+    // In test environment, just show success message
+    if (isLovableTestEnvironment()) {
+      toast({
+        title: "测试环境",
+        description: "密码重置邮件已发送（模拟）",
+      });
+      return { error: null };
+    }
+
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
@@ -215,6 +296,25 @@ export function useAuth(): AuthState & AuthMethods {
   }, [toast]);
 
   const signInWithOAuth = useCallback(async (provider: 'google' | 'apple') => {
+    // In test environment, automatically use test user
+    if (isLovableTestEnvironment()) {
+      const mockUser = getMockTestUser() as any;
+      const mockSession = getMockTestSession() as any;
+      
+      setState({
+        user: mockUser,
+        session: mockSession,
+        loading: false,
+        initialized: true,
+      });
+      
+      toast({
+        title: "测试环境",
+        description: `已模拟 ${provider} 登录`,
+      });
+      return { error: null };
+    }
+
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
