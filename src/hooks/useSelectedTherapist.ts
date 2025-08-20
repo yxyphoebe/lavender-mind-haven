@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +8,56 @@ export const useSelectedTherapist = () => {
   const { toast } = useToast();
   const [selectedTherapistId, setSelectedTherapistId] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
+
+  const updateSelectedTherapist = useCallback(async (therapistId: string, showToast = true) => {
+    if (!user) {
+      console.error('No user found when updating selected therapist');
+      return false;
+    }
+
+    try {
+      // Update database
+      const { error } = await supabase
+        .from('users')
+        .update({ selected_therapist_id: therapistId })
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('Error updating selected therapist in database:', error);
+        if (showToast) {
+          toast({
+            title: "Error",
+            description: "Failed to save therapist selection",
+            variant: "destructive"
+          });
+        }
+        return false;
+      }
+
+      // Update local state and localStorage
+      setSelectedTherapistId(therapistId);
+      localStorage.setItem('selectedTherapistId', therapistId);
+
+      if (showToast) {
+        toast({
+          title: "Success",
+          description: "Therapist selection saved"
+        });
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error updating selected therapist:', error);
+      if (showToast) {
+        toast({
+          title: "Error",
+          description: "Failed to save therapist selection",
+          variant: "destructive"
+        });
+      }
+      return false;
+    }
+  }, [user, toast]);
 
   // Load selected therapist from database on mount
   useEffect(() => {
@@ -61,58 +111,7 @@ export const useSelectedTherapist = () => {
     };
 
     loadSelectedTherapist();
-  }, [user, initialized]);
-
-  const updateSelectedTherapist = async (therapistId: string, showToast = true) => {
-    if (!user) {
-      console.error('No user found when updating selected therapist');
-      return false;
-    }
-
-    try {
-      // Update database
-      const { error } = await supabase
-        .from('users')
-        .update({ selected_therapist_id: therapistId })
-        .eq('id', user.id);
-
-      if (error) {
-        console.error('Error updating selected therapist in database:', error);
-        if (showToast) {
-          toast({
-            title: "Error",
-            description: "Failed to save therapist selection",
-            variant: "destructive"
-          });
-        }
-        return false;
-      }
-
-      // Update local state and localStorage
-      setSelectedTherapistId(therapistId);
-      localStorage.setItem('selectedTherapistId', therapistId);
-
-      if (showToast) {
-        toast({
-          title: "Success",
-          description: "Therapist selection saved"
-        });
-      }
-
-      return true;
-    } catch (error) {
-      console.error('Error updating selected therapist:', error);
-      if (showToast) {
-        toast({
-          title: "Error",
-          description: "Failed to save therapist selection",
-          variant: "destructive"
-        });
-      }
-      return false;
-    }
-  };
-
+  }, [user, initialized, updateSelectedTherapist]);
   return {
     selectedTherapistId,
     updateSelectedTherapist,
