@@ -7,6 +7,7 @@ import { useWelcomePrompt } from '@/hooks/useWelcomePrompt';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserCenterMessage, trackNavigation } from '@/hooks/useUserCenterMessage';
+import { useSelectedTherapist } from '@/hooks/useSelectedTherapist';
 import TypingText from '@/components/TypingText';
 import BackgroundMusic from '@/components/BackgroundMusic';
 import { useEffect } from 'react';
@@ -16,7 +17,7 @@ const UserCenter = () => {
   const isMobile = useIsMobile();
   const { user, initialized } = useAuth();
 
-  const selectedTherapistId = localStorage.getItem('selectedTherapistId') || '';
+  const { selectedTherapistId, isLoading: therapistIdLoading } = useSelectedTherapist();
   const { data: therapist, isLoading } = useTherapist(selectedTherapistId);
   const { welcomePrompt, isLoading: promptLoading } = useWelcomePrompt(selectedTherapistId);
 
@@ -32,7 +33,7 @@ const UserCenter = () => {
   }, []);
 
   // Only show loading if we have no data at all
-  if (!initialized || (!therapist && isLoading)) {
+  if (!initialized || therapistIdLoading || (!therapist && isLoading)) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-mindful-50 via-mindful-100 to-enso-100 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-mindful-400" />

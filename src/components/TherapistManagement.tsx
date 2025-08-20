@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapists } from '@/hooks/useTherapists';
+import { useSelectedTherapist } from '@/hooks/useSelectedTherapist';
 import { VideoAvatar } from '@/components/VideoAvatar';
 
 const TherapistManagement = () => {
@@ -15,17 +16,19 @@ const TherapistManagement = () => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
-  // Get current therapist from localStorage
-  const currentTherapistId = localStorage.getItem('selectedTherapistId');
+  // Get selected therapist using the hook
+  const { selectedTherapistId: currentTherapistId, updateSelectedTherapist } = useSelectedTherapist();
   
   // Filter out the current therapist from available options
   const availableTherapists = therapists?.filter(therapist => 
     therapist.active && therapist.id !== currentTherapistId
   ) || [];
 
-  const handleSelectTherapist = (therapistId: string) => {
-    localStorage.setItem('selectedTherapistId', therapistId);
-    navigate('/home');
+  const handleSelectTherapist = async (therapistId: string) => {
+    const success = await updateSelectedTherapist(therapistId);
+    if (success) {
+      navigate('/home');
+    }
   };
 
   // Swipe detection
