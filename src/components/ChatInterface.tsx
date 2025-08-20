@@ -8,7 +8,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/hooks/useAuth';
 import { useDailyMessage } from '@/hooks/useDailyMessage';
 import { useChatLogic } from '@/hooks/useChatLogic';
-import { useSelectedTherapist } from '@/hooks/useSelectedTherapist';
+import { useTherapistContext } from '@/contexts/TherapistContext';
 import EmbeddedMessageList from './EmbeddedMessageList';
 import EmbeddedChatInput from './EmbeddedChatInput';
 import { useEffect } from 'react';
@@ -19,7 +19,7 @@ const ChatInterface = () => {
   const isMobile = useIsMobile();
   const { user, initialized } = useAuth();
 
-  const { selectedTherapistId, isLoading: therapistIdLoading } = useSelectedTherapist();
+  const { selectedTherapistId, isLoading: therapistIdLoading } = useTherapistContext();
   const { data: therapist, isLoading } = useTherapist(selectedTherapistId);
   const { welcomePrompt, isLoading: promptLoading } = useWelcomePrompt(selectedTherapistId);
 

@@ -7,7 +7,7 @@ import { useWelcomePrompt } from '@/hooks/useWelcomePrompt';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserCenterMessage, trackNavigation } from '@/hooks/useUserCenterMessage';
-import { useSelectedTherapist } from '@/hooks/useSelectedTherapist';
+import { useTherapistContext } from '@/contexts/TherapistContext';
 import TypingText from '@/components/TypingText';
 import BackgroundMusic from '@/components/BackgroundMusic';
 import { useEffect } from 'react';
@@ -17,7 +17,7 @@ const UserCenter = () => {
   const isMobile = useIsMobile();
   const { user, initialized } = useAuth();
 
-  const { selectedTherapistId, isLoading: therapistIdLoading } = useSelectedTherapist();
+  const { selectedTherapistId, isLoading: therapistIdLoading } = useTherapistContext();
   const { data: therapist, isLoading } = useTherapist(selectedTherapistId);
   const { welcomePrompt, isLoading: promptLoading } = useWelcomePrompt(selectedTherapistId);
 

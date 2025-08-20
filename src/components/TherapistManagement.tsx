@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapists } from '@/hooks/useTherapists';
-import { useSelectedTherapist } from '@/hooks/useSelectedTherapist';
+import { useTherapistContext } from '@/contexts/TherapistContext';
 import { VideoAvatar } from '@/components/VideoAvatar';
 
 const TherapistManagement = () => {
@@ -16,8 +16,8 @@ const TherapistManagement = () => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
-  // Get selected therapist using the hook
-  const { selectedTherapistId: currentTherapistId, updateSelectedTherapist, refreshSelectedTherapist } = useSelectedTherapist();
+  // Get selected therapist using the context
+  const { selectedTherapistId: currentTherapistId, updateSelectedTherapist, refreshSelectedTherapist } = useTherapistContext();
   
   // Filter out the current therapist from available options
   const availableTherapists = therapists?.filter(therapist => 

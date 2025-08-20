@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/hooks/useTherapists';
 import { useTavusVideo } from '@/hooks/useTavusVideo';
-import { useSelectedTherapist } from '@/hooks/useSelectedTherapist';
+import { useTherapistContext } from '@/contexts/TherapistContext';
 import { trackNavigation } from '@/hooks/useUserCenterMessage';
 
 
@@ -15,7 +15,7 @@ import RatingDialog from './RatingDialog';
 const VideoChat = () => {
   const navigate = useNavigate();
   
-  const { selectedTherapistId } = useSelectedTherapist();
+  const { selectedTherapistId } = useTherapistContext();
   const { data: therapist } = useTherapist(selectedTherapistId);
   
   const [isInCall, setIsInCall] = useState(false);
