@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapists } from '@/hooks/useTherapists';
-import { useTherapistContext } from '@/contexts/TherapistContext';
 import { VideoAvatar } from '@/components/VideoAvatar';
 
 const TherapistManagement = () => {
@@ -16,24 +15,17 @@ const TherapistManagement = () => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
-  // Get selected therapist using the context
-  const { selectedTherapistId: currentTherapistId, updateSelectedTherapist, refreshSelectedTherapist } = useTherapistContext();
+  // Get current therapist from localStorage
+  const currentTherapistId = localStorage.getItem('selectedTherapistId');
   
   // Filter out the current therapist from available options
   const availableTherapists = therapists?.filter(therapist => 
     therapist.active && therapist.id !== currentTherapistId
   ) || [];
 
-  const handleSelectTherapist = async (therapistId: string) => {
-    const success = await updateSelectedTherapist(therapistId);
-    if (success) {
-      // Force refresh to ensure data consistency
-      await refreshSelectedTherapist();
-      // Small delay to ensure database has processed the update
-      setTimeout(() => {
-        navigate('/home');
-      }, 100);
-    }
+  const handleSelectTherapist = (therapistId: string) => {
+    localStorage.setItem('selectedTherapistId', therapistId);
+    navigate('/home');
   };
 
   // Swipe detection

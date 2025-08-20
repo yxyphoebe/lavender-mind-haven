@@ -16,7 +16,6 @@ interface AuthMethods {
   signOut: () => Promise<{ error: AuthError | null }>;
   resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
   signInWithOAuth: (provider: 'google' | 'apple') => Promise<{ error: AuthError | null }>;
-  signInAsTestUser: () => Promise<{ error: AuthError | null }>;
 }
 
 export function useAuth(): AuthState & AuthMethods {
@@ -244,72 +243,13 @@ export function useAuth(): AuthState & AuthMethods {
     }
   }, [toast]);
 
-  const signInAsTestUser = useCallback(async () => {
-    try {
-      // Create mock session for test user PY
-      const mockUser = {
-        id: '03ea3053-1b96-4239-afaf-40bb8188ebaa',
-        email: 'yxyphoebe@gmail.com',
-        email_confirmed_at: new Date().toISOString(),
-        phone: '',
-        confirmed_at: new Date().toISOString(),
-        last_sign_in_at: new Date().toISOString(),
-        app_metadata: { provider: 'test', providers: ['test'] },
-        user_metadata: { 
-          name: 'PY', 
-          full_name: 'PY Test User',
-          email: 'yxyphoebe@gmail.com'
-        },
-        aud: 'authenticated',
-        created_at: '2024-01-01T00:00:00.000Z',
-        updated_at: new Date().toISOString(),
-        role: 'authenticated'
-      } as User;
-
-      const mockSession = {
-        access_token: 'test-access-token',
-        refresh_token: 'test-refresh-token',
-        expires_in: 3600,
-        expires_at: Math.floor(Date.now() / 1000) + 3600,
-        token_type: 'bearer',
-        user: mockUser
-      } as Session;
-
-      // Update state directly with mock session
-      setState(prev => ({
-        ...prev,
-        session: mockSession,
-        user: mockUser,
-        loading: false,
-        initialized: true,
-      }));
-
-      toast({
-        title: "Test Mode Activated",
-        description: "Signed in as test user PY",
-        variant: "default",
-      });
-
-      return { error: null };
-    } catch (err) {
-      const error = err as AuthError;
-      toast({
-        title: "Test sign-in failed",
-        description: "Could not activate test mode",
-        variant: "destructive",
-      });
-      return { error };
-    }
-  }, [toast]);
-
   return {
     ...state,
     signUp,
     signIn,
     signOut,
-    resetPassword,  
+    resetPassword,
     signInWithOAuth,
-    signInAsTestUser,
   };
 }
 
