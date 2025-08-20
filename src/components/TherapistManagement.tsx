@@ -4,9 +4,12 @@ import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapists } from '@/hooks/useTherapists';
 import { VideoAvatar } from '@/components/VideoAvatar';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 const TherapistManagement = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { data: therapists, isLoading, error } = useTherapists();
   const [currentTherapistIndex, setCurrentTherapistIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -23,9 +26,40 @@ const TherapistManagement = () => {
     therapist.active && therapist.id !== currentTherapistId
   ) || [];
 
-  const handleSelectTherapist = (therapistId: string) => {
-    localStorage.setItem('selectedTherapistId', therapistId);
-    navigate('/home');
+  const handleSelectTherapist = async (therapistId: string) => {
+    if (!therapistId) return;
+    
+    // Find the selected therapist to get their name
+    const selectedTherapist = availableTherapists.find(t => t.id === therapistId);
+    if (!selectedTherapist) return;
+    
+    try {
+      // Update database
+      const { error } = await supabase
+        .from('users')
+        .update({ 
+          selected_therapist_id: therapistId,
+          therapist_name: selectedTherapist.name 
+        })
+        .eq('id', user?.id);
+
+      if (error) {
+        console.error('Error updating therapist selection:', error);
+        // Still update localStorage as fallback
+        localStorage.setItem('selectedTherapistId', therapistId);
+        navigate('/home');
+        return;
+      }
+
+      // Update localStorage for immediate use
+      localStorage.setItem('selectedTherapistId', therapistId);
+      navigate('/home');
+    } catch (error) {
+      console.error('Error selecting therapist:', error);
+      // Fallback to localStorage only
+      localStorage.setItem('selectedTherapistId', therapistId);
+      navigate('/home');
+    }
   };
 
   // Swipe detection

@@ -160,7 +160,7 @@ const Profile = () => {
           .from('users')
           .select('name, email, phone, notifications_enabled, created_at')
           .eq('id', user.id)
-          .single();
+          .maybeSingle();
 
         if (error) {
           console.error('Error fetching user data:', error);
