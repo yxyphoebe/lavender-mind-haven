@@ -41,9 +41,9 @@ const AuthPage = () => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col relative"
+      className="min-h-screen flex flex-col relative bg-gradient-to-br from-mindful-600 via-mindful-400 to-enso-400"
       style={{
-        backgroundImage: 'url(https://vsiiedactvlzdvprwgkq.supabase.co/storage/v1/object/public/background-images/BackgroundImages/commen.png)',
+        backgroundImage: 'url(https://vsiiedactvlzdvprwgkq.supabase.co/storage/v1/object/public/background-images/commen.png), linear-gradient(135deg, hsl(var(--mindful-600)), hsl(var(--mindful-400)), hsl(var(--enso-400)))',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
@@ -60,10 +60,10 @@ const AuthPage = () => {
       {/* Top Content - Branding */}
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold text-white mb-2">
+          <h1 className="text-5xl font-bold text-mindful-600 mb-2">
             Mindful AI
           </h1>
-          <p className="text-white/80 text-lg font-light">
+          <p className="text-mindful-700 text-lg font-light">
             Your journey begins here
           </p>
         </div>
@@ -106,11 +106,11 @@ const AuthPage = () => {
         </div>
 
         {/* Footer Links */}
-        <div className="text-center text-sm text-white/70">
+        <div className="text-center text-sm text-mindful-700">
           By continuing, you agree to our{' '}
-          <a href="/terms" className="text-white underline hover:text-white/80">Terms of Service</a>
+          <a href="/terms" className="text-mindful-600 underline hover:text-mindful-500">Terms of Service</a>
           {' '}and{' '}
-          <a href="/privacy" className="text-white underline hover:text-white/80">Privacy Policy</a>
+          <a href="/privacy" className="text-mindful-600 underline hover:text-mindful-500">Privacy Policy</a>
         </div>
       </div>
     </div>
