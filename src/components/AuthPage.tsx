@@ -40,7 +40,15 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-mindful-600 via-mindful-400 to-enso-400 flex flex-col relative">
+    <div 
+      className="min-h-screen flex flex-col relative"
+      style={{
+        backgroundImage: 'url(https://vsiiedactvlzdvprwgkq.supabase.co/storage/v1/object/public/background-images/BackgroundImages/commen.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       
       {/* Test Environment Banner */}
       {isTestEnv && (
