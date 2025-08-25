@@ -41,7 +41,7 @@ const AuthPage = () => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col relative bg-gradient-to-br from-mindful-600 via-mindful-400 to-enso-400"
+      className="min-h-screen flex flex-col relative"
       style={{
         backgroundImage: 'url(https://vsiiedactvlzdvprwgkq.supabase.co/storage/v1/object/public/background-images/commen.jpg), linear-gradient(135deg, hsl(var(--mindful-600)), hsl(var(--mindful-400)), hsl(var(--enso-400)))',
         backgroundSize: 'cover',
