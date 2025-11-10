@@ -91,7 +91,7 @@ const OnboardingPage = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center pt-20 max-w-lg mx-auto w-full px-4">
+      <div className="flex-1 flex flex-col items-center pt-20 max-w-md mx-auto w-full px-4">
         {/* Question Title */}
         <h1 className="text-lg font-medium text-center text-gray-800 mb-10 leading-relaxed">
           {currentQuestion.question_text}
