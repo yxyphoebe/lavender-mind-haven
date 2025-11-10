@@ -103,7 +103,7 @@ const OnboardingPage = () => {
             <div
               key={option.id}
               onClick={() => handleOptionSelect(option.option_value)}
-              className="w-full aspect-[4/5] bg-gray-100 border-2 border-gray-200 rounded-2xl overflow-hidden cursor-pointer hover:border-gray-300 hover:shadow-lg transition-all duration-200 active:scale-[0.98] relative group"
+              className="w-full aspect-[3/2] bg-gray-100 border-2 border-gray-200 rounded-2xl overflow-hidden cursor-pointer hover:border-gray-300 hover:shadow-lg transition-all duration-200 active:scale-[0.98] relative group"
             >
               {/* Image */}
               {option.image_url ? (
