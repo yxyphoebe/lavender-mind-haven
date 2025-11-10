@@ -48,7 +48,7 @@ const PersonaSelection = () => {
   const handleContinue = async (therapistId: string) => {
     try {
       localStorage.setItem('selectedTherapistId', therapistId);
-      navigate('/chat');
+      navigate('/home');
     } catch (error) {
       console.error('Error in handleContinue:', error);
     }
