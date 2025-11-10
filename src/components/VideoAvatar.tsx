@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Play, Loader2, MessageCircle } from 'lucide-react';
+import { Play, Loader2, MessageCircle, Pause } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface VideoAvatarProps {
@@ -22,6 +22,8 @@ export const VideoAvatar = ({
   const [hasVideoError, setHasVideoError] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [showPlayPauseIcon, setShowPlayPauseIcon] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Reset state when videoUrl changes (new therapist selected)
@@ -30,6 +32,7 @@ export const VideoAvatar = ({
     setHasVideoError(false);
     setHasStarted(false);
     setHasEnded(false);
+    setIsPaused(false);
   }, [videoUrl]);
 
   const handleVideoLoad = () => {
@@ -63,9 +66,25 @@ export const VideoAvatar = ({
     setHasEnded(true);
   };
 
+  const handleTogglePlayPause = () => {
+    if (videoRef.current && hasStarted && !hasEnded && !isVideoLoading) {
+      if (isPaused) {
+        videoRef.current.play();
+        setIsPaused(false);
+      } else {
+        videoRef.current.pause();
+        setIsPaused(true);
+      }
+      // Show icon feedback
+      setShowPlayPauseIcon(true);
+      setTimeout(() => setShowPlayPauseIcon(false), 800);
+    }
+  };
+
   const handleReplay = () => {
     if (videoRef.current) {
       setHasEnded(false);
+      setIsPaused(false);
       videoRef.current.currentTime = 0;
       videoRef.current.play();
     }
@@ -157,6 +176,27 @@ export const VideoAvatar = ({
             onError={handleVideoError}
             onEnded={handleVideoEnded}
           />
+
+          {/* Clickable overlay for play/pause when video is playing */}
+          {hasStarted && !hasEnded && !isVideoLoading && (
+            <div 
+              className="absolute inset-0 cursor-pointer z-20"
+              onClick={handleTogglePlayPause}
+            >
+              {/* Play/Pause icon feedback */}
+              {showPlayPauseIcon && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="bg-black/40 backdrop-blur-sm rounded-full p-6 animate-fade-in">
+                    {isPaused ? (
+                      <Play className="w-12 h-12 text-white fill-white" />
+                    ) : (
+                      <Pause className="w-12 h-12 text-white" />
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Replay button when video has ended */}
           {hasEnded && !isVideoLoading && hasStarted && (
