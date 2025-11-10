@@ -23,7 +23,7 @@ const Index = () => {
   }, [user, initialized, checkAndRedirect]);
 
   const handleVideoEnd = () => {
-    navigate('/auth');
+    navigate('/onboarding');
   };
 
   if (showVideoSplash && (!initialized || !user)) {
