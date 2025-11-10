@@ -91,7 +91,7 @@ const OnboardingPage = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center pt-20 max-w-md mx-auto w-full px-4">
+      <div className="flex-1 flex flex-col items-center pt-20 max-w-sm mx-auto w-full px-4">
         {/* Question Title */}
         <h1 className="text-lg font-medium text-center text-gray-800 mb-10 leading-relaxed">
           {currentQuestion.question_text}
@@ -103,7 +103,7 @@ const OnboardingPage = () => {
             <div
               key={option.id}
               onClick={() => handleOptionSelect(option.option_value)}
-              className="w-full aspect-square bg-gray-100 border-2 border-gray-200 rounded-2xl overflow-hidden cursor-pointer hover:border-gray-300 hover:shadow-lg transition-all duration-200 active:scale-[0.98] relative group"
+              className="w-full aspect-[4/5] bg-gray-100 border-2 border-gray-200 rounded-2xl overflow-hidden cursor-pointer hover:border-gray-300 hover:shadow-lg transition-all duration-200 active:scale-[0.98] relative group"
             >
               {/* Image */}
               {option.image_url ? (
